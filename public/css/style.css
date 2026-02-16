@@ -1,0 +1,690 @@
+﻿:root{
+    --bg: #0b1220;
+    --panel: #0f1a2e;
+    --panel-2: #0c1527;
+    --text: #eaf0ff;
+    --muted: rgba(234,240,255,.75);
+    --border: rgba(234,240,255,.12);
+    --shadow: 0 18px 50px rgba(0,0,0,.35);
+    --radius: 16px;
+    --max: 1100px;
+}
+
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+    margin:0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: radial-gradient(1200px 700px at 10% 0%, #152a55 0%, var(--bg) 55%) fixed;
+    color: var(--text);
+}
+
+a{ color: inherit; text-decoration:none; }
+img{ max-width:100%; display:block; }
+.container{ width:min(var(--max), calc(100% - 32px)); margin:0 auto; }
+
+/* =========================
+   HEADER / NAV
+   ========================= */
+
+.site-header{
+    height: 72px;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding: 0px 16px;
+    background: rgba(11,18,32,.78);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+}
+
+.brand{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    box-shadow: none;
+}
+.brand:focus,
+.brand:focus-visible{
+    outline: none;
+    box-shadow: none;
+}
+
+.logo{
+    height: 75px;
+    width: auto;
+    object-fit: contain;
+    box-shadow: none;
+    border-radius: 0;
+}
+.brand-text{
+    display: inline;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: .2px;
+}
+
+.site-nav{
+    display:flex;
+    align-items:center;
+    gap: 8px;
+}
+.nav-link{
+    padding:10px 12px;
+    border-radius: 999px;
+    color: var(--muted);
+    border: 1px solid transparent;
+}
+.nav-link:hover{ border-color: var(--border); color: var(--text); }
+.nav-link.active{
+    color: var(--text);
+    border-color: var(--border);
+    background: rgba(255,255,255,.04);
+}
+
+.hamburger{
+    display:none;
+    border:1px solid var(--border);
+    background: rgba(255,255,255,.04);
+    color: var(--text);
+    border-radius: 12px;
+    padding:10px 12px;
+    cursor:pointer;
+}
+
+/* =========================
+   HERO (INDEX)
+   ========================= */
+
+.hero{
+    position:relative;
+    min-height: 74vh;
+    display:flex;
+    align-items:center;
+    background: linear-gradient(180deg, rgba(11,18,32,.25), rgba(11,18,32,.92));
+    border-bottom: 1px solid var(--border);
+}
+.hero-overlay{ display:none; }
+.hero-content{ padding: 64px 0; }
+.hero-kicker{
+    display:inline-block;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.04);
+    color: var(--muted);
+    margin: 0 0 14px 0;
+}
+.hero h1{
+    margin: 0 0 10px 0;
+    font-size: clamp(34px, 4vw, 54px);
+    line-height: 1.05;
+}
+.hero-subtitle{
+    margin: 0 0 22px 0;
+    max-width: 720px;
+    color: var(--muted);
+    font-size: 1.05rem;
+}
+.hero-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-bottom: 22px; }
+
+.hero-badges{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top: 6px;
+}
+.badge{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding: 10px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.03);
+    color: var(--muted);
+}
+
+/* =========================
+   BUTTONS
+   ========================= */
+
+.btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.04);
+    color: var(--text);
+    box-shadow: var(--shadow);
+}
+.btn:hover{ transform: translateY(-1px); }
+.btn.primary{
+    background: linear-gradient(180deg, rgba(106,255,204,.20), rgba(106,255,204,.06));
+    border-color: rgba(106,255,204,.35);
+}
+.btn.ghost{ background: rgba(255,255,255,.02); }
+.btn.small{ padding: 10px 14px; border-radius: 12px; box-shadow:none; }
+
+/* =========================
+   SECTIONS / GRID / CARDS
+   ========================= */
+
+.section{ padding: 64px 0; }
+.section.alt{
+    background: rgba(255,255,255,.02);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+.section-head{ margin-bottom: 22px; }
+.section-head h2{ margin:0 0 8px 0; font-size: 28px; }
+.section-head p{ margin:0; color: var(--muted); max-width: 750px; }
+
+.grid{ display:grid; gap: 16px; }
+.cards{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.routes{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.perks{ grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+.card,
+.route,
+.perk{
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow:hidden;
+    box-shadow: var(--shadow);
+}
+
+.card-media{
+    height: 150px;
+    background:
+            linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.02)),
+            radial-gradient(900px 260px at 20% 20%, rgba(106,255,204,.18), transparent 55%),
+            radial-gradient(900px 260px at 80% 0%, rgba(120,170,255,.22), transparent 55%);
+}
+.card-body{ padding: 14px; }
+.card-body h3{ margin:0 0 8px 0; }
+.card-body p{ margin:0 0 12px 0; color: var(--muted); }
+.card-link{ color: var(--text); opacity: .9; }
+.card-link i{ margin-left: 6px; }
+
+.route{ padding: 16px; }
+.route h3{ margin: 0 0 10px 0; }
+.route ul{ margin: 0 0 14px 18px; color: var(--muted); }
+.route li{ margin: 6px 0; }
+
+.perk{ padding: 16px; }
+.perk i{ font-size: 22px; opacity: .9; }
+.perk h3{ margin: 10px 0 8px 0; }
+.perk p{ margin: 0; color: var(--muted); }
+
+.cta{
+    margin-top: 22px;
+    padding: 18px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(120,170,255,.12), rgba(255,255,255,.02));
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 14px;
+}
+.cta-text h3{ margin:0 0 6px 0; }
+.cta-text p{ margin:0; color: var(--muted); }
+
+/* =========================
+   FOOTER
+   ========================= */
+
+.site-footer{
+    border-top: 1px solid var(--border);
+    padding: 20px 0;
+    background: rgba(11,18,32,.78);
+}
+.footer-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 16px;
+}
+.muted{ color: var(--muted); }
+
+.social{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:40px;
+    height:40px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.03);
+    margin-left: 8px;
+}
+
+/* =========================
+   RESPONSIVE (INDEX)
+   ========================= */
+
+@media (max-width: 980px){
+    .cards{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .routes{ grid-template-columns: 1fr; }
+    .perks{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px){
+    .hamburger{ display:inline-flex; }
+
+    .site-nav{
+        position: absolute;
+        right: 16px;
+        top: 64px;
+        width: min(92vw, 340px);
+        padding: 10px;
+        border-radius: 16px;
+        background: rgba(11,18,32,.92);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .site-nav.mobile{ display:flex; }
+    .nav-link{ width: 100%; }
+
+    .cards{ grid-template-columns: 1fr; }
+    .cta{ flex-direction: column; align-items: flex-start; }
+}
+
+/* =========================
+   PAGE HERO (PAGINI INTERNE)
+   ========================= */
+
+.page-hero{
+    padding: 56px 0 24px 0;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(11,18,32,.25), rgba(11,18,32,.92));
+}
+
+.note{
+    margin-top: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.03);
+    color: var(--muted);
+    max-width: 900px;
+}
+
+/* =========================
+   DESTINAȚII / RUTE (Leaflet + UI)
+   ========================= */
+
+.destinations-toolbar{
+    display:flex;
+    gap: 12px;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    margin-bottom: 14px;
+}
+
+.search{
+    flex: 1 1 340px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.03);
+    color: var(--muted);
+}
+.search input{
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--text);
+    font-size: 1rem;
+}
+.search input::placeholder{ color: rgba(234,240,255,.55); }
+
+.chips{ display:flex; gap: 8px; flex-wrap:wrap; }
+.chip{
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.02);
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 10px 12px;
+    cursor:pointer;
+}
+.chip:hover{ color: var(--text); }
+.chip.active{
+    color: var(--text);
+    background: rgba(255,255,255,.06);
+    border-color: rgba(120,170,255,.28);
+}
+
+.destinations-layout{
+    display:grid;
+    grid-template-columns: 1.25fr .75fr;
+    gap: 16px;
+    align-items: start;
+}
+
+.destinations-map-wrap{ position: relative; }
+.destinations-map{
+    height: 620px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    background: rgba(255,255,255,.02);
+}
+.map-hint{
+    position:absolute;
+    left: 12px;
+    bottom: 12px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(11,18,32,.75);
+    color: var(--muted);
+    backdrop-filter: blur(8px);
+}
+
+.destinations-list{
+    position: sticky;
+    top: 92px;
+    max-height: calc(100vh - 110px);
+    overflow:auto;
+    padding-right: 2px;
+}
+.destinations-meta{
+    display:flex;
+    align-items:baseline;
+    gap: 10px;
+    margin: 4px 0 10px 2px;
+}
+.destinations-meta strong{ font-size: 1.2rem; }
+
+.destinations-cards{ grid-template-columns: 1fr; }
+
+.pill{
+    display:inline-flex;
+    align-items:center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.02);
+    color: var(--muted);
+    font-size: .92rem;
+}
+
+.dest-row{ display:flex; gap: 8px; flex-wrap:wrap; margin: 0 0 10px 0; }
+.dest-row.bottom{ margin-top: -4px; }
+.tip{ line-height: 1.3; }
+
+.dest-btn{ width: 100%; justify-content: center; }
+
+/* Marker (Leaflet divIcon) */
+.dest-icon{ background: transparent; border:0; }
+.marker{
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border: 1px solid rgba(234,240,255,.20);
+    background: rgba(11,18,32,.82);
+    box-shadow: 0 10px 24px rgba(0,0,0,.35);
+}
+.marker i{ color: rgba(234,240,255,.95); font-size: 14px; }
+
+.popup strong{ display:block; margin-bottom: 6px; }
+.popup-tags{ display:flex; gap: 6px; flex-wrap:wrap; margin-bottom: 6px; }
+.popup-desc{ margin: 0 0 8px 0; color: rgba(234,240,255,.85); }
+.popup-tips{ margin: 0; color: rgba(234,240,255,.75); }
+
+/* =========================
+   CARD HEADER CU POZĂ (DESTINAȚII)
+   ========================= */
+
+.destination-card .card-media{
+    position: relative;
+    height: 170px;
+    border-radius: 18px 18px 0 0;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    border-bottom: 1px solid var(--border);
+    cursor: zoom-in;
+}
+
+.media-preload{
+    position:absolute;
+    inset:0;
+    width:1px; height:1px;
+    opacity:0;
+    pointer-events:none;
+}
+
+.card-media-overlay{
+    position:absolute;
+    inset:0;
+    background: linear-gradient(180deg, rgba(11,18,32,.18), rgba(11,18,32,.62));
+}
+
+.card-media-top{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    padding: 12px;
+}
+
+.mini-header{
+    width: min(420px, 86%);
+    background: rgba(11,18,32,.72);
+    border: 1px solid rgba(234,240,255,.14);
+    border-radius: 14px;
+    padding: 12px 14px;
+    backdrop-filter: blur(10px);
+}
+.mini-title{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    color: rgba(234,240,255,.96);
+    font-weight: 700;
+    font-size: 1.05rem;
+    line-height: 1.15;
+}
+.mini-emoji{
+    display:inline-flex;
+    width: 22px;
+    justify-content:center;
+}
+.mini-meta{
+    margin-top: 6px;
+    color: rgba(234,240,255,.78);
+    font-size: .92rem;
+}
+
+.zoom-badge{
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    display:grid;
+    place-items:center;
+    border: 1px solid rgba(234,240,255,.20);
+    background: rgba(11,18,32,.70);
+    color: rgba(234,240,255,.92);
+    backdrop-filter: blur(8px);
+}
+.destination-card .card-media:hover .zoom-badge{
+    background: rgba(11,18,32,.85);
+}
+
+.no-scroll{ overflow: hidden; }
+
+/* =========================
+   LIGHTBOX (DESTINAȚII)
+   ========================= */
+
+.lightbox{
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+}
+.lightbox.open{ display: block; }
+
+.lightbox-backdrop{
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.65);
+}
+
+.lightbox-panel{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(980px, calc(100vw - 22px));
+    max-height: min(86vh, 820px);
+    border-radius: 18px;
+    border: 1px solid rgba(234,240,255,.16);
+    background: rgba(11,18,32,.92);
+    box-shadow: 0 24px 80px rgba(0,0,0,.55);
+    overflow: hidden;
+}
+
+.lightbox-close{
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    border: 1px solid rgba(234,240,255,.18);
+    background: rgba(0,0,0,.25);
+    color: rgba(234,240,255,.95);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    z-index: 2;
+}
+.lightbox-close:hover{ background: rgba(0,0,0,.35); }
+
+.lightbox-img{
+    width: 100%;
+    height: min(72vh, 680px);
+    object-fit: contain;
+    background: rgba(0,0,0,.25);
+    display: block;
+}
+
+.lightbox-caption{
+    padding: 12px 14px;
+    border-top: 1px solid rgba(234,240,255,.10);
+    color: rgba(234,240,255,.82);
+}
+
+/* =========================
+   RUTE (detalii) + Leaflet layout fix
+   ========================= */
+
+.route-details{
+    display: none;
+    margin-top: 10px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.03);
+    color: var(--muted);
+    line-height: 1.5;
+}
+.route-details.open{ display: block; }
+
+/* ca să nu se suprapună controalele Leaflet peste header */
+.destinations-map .leaflet-top{ margin-top: 90px; }
+
+/* =========================
+   POI PANEL (RUTE)
+   ========================= */
+
+.poi-panel{
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    width: min(360px, calc(100% - 24px));
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: rgba(11,18,32,.78);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    z-index: 600;
+    display: none;
+}
+.poi-panel.open{ display: block; }
+
+.poi-close{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    height: 34px;
+    width: 34px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.06);
+    color: var(--text);
+    cursor: pointer;
+}
+
+.poi-media{
+    height: 160px;
+    background: rgba(255,255,255,.04);
+}
+.poi-media img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.poi-content{ padding: 12px 12px 14px 12px; }
+.poi-title{ font-weight: 800; margin-bottom: 6px; }
+.poi-text{ color: var(--muted); line-height: 1.5; font-size: 0.95rem; }
+
+/* =========================
+   RESPONSIVE (DESTINAȚII/RUTE)
+   ========================= */
+
+@media (max-width: 980px){
+    .destinations-layout{ grid-template-columns: 1fr; }
+    .destinations-list{
+        position: static;
+        max-height: none;
+        overflow: visible;
+        padding-right: 0;
+    }
+    .destinations-map{ height: 520px; }
+}
+
+@media (max-width: 720px){
+    .destinations-map{ height: 440px; }
+}
