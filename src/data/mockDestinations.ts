@@ -1,0 +1,88 @@
+import type { Destination } from "../types/destination";
+
+export const MOCK_DESTINATIONS: Destination[] = [
+  {
+    id: "orheiul-vechi",
+    name: "Orheiul Vechi",
+    area: "Orhei",
+    cat: "Istorie",
+    lat: 47.3,
+    lng: 28.971,
+    description:
+      "Complex cultural-natural cu privelisti superbe si trasee usoare.",
+    tips: "Cel mai fain la apus. Ia incaltaminte comoda.",
+  },
+  {
+    id: "cricova",
+    name: "Cricova",
+    area: "Chisinau",
+    cat: "Vin",
+    lat: 47.1407,
+    lng: 28.8637,
+    description:
+      "Oras subteran al vinului, perfect pentru tururi si degustari.",
+    tips: "Rezerva turul din timp; e racoare in galerii.",
+  },
+  {
+    id: "tipova",
+    name: "Tipova",
+    area: "Rezina",
+    cat: "Manastiri",
+    lat: 47.6146,
+    lng: 28.9832,
+    description:
+      "Manastire rupestra pe Nistru cu panorame si natura salbatica.",
+    tips: "Trasee pe stanca. Verifica vremea inainte de plecare.",
+  },
+  {
+    id: "soroca",
+    name: "Cetatea Soroca",
+    area: "Soroca",
+    cat: "Istorie",
+    lat: 48.1582,
+    lng: 28.2962,
+    description: "Fortareata medievala pe malul Nistrului, foarte fotogenica.",
+    tips: "Combin-o cu punctele panoramice din zona.",
+  },
+  {
+    id: "codrii",
+    name: "Codrii",
+    area: "Straseni",
+    cat: "Natura",
+    lat: 47.1008,
+    lng: 28.422,
+    description:
+      "Paduri, aer curat si plimbari relaxante aproape de Chisinau.",
+    tips: "Perfect pentru o escapada de weekend.",
+  },
+  {
+    id: "castel-mimi",
+    name: "Castel Mimi",
+    area: "Anenii Noi",
+    cat: "Vin",
+    lat: 46.9987,
+    lng: 29.0586,
+    description: "Arhitectura eleganta, vin, gastronomie si evenimente.",
+    tips: "Merita tur + pranz; recomandata rezervarea.",
+  },
+  {
+    id: "curchi",
+    name: "Manastirea Curchi",
+    area: "Orhei",
+    cat: "Manastiri",
+    lat: 47.4225,
+    lng: 28.9066,
+    description: "Complex monahal impunator cu gradini si arhitectura eleganta.",
+    tips: "Respecta linistea si programul manastirii.",
+  },
+  {
+    id: "balti",
+    name: "Balti",
+    area: "Balti",
+    cat: "Orase",
+    lat: 47.7617,
+    lng: 27.9289,
+    description: "Al doilea oras ca marime, bun pentru plimbari si pauza.",
+    tips: "Bun ca punct de oprire in excursiile spre nord.",
+  },
+];
