@@ -255,7 +255,10 @@ function App() {
   if (isDestinatii) {
     return <DestinatiiPage sectionId={routeState.sectionId} />
   }
+import AppRouter from "./app/router/AppRouter";
 
+export default function App() {
+  return <AppRouter />;
   return (
     <div className="app-shell">
       <header className="site-header">
@@ -508,5 +511,3 @@ function App() {
     </div>
   )
 }
-
-export default App
