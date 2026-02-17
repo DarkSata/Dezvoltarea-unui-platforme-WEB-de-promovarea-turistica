@@ -106,7 +106,7 @@ img{ max-width:100%; display:block; }
   align-items:center;
   background:
     linear-gradient(180deg, rgba(11,18,32,.25), rgba(11,18,32,.92)),
-    url('/images/Logo_Image.png');
+    url('/images/logo-moldova.png');
   background-size: cover;
   background-position: center;
   border-bottom: 1px solid var(--border);

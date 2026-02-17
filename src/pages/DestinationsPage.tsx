@@ -24,7 +24,7 @@ const CATEGORY_LABEL: Record<"Toate" | DestinationCategory, string> = {
   Orase: "Orase",
 };
 
-const FALLBACK_IMAGE = "/images/Logo_Image.png";
+const FALLBACK_IMAGE = "/images/logo-moldova.png";
 
 function categoryIcon(category: DestinationCategory): string {
   switch (category) {

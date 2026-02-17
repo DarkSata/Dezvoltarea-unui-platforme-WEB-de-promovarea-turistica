@@ -68,7 +68,7 @@ export default function DestinationsMap({
   places,
   selected,
   onSelect,
-  fallbackImage = "/images/Logo_Image.png",
+  fallbackImage = "/images/logo-moldova.png",
 }: {
   places: Destination[];
   selected: Destination | null;
