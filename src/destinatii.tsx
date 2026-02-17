@@ -1,5 +1,4 @@
-import { StrictMode, useEffect, useMemo, useRef, useState } from 'react'
-import { createRoot } from 'react-dom/client'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import './App.css'
@@ -267,7 +266,11 @@ function buildMarkerIcon(category: Category) {
   })
 }
 
-export function DestinatiiPage() {
+type DestinatiiPageProps = {
+  sectionId?: string
+}
+
+export function DestinatiiPage({ sectionId = '' }: DestinatiiPageProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>('toate')
@@ -310,6 +313,18 @@ export function DestinatiiPage() {
     window.addEventListener('resize', onResize)
     return () => window.removeEventListener('resize', onResize)
   }, [])
+
+  useEffect(() => {
+    if (!sectionId) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+
+    const target = document.getElementById(sectionId)
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [sectionId])
 
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) {
@@ -420,7 +435,7 @@ export function DestinatiiPage() {
   return (
     <div className="destinatii-page">
       <header className="site-header">
-        <a className="brand" href="/index.html" aria-label="Acasa">
+        <a className="brand" href="#/" aria-label="Acasa">
           <img className="logo" src="/images/logo-moldova.png" alt="Logo Moldova Travel" />
           <span className="brand-text">Moldova Travel</span>
         </a>
@@ -438,22 +453,22 @@ export function DestinatiiPage() {
         </button>
 
         <nav id="site-nav" className={`site-nav ${isMenuOpen ? 'open' : ''}`} aria-label="Navigare principala">
-          <a className="nav-link" href="/index.html">
+          <a className="nav-link" href="#/">
             Acasa
           </a>
-          <a className="nav-link active" href="/destinatii.html">
+          <a className="nav-link active" href="#/destinatii">
             Destinatii
           </a>
-          <a className="nav-link" href="/index.html#rute-rapide">
+          <a className="nav-link" href="#/rute-rapide">
             Rute
           </a>
-          <a className="nav-link" href="/index.html#ghid-rapid">
+          <a className="nav-link" href="#/ghid-rapid">
             Ghid
           </a>
-          <a className="nav-link" href="/index.html#galerie">
+          <a className="nav-link" href="#/galerie">
             Galerie
           </a>
-          <a className="nav-link" href="/index.html#contact">
+          <a className="nav-link" href="#/contact">
             Contact
           </a>
         </nav>
@@ -470,10 +485,10 @@ export function DestinatiiPage() {
             </p>
 
             <div className="hero-actions">
-              <a className="btn primary" href="#harta">
+              <a className="btn primary" href="#/destinatii/harta">
                 Deschide harta
               </a>
-              <a className="btn ghost" href="/index.html">
+              <a className="btn ghost" href="#/">
                 Inapoi la pagina principala
               </a>
             </div>
@@ -650,9 +665,3 @@ export function DestinatiiPage() {
     </div>
   )
 }
-
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <DestinatiiPage />
-  </StrictMode>,
-)

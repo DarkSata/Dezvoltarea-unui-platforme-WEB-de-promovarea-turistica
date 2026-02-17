@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import './App.css'
+import { DestinatiiPage } from './destinatii'
 
 type NavLink = {
   label: string
@@ -10,7 +11,6 @@ type Destination = {
   id: string
   name: string
   description: string
-  href: string
   vibe: string
 }
 
@@ -18,7 +18,6 @@ type RouteIdea = {
   icon: string
   title: string
   points: string[]
-  href: string
 }
 
 type Perk = {
@@ -44,12 +43,12 @@ type Testimonial = {
 }
 
 const navLinks: NavLink[] = [
-  { label: 'Acasa', href: '#home' },
-  { label: 'Destinatii', href: '/destinatii.html' },
-  { label: 'Rute', href: '#rute-rapide' },
-  { label: 'Ghid', href: '#ghid-rapid' },
-  { label: 'Galerie', href: '#galerie' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Acasa', href: '#/' },
+  { label: 'Destinatii', href: '#/destinatii' },
+  { label: 'Rute', href: '#/rute-rapide' },
+  { label: 'Ghid', href: '#/ghid-rapid' },
+  { label: 'Galerie', href: '#/galerie' },
+  { label: 'Contact', href: '#/contact' },
 ]
 
 const topPlaces: Destination[] = [
@@ -57,42 +56,36 @@ const topPlaces: Destination[] = [
     id: 'orheiul-vechi',
     name: 'Orheiul Vechi',
     description: 'Complex cultural-natural cu privelisti superbe si trasee usoare.',
-    href: '#top-locuri',
     vibe: 'canioane si istorie',
   },
   {
     id: 'cricova',
     name: 'Cricova',
     description: 'Oras subteran al vinului, perfect pentru tururi si degustari.',
-    href: '#top-locuri',
     vibe: 'degustari premium',
   },
   {
     id: 'tipova',
     name: 'Tipova',
     description: 'Manastire rupestra pe Nistru plus panorame si natura salbatica.',
-    href: '#top-locuri',
     vibe: 'vibe de aventura',
   },
   {
     id: 'soroca',
     name: 'Cetatea Soroca',
     description: 'Fortareata medievala pe malul Nistrului, super fotogenica.',
-    href: '#top-locuri',
     vibe: 'arhitectura medievala',
   },
   {
     id: 'codrii',
     name: 'Codrii',
     description: 'Paduri, aer curat si plimbari relaxante aproape de Chisinau.',
-    href: '#top-locuri',
     vibe: 'escape in natura',
   },
   {
     id: 'castel-mimi',
     name: 'Castel Mimi',
     description: 'Arhitectura eleganta, vin, gastronomie si evenimente.',
-    href: '#top-locuri',
     vibe: 'lux relaxat',
   },
 ]
@@ -102,19 +95,16 @@ const routeIdeas: RouteIdea[] = [
     icon: 'fa-solid fa-clock',
     title: '1 zi: Chisinau + Cricova',
     points: ['Dimineata: centru Chisinau + parcuri', 'Pranz: bucatarie locala', 'Dupa-amiaza: tur Cricova'],
-    href: '#rute-rapide',
   },
   {
     icon: 'fa-solid fa-route',
     title: '2 zile: Orheiul Vechi + vinarie',
     points: ['Ziua 1: Orheiul Vechi + Butuceni', 'Ziua 2: vinarie (Cricova / Milestii Mici)', 'Bonus: apus la punct panoramic'],
-    href: '#rute-rapide',
   },
   {
     icon: 'fa-solid fa-mountain-sun',
     title: '3 zile: Nistru (Tipova) + Soroca',
     points: ['Ziua 1: drum spre Nistru + plimbare', 'Ziua 2: Tipova + trasee', 'Ziua 3: Cetatea Soroca + oras'],
-    href: '#rute-rapide',
   },
 ]
 
@@ -193,9 +183,38 @@ const testimonials: Testimonial[] = [
   },
 ]
 
+type RouteState = {
+  route: 'home' | 'destinatii'
+  sectionId: string
+}
+
+const parseHash = (): RouteState => {
+  const raw = window.location.hash.replace(/^#\/?/, '')
+  if (!raw) {
+    return { route: 'home', sectionId: '' }
+  }
+
+  const parts = raw.split('/')
+  if (parts[0] === 'destinatii') {
+    return { route: 'destinatii', sectionId: parts[1] ?? '' }
+  }
+
+  return { route: 'home', sectionId: parts[0] }
+}
+
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const currentYear = new Date().getFullYear()
+  const [routeState, setRouteState] = useState<RouteState>(() => parseHash())
+
+  const isDestinatii = routeState.route === 'destinatii'
+
+  const activeNavLabel = useMemo(() => {
+    if (isDestinatii) {
+      return 'Destinatii'
+    }
+    return 'Acasa'
+  }, [isDestinatii])
 
   useEffect(() => {
     const onResize = () => {
@@ -208,10 +227,39 @@ function App() {
     return () => window.removeEventListener('resize', onResize)
   }, [])
 
+  useEffect(() => {
+    const onHashChange = () => {
+      setRouteState(parseHash())
+    }
+
+    window.addEventListener('hashchange', onHashChange)
+    return () => window.removeEventListener('hashchange', onHashChange)
+  }, [])
+
+  useEffect(() => {
+    if (routeState.route !== 'home') {
+      return
+    }
+
+    if (!routeState.sectionId) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      return
+    }
+
+    const target = document.getElementById(routeState.sectionId)
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [routeState])
+
+  if (isDestinatii) {
+    return <DestinatiiPage sectionId={routeState.sectionId} />
+  }
+
   return (
     <div className="app-shell">
       <header className="site-header">
-        <a className="brand" href="#home" aria-label="Acasa">
+        <a className="brand" href="#/" aria-label="Acasa">
           <img className="logo" src="/images/logo-moldova.png" alt="Logo Moldova Travel" />
           <span className="brand-text">Moldova Travel</span>
         </a>
@@ -229,10 +277,10 @@ function App() {
         </button>
 
         <nav id="site-nav" className={`site-nav ${isMenuOpen ? 'open' : ''}`} aria-label="Navigare principala">
-          {navLinks.map((link, index) => (
+          {navLinks.map((link) => (
             <a
               key={link.label}
-              className={`nav-link ${index === 0 ? 'active' : ''}`}
+              className={`nav-link ${link.label === activeNavLabel ? 'active' : ''}`}
               href={link.href}
               onClick={() => setIsMenuOpen(false)}
             >
@@ -254,10 +302,10 @@ function App() {
             </p>
 
             <div className="hero-actions">
-              <a className="btn primary" href="#top-locuri">
+              <a className="btn primary" href="#/top-locuri">
                 Vezi top locuri
               </a>
-              <a className="btn ghost" href="#rute-rapide">
+              <a className="btn ghost" href="#/rute-rapide">
                 Trasee 1-3 zile
               </a>
             </div>
@@ -304,7 +352,7 @@ function App() {
                   <div className="card-body">
                     <h3>{place.name}</h3>
                     <p>{place.description}</p>
-                    <a className="card-link" href={place.href}>
+                    <a className="card-link" href="#/top-locuri">
                       Detalii <i className="fa-solid fa-arrow-right" aria-hidden="true"></i>
                     </a>
                   </div>
@@ -332,7 +380,7 @@ function App() {
                       <li key={point}>{point}</li>
                     ))}
                   </ul>
-                  <a className="btn small" href={route.href}>
+                  <a className="btn small" href="#/rute-rapide">
                     Vezi ruta
                   </a>
                 </article>
