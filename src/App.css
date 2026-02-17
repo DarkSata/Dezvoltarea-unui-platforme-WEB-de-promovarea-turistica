@@ -757,6 +757,22 @@ img{ max-width:100%; display:block; }
 }
 .route-details.open{ display: block; }
 
+.route-info-card{
+  margin-top: 14px;
+}
+.route-info-card .card-body > h3{
+  margin: 0 0 10px 0;
+}
+.route-info-list{
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.route-info-card .cta{
+  margin-top: 14px;
+}
+
 /* ca sa nu se suprapuna controalele Leaflet peste header */
 .destinations-map .leaflet-top{ margin-top: 90px; }
 
