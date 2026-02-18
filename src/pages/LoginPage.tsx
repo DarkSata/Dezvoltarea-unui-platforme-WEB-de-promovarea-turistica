@@ -32,13 +32,13 @@ export default function LoginPage() {
     const next: LoginErrors = {};
 
     if (!username.trim()) {
-      next.username = "Introdu username.";
+      next.username = "Introdu numele de utilizator.";
     }
 
     if (!password.trim()) {
       next.password = "Introdu parola.";
     } else if (password.trim().length < 4) {
-      next.password = "Parola trebuie sa aiba minim 4 caractere.";
+      next.password = "Parola trebuie să aibă minimum 4 caractere.";
     }
 
     return next;
@@ -56,7 +56,7 @@ export default function LoginPage() {
     const result = authService.login(username.trim(), password.trim());
 
     if (!result) {
-      setErrors({ form: "Credentiale invalide. Incearca admin/admin123 sau user/user123." });
+      setErrors({ form: "Credențiale invalide. Încearcă admin/admin123 sau user/user123." });
       return;
     }
 
@@ -73,8 +73,8 @@ export default function LoginPage() {
     <section className="section">
       <div className="container auth-wrap">
         <article className="auth-card">
-          <h2>Login</h2>
-          <p className="muted">Autentificare simulata cu roluri si sesiune in localStorage.</p>
+          <h2>Autentificare</h2>
+          <p className="muted">Autentificare simulată cu roluri și sesiune în localStorage.</p>
 
           <form onSubmit={onSubmit} className="admin-form">
             <Input
@@ -103,7 +103,7 @@ export default function LoginPage() {
             {errors.form ? <p className="form-error">{errors.form}</p> : null}
 
             <div className="form-actions">
-              <Button type="submit">Login</Button>
+              <Button type="submit">Intră în cont</Button>
             </div>
           </form>
 

@@ -6,8 +6,8 @@ export function PerksSection() {
     <section className="section" id="de-ce">
       <div className="container">
         <div className="section-head">
-          <h2>De ce merita Moldova?</h2>
-          <p>Mica, dar plina de surprize. Perfecta pentru weekenduri.</p>
+          <h2>De ce merită Moldova?</h2>
+          <p>Mică, dar plină de surprize. Perfectă pentru weekenduri.</p>
         </div>
 
         <div className="grid perks">
@@ -20,7 +20,7 @@ export function PerksSection() {
           ))}
         </div>
 
-        <div className="testimonials" aria-label="Recomandari de la calatori">
+        <div className="testimonials" aria-label="Recomandări de la călători">
           {testimonials.map((testimonial) => (
             <blockquote className="quote" key={testimonial.author}>
               <p>{testimonial.quote}</p>
@@ -31,11 +31,11 @@ export function PerksSection() {
 
         <div className="cta" id="contact">
           <div className="cta-text">
-            <h3>Vrei sa-ti facem un itinerar?</h3>
-            <p>Scrie-ne ce preferi (natura / vin / istorie) si cate zile ai.</p>
+            <h3>Vrei să-ți facem un itinerar?</h3>
+            <p>Scrie-ne ce preferi (natură / vin / istorie) și câte zile ai.</p>
           </div>
           <a className="btn primary" href="mailto:contact@moldovatravel.md">
-            Contacteaza-ne
+            Contactează-ne
           </a>
         </div>
       </div>

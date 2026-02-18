@@ -32,10 +32,10 @@ function validate(input: DestinationInput): FormErrors {
   if (!input.description.trim()) errors.description = "Descrierea este obligatorie.";
   if (!input.tips.trim()) errors.tips = "Tips este obligatoriu.";
   if (Number.isNaN(input.lat) || input.lat < 45 || input.lat > 49.5) {
-    errors.lat = "Latitudine invalida (45 - 49.5).";
+    errors.lat = "Latitudine invalidă (45 - 49.5).";
   }
   if (Number.isNaN(input.lng) || input.lng < 26 || input.lng > 30.5) {
-    errors.lng = "Longitudine invalida (26 - 30.5).";
+    errors.lng = "Longitudine invalidă (26 - 30.5).";
   }
 
   return errors;
@@ -70,7 +70,7 @@ export default function AdminPage() {
       });
       setItems(result.items);
     } catch {
-      setError("Nu am putut incarca lista pentru admin.");
+      setError("Nu am putut încărca lista pentru admin.");
     } finally {
       setLoading(false);
     }
@@ -86,7 +86,7 @@ export default function AdminPage() {
     };
   }, [refresh]);
 
-  const sortedCountLabel = useMemo(() => `${items.length} inregistrari`, [items.length]);
+  const sortedCountLabel = useMemo(() => `${items.length} înregistrări`, [items.length]);
 
   function resetForm() {
     setForm(EMPTY_FORM);
@@ -140,7 +140,7 @@ export default function AdminPage() {
       if (editingId) {
         const updated = await destinationsService.update(editingId, payload);
         if (!updated) {
-          setSubmitError("Elementul nu mai exista in lista.");
+          setSubmitError("Elementul nu mai există în listă.");
           return;
         }
       } else {
@@ -150,7 +150,7 @@ export default function AdminPage() {
       resetForm();
       await refresh();
     } catch {
-      setSubmitError("Operatia a esuat. Incearca din nou.");
+      setSubmitError("Operația a eșuat. Încearcă din nou.");
     }
   }
 
@@ -163,7 +163,7 @@ export default function AdminPage() {
       await refresh();
     } catch {
       setDeleteId(null);
-      setError("Nu am putut sterge destinatia.");
+      setError("Nu am putut șterge destinația.");
     }
   }
 
@@ -173,7 +173,7 @@ export default function AdminPage() {
         <div>
           <div className="section-head">
             <h2>Panou Admin</h2>
-            <p>CRUD pe destinatii, validari de formular, cautare, filtrare si sortare.</p>
+            <p>CRUD pe destinații, validări de formular, căutare, filtrare și sortare.</p>
           </div>
 
           <form className="admin-form" onSubmit={onSubmit}>
@@ -226,7 +226,7 @@ export default function AdminPage() {
               />
 
               <Input
-                label="Imagine URL (optional)"
+                label="Imagine URL (opțional)"
                 value={form.image ?? ""}
                 onChange={(event) => onFieldChange("image", event.target.value)}
                 error={formErrors.image}
@@ -246,7 +246,7 @@ export default function AdminPage() {
               </label>
 
               <label className="form-field form-field-full">
-                <span className="form-label">Tips</span>
+                <span className="form-label">Sfaturi</span>
                 <textarea
                   className="form-control"
                   rows={2}
@@ -260,7 +260,7 @@ export default function AdminPage() {
             {submitError ? <p className="form-error">{submitError}</p> : null}
 
             <div className="form-actions">
-              <Button type="submit">{editingId ? "Salveaza modificarile" : "Adauga destinatie"}</Button>
+              <Button type="submit">{editingId ? "Salvează modificările" : "Adaugă destinație"}</Button>
               <Button type="button" variant="ghost" onClick={resetForm}>
                 Reset
               </Button>
@@ -270,17 +270,17 @@ export default function AdminPage() {
 
         <div>
           <div className="admin-list-head">
-            <h3>Destinatii</h3>
+            <h3>Destinații</h3>
             <span className="muted">{sortedCountLabel}</span>
           </div>
 
           <div className="destinations-toolbar admin-toolbar">
-            <label className="search" aria-label="Search admin list">
+            <label className="search" aria-label="Caută în lista de admin">
               <i className="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
               <input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                placeholder="Cauta dupa nume, zona, descriere"
+                placeholder="Caută după nume, zonă, descriere"
               />
             </label>
 
@@ -323,10 +323,10 @@ export default function AdminPage() {
             </label>
           </div>
 
-          {loading ? <Loading text="Se incarca datele admin..." /> : null}
+          {loading ? <Loading text="Se încarcă datele admin..." /> : null}
           {!loading && error ? <ErrorState title="Eroare" message={error} /> : null}
           {!loading && !error && items.length === 0 ? (
-            <Empty title="Lista este goala" description="Adauga prima destinatie din formular." />
+            <Empty title="Lista este goală" description="Adaugă prima destinație din formular." />
           ) : null}
 
           {!loading && !error && items.length > 0 ? (
@@ -342,10 +342,10 @@ export default function AdminPage() {
                     <p>{item.description}</p>
                     <div className="admin-row-actions">
                       <Button variant="small" onClick={() => startEdit(item)}>
-                        Edit
+                        Editează
                       </Button>
                       <Button variant="small" className="danger" onClick={() => setDeleteId(item.id)}>
-                        Delete
+                        Șterge
                       </Button>
                     </div>
                   </div>
@@ -358,8 +358,8 @@ export default function AdminPage() {
 
       <ModalConfirm
         open={Boolean(deleteId)}
-        title="Stergere destinatie"
-        message="Actiunea nu poate fi anulata. Confirmi stergerea?"
+        title="Ștergere destinație"
+        message="Acțiunea nu poate fi anulată. Confirmi ștergerea?"
         onCancel={() => setDeleteId(null)}
         onConfirm={() => {
           void confirmDelete();

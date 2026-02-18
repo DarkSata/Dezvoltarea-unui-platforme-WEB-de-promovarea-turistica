@@ -6,11 +6,11 @@ export default function ServerError500() {
       <div className="container">
         <article className="error-page">
           <p className="error-code">500</p>
-          <h2>Internal Server Error</h2>
-          <p className="muted">Eroare simulata de serviciu. Incearca din nou sau revino mai tarziu.</p>
+          <h2>Eroare internă de server</h2>
+          <p className="muted">Eroare simulată de serviciu. Încearcă din nou sau revino mai târziu.</p>
           <div className="error-actions">
             <Link className="btn primary" to="/">
-              Inapoi acasa
+              Înapoi acasă
             </Link>
             <Link className="btn ghost" to="/admin">
               Admin

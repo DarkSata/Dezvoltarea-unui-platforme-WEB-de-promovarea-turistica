@@ -17,11 +17,11 @@ const CATEGORIES: Array<"Toate" | DestinationCategory> = [
 
 const CATEGORY_LABEL: Record<"Toate" | DestinationCategory, string> = {
   Toate: "Toate",
-  Natura: "Natura",
-  Vin: "Vinarii",
-  Manastiri: "Manastiri",
+  Natura: "Natură",
+  Vin: "Vinării",
+  Manastiri: "Mănăstiri",
   Istorie: "Istorie",
-  Orase: "Orase",
+  Orase: "Orașe",
 };
 
 const FALLBACK_IMAGE = "/images/logo-moldova.png";
@@ -65,7 +65,7 @@ export default function DestinationsPage() {
         setSelectedId(data[0]?.id ?? null);
       } catch {
         if (!active) return;
-        setError("Nu am putut incarca destinatiile.");
+        setError("Nu am putut încărca destinațiile.");
       } finally {
         if (active) {
           setLoading(false);
@@ -148,21 +148,21 @@ export default function DestinationsPage() {
       <section className="section">
         <div className="container">
           <div className="section-head">
-            <h2>Destinatii</h2>
-            <p>Cauta, filtreaza si exploreaza direct pe harta toate locurile turistice.</p>
+            <h2>Destinații</h2>
+            <p>Caută, filtrează și explorează direct pe hartă toate locurile turistice.</p>
           </div>
 
           <div className="destinations-toolbar">
-            <label className="search" aria-label="Search destinations">
+            <label className="search" aria-label="Caută destinații">
               <i className="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
               <input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                placeholder="Cauta (ex: Orhei, vinarie, Nistru...)"
+                placeholder="Caută (ex: Orhei, vinărie, Nistru...)"
               />
             </label>
 
-            <div className="chips" role="tablist" aria-label="Categories">
+            <div className="chips" role="tablist" aria-label="Categorii">
               {CATEGORIES.map((item) => (
                 <button
                   key={item}
@@ -176,10 +176,10 @@ export default function DestinationsPage() {
             </div>
           </div>
 
-          {loading ? <Loading text="Se incarca destinatiile..." /> : null}
+          {loading ? <Loading text="Se încarcă destinațiile..." /> : null}
           {!loading && error ? <ErrorState title="Eroare" message={error} /> : null}
           {!loading && !error && filtered.length === 0 ? (
-            <Empty title="Nu am gasit rezultate" description="Schimba filtrul sau cautarea." />
+            <Empty title="Nu am găsit rezultate" description="Schimbă filtrul sau căutarea." />
           ) : null}
 
           {!loading && !error && filtered.length > 0 ? (
@@ -191,10 +191,10 @@ export default function DestinationsPage() {
                 fallbackImage={FALLBACK_IMAGE}
               />
 
-              <aside className="destinations-list" aria-label="Lista destinatiilor">
+              <aside className="destinations-list" aria-label="Lista destinațiilor">
                 <div className="destinations-meta">
                   <strong>{filtered.length}</strong>
-                  <span className="muted">locuri afisate</span>
+                  <span className="muted">locuri afișate</span>
                 </div>
 
                 <div className="grid destinations-cards">
@@ -211,7 +211,7 @@ export default function DestinationsPage() {
                           className="card-media"
                           type="button"
                           style={{ backgroundImage: `url('${imageSrc}')` }}
-                          aria-label={`Mareste imaginea pentru ${item.name}`}
+                          aria-label={`Mărește imaginea pentru ${item.name}`}
                           onClick={(event) => {
                             event.stopPropagation();
                             setLightboxDestination(item);
@@ -270,7 +270,7 @@ export default function DestinationsPage() {
                               focusOnDestination(item.id, true);
                             }}
                           >
-                            Vezi pe harta
+                            Vezi pe hartă
                           </button>
                         </div>
                       </article>
@@ -285,14 +285,14 @@ export default function DestinationsPage() {
 
       <div className={`lightbox ${lightboxDestination ? "open" : ""}`} aria-hidden={!lightboxDestination}>
         <div className="lightbox-backdrop" data-close="1" onClick={closeLightbox}></div>
-        <div className="lightbox-panel" role="dialog" aria-modal="true" aria-label="Imagine destinatie">
-          <button className="lightbox-close" type="button" aria-label="Inchide" onClick={closeLightbox}>
+        <div className="lightbox-panel" role="dialog" aria-modal="true" aria-label="Imagine destinație">
+          <button className="lightbox-close" type="button" aria-label="Închide" onClick={closeLightbox}>
             <i className="fa-solid fa-xmark"></i>
           </button>
           <img
             className="lightbox-img"
             src={lightboxDestination?.image?.trim() ? lightboxDestination.image : FALLBACK_IMAGE}
-            alt={lightboxDestination ? `Imagine ${lightboxDestination.name}` : "Imagine destinatie"}
+            alt={lightboxDestination ? `Imagine ${lightboxDestination.name}` : "Imagine destinație"}
             onError={(event) => {
               event.currentTarget.src = FALLBACK_IMAGE;
             }}

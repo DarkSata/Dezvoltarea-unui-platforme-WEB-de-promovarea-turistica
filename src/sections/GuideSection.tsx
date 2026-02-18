@@ -5,8 +5,8 @@ export function GuideSection() {
     <section className="section" id="ghid-rapid">
       <div className="container">
         <div className="section-head">
-          <h2>Ghid rapid inainte de plecare</h2>
-          <p>Un checklist compact care te ajuta sa organizezi un city-break fara stres.</p>
+          <h2>Ghid rapid înainte de plecare</h2>
+          <p>Un checklist compact care te ajută să organizezi un city-break fără stres.</p>
         </div>
 
         <div className="grid check-grid">

@@ -22,10 +22,10 @@ export default function ModalConfirm({
         <p className="muted">{message}</p>
         <div className="modal-actions">
           <button className="btn ghost" type="button" onClick={onCancel}>
-            Cancel
+            Anulează
           </button>
           <button className="btn primary" type="button" onClick={onConfirm}>
-            Confirm
+            Confirmă
           </button>
         </div>
       </div>

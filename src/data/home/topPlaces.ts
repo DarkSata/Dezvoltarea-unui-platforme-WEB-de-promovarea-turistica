@@ -11,10 +11,10 @@ export const topPlaces: TopPlace[] = [
     description: 'Complex cultural-natural cu privelisti superbe si trasee usoare.',
     vibe: 'canioane si istorie',
     collageImages: [
-      '/images/destinatii/orheiul-vechi.jpg',
-      '/images/destinatii/tipova.jpg',
-      '/images/destinatii/saharna.jpg',
-      '/images/destinatii/curchi.jpg',
+      '/images/destinatii/top-optimized/orheiul-vechi.jpg',
+      '/images/destinatii/top-optimized/tipova.jpg',
+      '/images/destinatii/top-optimized/saharna.jpg',
+      '/images/destinatii/top-optimized/curchi.jpg',
     ],
   },
   {
@@ -23,10 +23,10 @@ export const topPlaces: TopPlace[] = [
     description: 'Oras subteran al vinului, perfect pentru tururi si degustari.',
     vibe: 'degustari premium',
     collageImages: [
-      '/images/destinatii/cricova.jpg',
-      '/images/destinatii/milestii-mici.jpg',
-      '/images/destinatii/purcari.jpg',
-      '/images/destinatii/castel-mimi.jpg',
+      '/images/destinatii/top-optimized/cricova.jpg',
+      '/images/destinatii/top-optimized/milestii-mici.jpg',
+      '/images/destinatii/top-optimized/purcari.jpg',
+      '/images/destinatii/top-optimized/castel-mimi.jpg',
     ],
   },
   {
@@ -35,10 +35,10 @@ export const topPlaces: TopPlace[] = [
     description: 'Manastire rupestra pe Nistru plus panorame si natura salbatica.',
     vibe: 'vibe de aventura',
     collageImages: [
-      '/images/destinatii/tipova.jpg',
-      '/images/destinatii/saharna.jpg',
-      '/images/destinatii/orheiul-vechi.jpg',
-      '/images/destinatii/prutul-de-jos.jpg',
+      '/images/destinatii/top-optimized/tipova.jpg',
+      '/images/destinatii/top-optimized/saharna.jpg',
+      '/images/destinatii/top-optimized/orheiul-vechi.jpg',
+      '/images/destinatii/top-optimized/prutul-de-jos.jpg',
     ],
   },
   {
@@ -47,10 +47,10 @@ export const topPlaces: TopPlace[] = [
     description: 'Fortareata medievala pe malul Nistrului, super fotogenica.',
     vibe: 'arhitectura medievala',
     collageImages: [
-      '/images/destinatii/cetatea-soroca.jpg',
-      '/images/destinatii/cetatea-tighina.jpg',
-      '/images/destinatii/balti.jpg',
-      '/images/destinatii/chisinau.jpg',
+      '/images/destinatii/top-optimized/cetatea-soroca.jpg',
+      '/images/destinatii/top-optimized/cetatea-tighina.jpg',
+      '/images/destinatii/top-optimized/balti.jpg',
+      '/images/destinatii/top-optimized/chisinau.jpg',
     ],
   },
   {
@@ -59,10 +59,10 @@ export const topPlaces: TopPlace[] = [
     description: 'Paduri, aer curat si plimbari relaxante aproape de Chisinau.',
     vibe: 'escape in natura',
     collageImages: [
-      '/images/destinatii/codrii.jpg',
-      '/images/destinatii/padurea-domneasca.jpg',
-      '/images/destinatii/prutul-de-jos.jpg',
-      '/images/destinatii/capriana.jpg',
+      '/images/destinatii/top-optimized/codrii.jpg',
+      '/images/destinatii/top-optimized/padurea-domneasca.jpg',
+      '/images/destinatii/top-optimized/prutul-de-jos.jpg',
+      '/images/destinatii/top-optimized/capriana.jpg',
     ],
   },
   {
@@ -71,10 +71,10 @@ export const topPlaces: TopPlace[] = [
     description: 'Arhitectura eleganta, vin, gastronomie si evenimente.',
     vibe: 'lux relaxat',
     collageImages: [
-      '/images/destinatii/castel-mimi.jpg',
-      '/images/destinatii/purcari.jpg',
-      '/images/destinatii/cricova.jpg',
-      '/images/destinatii/milestii-mici.jpg',
+      '/images/destinatii/top-optimized/castel-mimi.jpg',
+      '/images/destinatii/top-optimized/purcari.jpg',
+      '/images/destinatii/top-optimized/cricova.jpg',
+      '/images/destinatii/top-optimized/milestii-mici.jpg',
     ],
   },
 ]

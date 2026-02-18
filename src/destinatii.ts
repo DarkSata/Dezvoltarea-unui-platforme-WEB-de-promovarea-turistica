@@ -81,7 +81,7 @@ const PLACES: Place[] = [
         desc: "Vinărie cu arhitectură spectaculoasă, gastronomie și evenimente.",
         tips: "Merită tur + prânz; rezervare recomandată.",
     },
-    // ... (дальше можешь перенести весь массив как у тебя — TS это спокойно выдержит)
+// ... (poți extinde lista în același format; TypeScript o gestionează fără probleme)
 ];
 
 const icons: Record<PlaceCat, string> = {

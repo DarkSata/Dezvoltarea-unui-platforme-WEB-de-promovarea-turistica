@@ -19,10 +19,10 @@ export function DestinatiiList({
   onFlyTo,
 }: DestinatiiListProps) {
   return (
-    <aside className="destinations-list" aria-label="Lista destinatiilor">
+    <aside className="destinations-list" aria-label="Lista destinațiilor">
       <div className="destinations-meta">
         <strong>{destinations.length}</strong>
-        <span className="muted">locuri afisate</span>
+        <span className="muted">locuri afișate</span>
       </div>
 
       <div id="cards" className="grid cards destinations-cards">

@@ -9,7 +9,7 @@ export function SiteFooter({ yearText, showTagline = false }: SiteFooterProps) {
       <div className="container footer-inner">
         <div className="footer-left">
           <strong>Moldova Travel</strong>
-          <div className="muted">{showTagline ? `${yearText} | Calatoreste local, traieste autentic` : yearText}</div>
+          <div className="muted">{showTagline ? `${yearText} | Călătorește local, trăiește autentic` : yearText}</div>
         </div>
 
         <div className="footer-right" aria-label="Social media">

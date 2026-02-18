@@ -410,27 +410,16 @@ textarea.form-control{
 .top-place-media{
   height: 220px;
   overflow: hidden;
-  background: #12223d;
-  isolation: isolate;
-}
-.top-place-media::after{ content: none; }
-
-.card-collage{
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-  gap: 2px;
-  background: rgba(11,18,32,.55);
-}
-.card-collage-item{
+  background-color: #12223d;
   background-size: cover;
   background-position: center;
-  transform: scale(1.02);
-  transition: background-image .7s ease-in-out, transform .7s ease-in-out;
+  background-repeat: no-repeat;
+  isolation: isolate;
+  contain: paint;
+  transition: transform .3s ease;
 }
-.top-place-media:hover .card-collage-item{ transform: scale(1.05); }
+.top-place-media::after{ content: none; }
+.top-place-media:hover{ transform: scale(1.02); }
 
 .card-media-overlay-gradient{
   position: absolute;

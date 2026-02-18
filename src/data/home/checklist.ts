@@ -3,18 +3,18 @@ import type { ChecklistItem } from '../../types/home'
 export const checklist: ChecklistItem[] = [
   {
     title: 'Alege zona',
-    description: 'Centru pentru mix cultural, Nistru pentru natura, nord pentru cetati.',
+    description: 'Centru pentru mix cultural, Nistru pentru natură, nord pentru cetăți.',
   },
   {
-    title: 'Seteaza ritmul',
-    description: '1-2 atractii principale pe zi iti pastreaza energia si bucuria.',
+    title: 'Setează ritmul',
+    description: '1-2 atracții principale pe zi îți păstrează energia și bucuria.',
   },
   {
-    title: 'Rezerva din timp',
-    description: 'Vinariile si pensiunile populare se ocupa rapid in weekend.',
+    title: 'Rezervă din timp',
+    description: 'Vinăriile și pensiunile populare se ocupă rapid în weekend.',
   },
   {
-    title: 'Lasa loc de spontan',
-    description: 'Cele mai bune opriri apar adesea intre punctele planificate.',
+    title: 'Lasă loc de spontan',
+    description: 'Cele mai bune opriri apar adesea între punctele planificate.',
   },
 ]

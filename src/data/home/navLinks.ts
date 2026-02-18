@@ -1,8 +1,8 @@
 import type { NavLink } from '../../types/nav'
 
 export const navLinks: NavLink[] = [
-  { label: 'Acasa', href: '#/' },
-  { label: 'Destinatii', href: '#/destinatii' },
+  { label: 'Acasă', href: '#/' },
+  { label: 'Destinații', href: '#/destinatii' },
   { label: 'Rute', href: '#/rute-rapide' },
   { label: 'Ghid', href: '#/ghid-rapid' },
   { label: 'Galerie', href: '#/galerie' },

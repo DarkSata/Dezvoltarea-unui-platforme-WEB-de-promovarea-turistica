@@ -24,7 +24,7 @@ export function SiteHeader({ navLinks, activeLabel, brandHref, breakpoint = 920 
 
   return (
     <header className="site-header">
-      <a className="brand" href={brandHref} aria-label="Acasa">
+      <a className="brand" href={brandHref} aria-label="Acasă">
         <img className="logo" src="/images/logo-moldova.png" alt="Logo Moldova Travel" />
         <span className="brand-text">Moldova Travel</span>
       </a>
@@ -41,7 +41,7 @@ export function SiteHeader({ navLinks, activeLabel, brandHref, breakpoint = 920 
         <i className="fa-solid fa-bars" aria-hidden="true"></i>
       </button>
 
-      <nav id="site-nav" className={`site-nav ${isMenuOpen ? 'open' : ''}`} aria-label="Navigare principala">
+      <nav id="site-nav" className={`site-nav ${isMenuOpen ? 'open' : ''}`} aria-label="Navigare principală">
         {navLinks.map((link) => (
           <a
             key={link.label}

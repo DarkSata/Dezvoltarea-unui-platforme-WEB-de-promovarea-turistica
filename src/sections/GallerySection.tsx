@@ -5,8 +5,8 @@ export function GallerySection() {
     <section className="section alt" id="galerie">
       <div className="container">
         <div className="section-head">
-          <h2>Galerie de atmosfera</h2>
-          <p>Am completat pagina cu cadre tematice ca sa simti directia fiecarei experiente.</p>
+          <h2>Galerie de atmosferă</h2>
+          <p>Am completat pagina cu cadre tematice ca să simți direcția fiecărei experiențe.</p>
         </div>
 
         <div className="grid gallery-grid">

@@ -4,9 +4,9 @@ export function HeroSection() {
       <div className="hero-overlay"></div>
 
       <div className="container hero-content">
-        <p className="hero-kicker">Natura | Vinarii | Manastiri | Istorie</p>
-        <h1>Descopera Moldova, pas cu pas</h1>
-        <p className="hero-subtitle">Idei de trasee, locuri faine si recomandari rapide pentru calatorii prin Moldova.</p>
+        <p className="hero-kicker">Natură | Vinării | Mănăstiri | Istorie</p>
+        <h1>Descoperă Moldova, pas cu pas</h1>
+        <p className="hero-subtitle">Idei de trasee, locuri faine și recomandări rapide pentru călătorii prin Moldova.</p>
 
         <div className="hero-actions">
           <a className="btn primary" href="#/top-locuri">Vezi top locuri</a>
@@ -15,9 +15,9 @@ export function HeroSection() {
 
         <div className="hero-badges" aria-label="Repere rapide">
           <div className="badge"><i className="fa-solid fa-mountain-sun" aria-hidden="true"></i><span>Peisaje</span></div>
-          <div className="badge"><i className="fa-solid fa-wine-glass" aria-hidden="true"></i><span>Vinarii</span></div>
-          <div className="badge"><i className="fa-solid fa-landmark" aria-hidden="true"></i><span>Cultura</span></div>
-          <div className="badge"><i className="fa-solid fa-person-hiking" aria-hidden="true"></i><span>Drumetii</span></div>
+          <div className="badge"><i className="fa-solid fa-wine-glass" aria-hidden="true"></i><span>Vinării</span></div>
+          <div className="badge"><i className="fa-solid fa-landmark" aria-hidden="true"></i><span>Cultură</span></div>
+          <div className="badge"><i className="fa-solid fa-person-hiking" aria-hidden="true"></i><span>Drumeții</span></div>
         </div>
       </div>
     </section>

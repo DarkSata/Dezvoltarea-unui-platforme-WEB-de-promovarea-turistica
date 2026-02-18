@@ -47,7 +47,7 @@ export function DestinatiiPage({ sectionId = '', yearText }: DestinatiiPageProps
 
   return (
     <div className="destinatii-page">
-      <SiteHeader navLinks={navLinks} activeLabel="Destinatii" brandHref="#/" breakpoint={720} />
+      <SiteHeader navLinks={navLinks} activeLabel="Destinații" brandHref="#/" breakpoint={720} />
       <main>
         <DestinatiiHero />
         <DestinatiiMapSection

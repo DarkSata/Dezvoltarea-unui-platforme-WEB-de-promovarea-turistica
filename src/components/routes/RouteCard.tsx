@@ -38,7 +38,7 @@ export function RouteCard({ route, detailsOpen, onToggleDetails, onShowRoute }: 
           {detailsOpen ? "Ascunde detalii" : "Detalii traseu"}
         </button>
         <button className="btn small dest-btn" type="button" onClick={() => onShowRoute(route.id)}>
-          Vezi ruta
+          Vezi rută
         </button>
 
         <div className={`route-details ${detailsOpen ? "open" : ""}`}>

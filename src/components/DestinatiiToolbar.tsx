@@ -18,13 +18,13 @@ export function DestinatiiToolbar({
   categoryLabel,
 }: DestinatiiToolbarProps) {
   return (
-    <div className="destinations-toolbar" aria-label="Cautare si filtre">
-      <label className="search" aria-label="Cauta destinatii">
+    <div className="destinations-toolbar" aria-label="Căutare și filtre">
+      <label className="search" aria-label="Caută destinații">
         <i className="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
         <input
           id="search"
           type="search"
-          placeholder="Cauta (ex: Orhei, vinarie, Nistru...)"
+          placeholder="Caută (ex: Orhei, vinărie, Nistru...)"
           autoComplete="off"
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}

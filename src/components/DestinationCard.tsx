@@ -22,7 +22,7 @@ export function DestinationCard({
         type="button"
         onClick={() => onOpenLightbox(destination)}
         style={{ backgroundImage: `url('${destination.image}')` }}
-        aria-label={`Mareste poza pentru ${destination.name}`}
+        aria-label={`Mărește poza pentru ${destination.name}`}
       >
         <img
           className="media-preload"
@@ -58,7 +58,7 @@ export function DestinationCard({
           <span className="pill tip"><i className="fa-regular fa-lightbulb" aria-hidden="true"></i> {destination.tips}</span>
         </div>
         <button className="btn small dest-btn" type="button" onClick={() => onFlyTo(destination)}>
-          Vezi pe harta
+          Vezi pe hartă
         </button>
       </div>
     </article>

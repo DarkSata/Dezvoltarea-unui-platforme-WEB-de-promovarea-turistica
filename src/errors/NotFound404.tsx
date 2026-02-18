@@ -6,11 +6,11 @@ export default function NotFound404() {
       <div className="container">
         <article className="error-page">
           <p className="error-code">404</p>
-          <h2>Not Found</h2>
-          <p className="muted">Ruta ceruta nu exista in aceasta aplicatie.</p>
+          <h2>Pagină inexistentă</h2>
+          <p className="muted">Ruta cerută nu există în această aplicație.</p>
           <div className="error-actions">
             <Link className="btn primary" to="/">
-              Inapoi acasa
+              Înapoi acasă
             </Link>
           </div>
         </article>

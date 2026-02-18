@@ -1,6 +1,6 @@
 export default function Empty({
-  title = "No items",
-  description = "Nothing to show here.",
+  title = "Nu există elemente",
+  description = "Nu există nimic de afișat aici.",
 }: {
   title?: string;
   description?: string;

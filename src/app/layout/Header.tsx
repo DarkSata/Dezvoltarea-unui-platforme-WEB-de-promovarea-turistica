@@ -28,7 +28,7 @@ export default function Header() {
 
   return (
     <header className="site-header">
-      <Link className="brand" to="/" aria-label="Acasa" onClick={closeMenu}>
+      <Link className="brand" to="/" aria-label="Acasă" onClick={closeMenu}>
         <img className="logo" src="/images/logo-moldova.png" alt="Moldova Travel logo" />
         <span className="brand-text">Moldova Travel</span>
       </Link>
@@ -37,7 +37,7 @@ export default function Header() {
         id="hamburger"
         className="hamburger"
         type="button"
-        aria-label="Open navigation"
+        aria-label="Deschide navigarea"
         aria-controls="site-nav"
         aria-expanded={isMobileOpen}
         onClick={() => setIsMobileOpen((value) => !value)}
@@ -48,20 +48,20 @@ export default function Header() {
       <nav
         id="site-nav"
         className={`site-nav ${isMobileOpen ? "mobile" : ""}`}
-        aria-label="Main navigation"
+        aria-label="Navigare principală"
         onClick={(event) => {
           const target = event.target as HTMLElement;
           if (target.closest("a")) closeMenu();
         }}
       >
         <NavLink className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`} to="/">
-          Acasa
+          Acasă
         </NavLink>
         <NavLink
           className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
           to="/destinations"
         >
-          Destinatii
+          Destinații
         </NavLink>
         <NavLink
           className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
@@ -82,11 +82,11 @@ export default function Header() {
             className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
             to="/login"
           >
-            Login
+            Autentificare
           </NavLink>
         ) : (
           <button className="nav-link nav-button" type="button" onClick={logout}>
-            Logout ({session.username})
+            Ieșire ({session.username})
           </button>
         )}
       </nav>

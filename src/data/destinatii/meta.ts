@@ -4,11 +4,11 @@ export const chipOrder: CategoryFilter[] = ['toate', 'Natura', 'Vin', 'Manastiri
 
 export const categoryLabel: Record<CategoryFilter, string> = {
   toate: 'Toate',
-  Natura: 'Natura',
-  Vin: 'Vinarii',
-  Manastiri: 'Manastiri',
+  Natura: 'Natură',
+  Vin: 'Vinării',
+  Manastiri: 'Mănăstiri',
   Istorie: 'Istorie',
-  Orase: 'Orase',
+  Orase: 'Orașe',
 }
 
 export const markerIconByCategory: Record<Category, string> = {

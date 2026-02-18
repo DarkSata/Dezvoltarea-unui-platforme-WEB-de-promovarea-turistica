@@ -4,21 +4,21 @@ export const perks: Perk[] = [
   {
     icon: 'fa-solid fa-money-bill-wave',
     title: 'Buget prietenos',
-    description: 'Multe locuri faine fara costuri mari.',
+    description: 'Multe locuri faine fără costuri mari.',
   },
   {
     icon: 'fa-solid fa-people-group',
     title: 'Oameni primitori',
-    description: 'Atmosfera calda si ospitalitate autentica.',
+    description: 'Atmosferă caldă și ospitalitate autentică.',
   },
   {
     icon: 'fa-solid fa-utensils',
-    title: 'Bucatarie locala',
-    description: 'Placinte, sarmale, zeama. Must try.',
+    title: 'Bucătărie locală',
+    description: 'Plăcinte, sarmale, zeamă. Must try.',
   },
   {
     icon: 'fa-solid fa-wine-bottle',
-    title: 'Vinarii legendare',
-    description: 'Tururi, degustari si galerii subterane memorabile.',
+    title: 'Vinării legendare',
+    description: 'Tururi, degustări și galerii subterane memorabile.',
   },
 ]

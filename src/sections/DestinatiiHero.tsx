@@ -3,18 +3,18 @@ export function DestinatiiHero() {
     <section className="page-hero">
       <div className="container">
         <p className="hero-kicker">Harta | Filtre | Info rapid</p>
-        <h1>Destinatii in Moldova</h1>
+        <h1>Destinații în Moldova</h1>
         <p className="hero-subtitle">
-          Exploreaza locuri turistice (natura, vinarii, manastiri, istorie si orase). Apasa pe un loc din lista ca sa-l vezi pe harta.
+          Explorează locuri turistice (natură, vinării, mănăstiri, istorie și orașe). Apasă pe un loc din listă ca să-l vezi pe hartă.
         </p>
 
         <div className="hero-actions">
           <a className="btn primary" href="#/destinatii/harta">Deschide harta</a>
-          <a className="btn ghost" href="#/">Inapoi la pagina principala</a>
+          <a className="btn ghost" href="#/">Înapoi la pagina principală</a>
         </div>
 
         <div className="note">
-          Nota: nu exista o lista oficiala cu toate atractiile. Aici ai o colectie mare de repere populare din Moldova, cu coordonate aproximative pentru planificare rapida.
+          Notă: nu există o listă oficială cu toate atracțiile. Aici ai o colecție mare de repere populare din Moldova, cu coordonate aproximative pentru planificare rapidă.
         </div>
       </div>
     </section>

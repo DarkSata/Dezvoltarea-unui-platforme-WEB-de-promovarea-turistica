@@ -6,14 +6,14 @@ export default function Forbidden403() {
       <div className="container">
         <article className="error-page">
           <p className="error-code">403</p>
-          <h2>Forbidden</h2>
-          <p className="muted">Ai sesiune activa, dar nu ai permisiunea necesara pentru aceasta zona.</p>
+          <h2>Acces interzis</h2>
+          <p className="muted">Ai sesiune activă, dar nu ai permisiunea necesară pentru această zonă.</p>
           <div className="error-actions">
             <Link className="btn primary" to="/">
-              Inapoi acasa
+              Înapoi acasă
             </Link>
             <Link className="btn ghost" to="/destinations">
-              Vezi destinatii
+              Vezi destinații
             </Link>
           </div>
         </article>

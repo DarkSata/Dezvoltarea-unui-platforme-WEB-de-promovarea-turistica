@@ -1,4 +1,4 @@
-export default function Loading({ text = "Loading..." }: { text?: string }) {
+export default function Loading({ text = "Se încarcă..." }: { text?: string }) {
   return (
     <div className="card">
       <div className="card-body">

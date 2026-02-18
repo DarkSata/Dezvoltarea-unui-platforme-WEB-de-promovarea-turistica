@@ -1,6 +1,6 @@
 export default function ErrorState({
-  title = "Something went wrong",
-  message = "Please try again.",
+  title = "A apărut o eroare",
+  message = "Te rugăm să încerci din nou.",
 }: {
   title?: string;
   message?: string;

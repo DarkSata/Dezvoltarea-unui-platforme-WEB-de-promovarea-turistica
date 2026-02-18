@@ -39,7 +39,7 @@ export function DestinatiiMapSection(props: DestinatiiMapSectionProps) {
       <div className="container">
         <div className="section-head">
           <h2>Harta locurilor</h2>
-          <p>Cauta, filtreaza pe categorii si planifica usor un itinerar.</p>
+          <p>Caută, filtrează pe categorii și planifică ușor un itinerar.</p>
         </div>
 
         <DestinatiiToolbar

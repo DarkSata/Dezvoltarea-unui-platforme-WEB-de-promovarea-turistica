@@ -2,15 +2,15 @@ import type { Testimonial } from '../../types/home'
 
 export const testimonials: Testimonial[] = [
   {
-    quote: 'Am plecat pentru un weekend si am ramas impresionati de cat de multe poti vedea intr-un timp scurt.',
-    author: 'Ana si Vlad, Iasi',
+    quote: 'Am plecat pentru un weekend și am rămas impresionați de cât de multe poți vedea într-un timp scurt.',
+    author: 'Ana și Vlad, Iași',
   },
   {
-    quote: 'Tipova la rasarit si Cricova seara au fost combinatia perfecta pentru grupul nostru.',
-    author: 'Radu, Bucuresti',
+    quote: 'Tipova la răsărit și Cricova seara au fost combinația perfectă pentru grupul nostru.',
+    author: 'Radu, București',
   },
   {
-    quote: 'Moldova are un ritm calm, oameni calzi si experiente care chiar merita povestite.',
+    quote: 'Moldova are un ritm calm, oameni calzi și experiențe care chiar merită povestite.',
     author: 'Marta, Cluj',
   },
 ]
