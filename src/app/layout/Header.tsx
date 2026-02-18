@@ -29,7 +29,7 @@ export default function Header() {
   return (
     <header className="site-header">
       <Link className="brand" to="/" aria-label="Acasa" onClick={closeMenu}>
-        <img className="logo" src="/Logo_Images.png" alt="Moldova Travel logo" />
+        <img className="logo" src="/images/logo-moldova.png" alt="Moldova Travel logo" />
         <span className="brand-text">Moldova Travel</span>
       </Link>
 

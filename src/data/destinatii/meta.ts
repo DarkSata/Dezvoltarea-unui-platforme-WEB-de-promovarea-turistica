@@ -19,4 +19,4 @@ export const markerIconByCategory: Record<Category, string> = {
   Orase: 'fa-solid fa-city',
 }
 
-export const fallbackImage = '/images/Logo_Image.png'
+export const fallbackImage = '/images/logo-moldova.png'

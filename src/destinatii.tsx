@@ -238,7 +238,7 @@ const markerIconByCategory: Record<Category, string> = {
   Orase: 'fa-solid fa-city',
 }
 
-const fallbackImage = '/images/Logo_Image.png'
+const fallbackImage = '/images/logo-moldova.png'
 
 function normalize(value: string) {
   return value

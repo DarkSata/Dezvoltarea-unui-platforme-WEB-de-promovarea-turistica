@@ -106,7 +106,7 @@ img{ max-width:100%; display:block; }
   align-items:center;
   background:
     linear-gradient(180deg, rgba(11,18,32,.25), rgba(11,18,32,.92)),
-    url('/images/Logo_Image.png');
+    url('/images/logo-moldova.png');
   background-size: cover;
   background-position: center;
   border-bottom: 1px solid var(--border);
@@ -535,6 +535,14 @@ img{ max-width:100%; display:block; }
 .marker i{ color: rgba(234,240,255,.95); font-size: 14px; }
 
 .popup strong{ display:block; margin-bottom: 6px; }
+.popup-image{
+  width: 100%;
+  height: 112px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  border: 1px solid rgba(234,240,255,.12);
+}
 .popup-tags{ display:flex; gap: 6px; flex-wrap:wrap; margin-bottom: 6px; }
 .popup-desc{ margin: 0 0 8px 0; color: rgba(234,240,255,.85); }
 .popup-tips{ margin: 0; color: rgba(234,240,255,.75); }
@@ -655,6 +663,19 @@ img{ max-width:100%; display:block; }
   background: rgba(11,18,32,.85);
 }
 
+.selectable-card{
+  cursor: pointer;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.selectable-card:hover{
+  transform: translateY(-2px);
+  border-color: rgba(120,170,255,.3);
+}
+.selectable-card.active{
+  border-color: rgba(106,255,204,.45);
+  box-shadow: 0 0 0 1px rgba(106,255,204,.2), var(--shadow);
+}
+
 .no-scroll{ overflow: hidden; }
 
 /* =========================
@@ -735,6 +756,22 @@ img{ max-width:100%; display:block; }
   line-height: 1.5;
 }
 .route-details.open{ display: block; }
+
+.route-info-card{
+  margin-top: 14px;
+}
+.route-info-card .card-body > h3{
+  margin: 0 0 10px 0;
+}
+.route-info-list{
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.route-info-card .cta{
+  margin-top: 14px;
+}
 
 /* ca sa nu se suprapuna controalele Leaflet peste header */
 .destinations-map .leaflet-top{ margin-top: 90px; }

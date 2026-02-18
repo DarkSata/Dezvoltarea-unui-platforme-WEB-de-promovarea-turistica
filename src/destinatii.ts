@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.key === "Escape" && lightbox?.classList.contains("open")) closeLightbox();
     });
 
-    const map = L.map("map", { scrollWheelZoom: false }).setView([47.2, 28.6], 8);
+    const map = L.map("map", { scrollWheelZoom: true }).setView([47.2, 28.6], 8);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 18,
         attribution: "&copy; OpenStreetMap contributors",

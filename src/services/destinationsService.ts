@@ -34,8 +34,62 @@ export type DestinationListResult = {
 class DestinationsService {
   private ensureSeed() {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return;
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(MOCK_DESTINATIONS));
+    if (!raw) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(MOCK_DESTINATIONS));
+      return;
+    }
+
+    let parsed: Destination[];
+    try {
+      parsed = JSON.parse(raw) as Destination[];
+    } catch {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(MOCK_DESTINATIONS));
+      return;
+    }
+
+    if (!Array.isArray(parsed)) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(MOCK_DESTINATIONS));
+      return;
+    }
+
+    const normalizedParsed = parsed.map((item) => {
+      if (item.id === "cetatea-soroca") {
+        return { ...item, id: "soroca" };
+      }
+      return item;
+    });
+
+    const byId = new Map(normalizedParsed.map((item) => [item.id, item]));
+    const baseIds = new Set(MOCK_DESTINATIONS.map((item) => item.id));
+
+    const mergedBase = MOCK_DESTINATIONS.map((seedItem) => {
+      const existing = byId.get(seedItem.id);
+      if (!existing) {
+        return seedItem;
+      }
+
+      return {
+        ...seedItem,
+        ...existing,
+        name: existing.name?.trim() ? existing.name : seedItem.name,
+        area: existing.area?.trim() ? existing.area : seedItem.area,
+        cat: existing.cat ?? seedItem.cat,
+        lat: Number.isFinite(existing.lat) ? existing.lat : seedItem.lat,
+        lng: Number.isFinite(existing.lng) ? existing.lng : seedItem.lng,
+        description: existing.description?.trim()
+          ? existing.description
+          : seedItem.description,
+        tips: existing.tips?.trim() ? existing.tips : seedItem.tips,
+        image: existing.image?.trim() ? existing.image : seedItem.image,
+      } satisfies Destination;
+    });
+
+    const customItems = normalizedParsed.filter((item) => !baseIds.has(item.id));
+    const next = [...mergedBase, ...customItems];
+
+    if (JSON.stringify(next) !== raw) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    }
   }
 
   private read(): Destination[] {
