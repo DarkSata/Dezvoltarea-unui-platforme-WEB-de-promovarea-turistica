@@ -95,3 +95,4 @@ knip.jsonc
 *.cache
 private_key.pem
 public_key.pem
+.vite/
