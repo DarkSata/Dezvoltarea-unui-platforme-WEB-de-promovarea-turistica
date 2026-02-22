@@ -62,9 +62,7 @@ export default function LoginPage() {
 
     const fallback = result.role === "admin" ? "/admin" : "/destinations";
     const nextPath =
-      from && !from.startsWith("/40") && from !== "/login" && from !== "/500"
-        ? from
-        : fallback;
+      from && !/^\/(40|50)\d$/.test(from) && from !== "/login" ? from : fallback;
 
     navigate(nextPath, { replace: true });
   }

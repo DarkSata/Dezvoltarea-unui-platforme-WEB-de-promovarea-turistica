@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import DestinationsMap from "../components/DestinationsMap";
 import Empty from "../components/Empty";
 import ErrorState from "../components/Error";
@@ -44,6 +45,8 @@ function categoryIcon(category: DestinationCategory): string {
 }
 
 export default function DestinationsPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [items, setItems] = useState<Destination[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -65,7 +68,8 @@ export default function DestinationsPage() {
         setSelectedId(data[0]?.id ?? null);
       } catch {
         if (!active) return;
-        setError("Nu am putut încărca destinațiile.");
+        navigate("/503", { replace: true, state: { from: location.pathname } });
+        setError("Serviciul de destinatii nu este disponibil momentan.");
       } finally {
         if (active) {
           setLoading(false);
@@ -78,7 +82,7 @@ export default function DestinationsPage() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [location.pathname, navigate]);
 
   const filtered = useMemo(() => {
     const term = search.trim().toLowerCase();

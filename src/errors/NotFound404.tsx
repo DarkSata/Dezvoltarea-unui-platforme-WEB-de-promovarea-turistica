@@ -1,20 +1,21 @@
-﻿import { Link } from "react-router-dom";
+import ErrorPage from "./ErrorPage";
 
 export default function NotFound404() {
   return (
-    <section className="section">
-      <div className="container">
-        <article className="error-page">
-          <p className="error-code">404</p>
-          <h2>Pagină inexistentă</h2>
-          <p className="muted">Ruta cerută nu există în această aplicație.</p>
-          <div className="error-actions">
-            <Link className="btn primary" to="/">
-              Înapoi acasă
-            </Link>
-          </div>
-        </article>
-      </div>
-    </section>
+    <ErrorPage
+      code="404"
+      title="Te-ai ratacit pe traseu"
+      message="Pagina cautata nu exista sau drumul catre ea s-a schimbat."
+      hint="Poti reveni pe harta principala sau continua explorarea destinatiilor recomandate."
+      actions={[
+        { to: "/", label: "Inapoi acasa", icon: "fa-solid fa-house" },
+        {
+          to: "/destinations",
+          label: "Vezi destinatii",
+          variant: "ghost",
+          icon: "fa-solid fa-compass",
+        },
+      ]}
+    />
   );
 }

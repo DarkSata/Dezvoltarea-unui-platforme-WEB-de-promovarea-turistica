@@ -817,6 +817,62 @@ textarea.form-control:-webkit-autofill:focus{
 }
 
 /* =========================
+   ERROR PAGES
+   ========================= */
+
+.error-page-shell{
+  min-height: calc(100vh - 72px - 77px);
+  display: flex;
+  align-items: center;
+}
+
+.error-page{
+  width: min(860px, 100%);
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 42px);
+  border-radius: calc(var(--radius) + 6px);
+  border: 1px solid var(--border-strong);
+  background:
+    radial-gradient(540px 220px at 8% 0%, rgba(120,170,255,.24), transparent 62%),
+    radial-gradient(560px 260px at 96% 100%, rgba(106,255,204,.12), transparent 66%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  box-shadow: var(--shadow);
+}
+
+.error-code{
+  margin: 0;
+  font-size: clamp(3.4rem, 8vw, 6.5rem);
+  font-weight: 800;
+  line-height: .95;
+  letter-spacing: .02em;
+  color: rgba(234,240,255,.92);
+}
+
+.error-page h2{
+  margin: 10px 0 8px;
+  font-size: clamp(1.6rem, 3vw, 2.35rem);
+  line-height: 1.1;
+}
+
+.error-message{
+  margin: 0;
+  max-width: 62ch;
+  color: rgba(234,240,255,.9);
+}
+
+.error-hint{
+  margin: 10px 0 0;
+  color: var(--muted);
+}
+
+.error-actions{
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* =========================
    DESTINATII / RUTE (Leaflet + UI)
    ========================= */
 
