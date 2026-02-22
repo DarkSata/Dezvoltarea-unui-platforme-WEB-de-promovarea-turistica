@@ -69,9 +69,9 @@ export default function Header() {
         >
           Rute
         </NavLink>
-        <Link className="nav-link" to="/#ghid-rapid">
+        <NavLink className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`} to="/guide">
           Ghid
-        </Link>
+        </NavLink>
         <Link className="nav-link" to="/#galerie">
           Galerie
         </Link>
