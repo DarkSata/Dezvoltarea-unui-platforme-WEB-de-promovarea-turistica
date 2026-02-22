@@ -75,9 +75,9 @@ export default function Header() {
         <Link className="nav-link" to="/#galerie">
           Galerie
         </Link>
-        <Link className="nav-link" to="/#contact">
+        <NavLink className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`} to="/contact">
           Contact
-        </Link>
+        </NavLink>
         {session?.role === "admin" ? (
           <NavLink
             className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
