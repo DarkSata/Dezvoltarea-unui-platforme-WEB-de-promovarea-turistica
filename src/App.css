@@ -774,6 +774,8 @@ textarea.form-control:-webkit-autofill:focus{
 @media (max-width: 980px){
   .cards{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .routes{ grid-template-columns: 1fr; }
+  .guide-itineraries-grid{ grid-template-columns: 1fr; }
+  .guide-hero-layout{ grid-template-columns: 1fr; }
   .perks{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .gallery-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .testimonials{ grid-template-columns: 1fr; }
@@ -835,6 +837,148 @@ textarea.form-control:-webkit-autofill:focus{
   background: rgba(255,255,255,.03);
   color: var(--muted);
   max-width: 900px;
+}
+
+.guide-list{
+  margin: 10px 0 0 18px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.guide-list li{
+  margin: 6px 0;
+}
+
+.guide-itineraries-grid{
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.guide-cta-example{
+  margin-top: 14px;
+}
+
+.guide-final-cta{
+  align-items: center;
+}
+
+.guide-final-actions{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.guide-page .section{
+  position: relative;
+}
+
+.guide-page-hero{
+  padding: 42px 0 34px 0;
+  background:
+    radial-gradient(900px 280px at 8% 0%, rgba(120,170,255,.18), transparent 65%),
+    linear-gradient(180deg, rgba(11,18,32,.22), rgba(11,18,32,.92));
+}
+
+.guide-hero-layout{
+  display: grid;
+  grid-template-columns: 1.4fr .9fr;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.guide-hero-main,
+.guide-hero-aside{
+  border-radius: calc(var(--radius) + 2px);
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  box-shadow: var(--shadow);
+}
+
+.guide-hero-main{
+  padding: 22px;
+}
+
+.guide-hero-main h1{
+  margin: 4px 0 10px;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+}
+
+.guide-hero-main p{
+  margin: 0;
+  color: var(--muted);
+  max-width: 68ch;
+}
+
+.guide-hero-main .hero-actions{
+  margin-top: 18px;
+}
+
+.guide-hero-main .hero-kicker{
+  margin: 0;
+}
+
+.guide-hero-main .hero-badges{
+  margin-top: 16px;
+}
+
+.guide-hero-aside{
+  padding: 18px 18px 10px;
+}
+
+.guide-hero-aside h3{
+  margin: 0 0 8px 0;
+}
+
+.guide-quick-nav-section{
+  padding: 18px 0 0;
+}
+
+.guide-quick-nav{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.guide-nav-pill{
+  background: rgba(255,255,255,.04);
+}
+
+.guide-steps{
+  display: grid;
+  gap: 12px;
+}
+
+.guide-step-item{
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.guide-step-index{
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.03);
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.guide-step-card{
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.03);
+  padding: 14px 14px 12px;
+}
+
+.guide-step-card h3{
+  margin: 10px 0 6px;
+}
+
+.guide-step-card p{
+  margin: 0;
+  color: var(--muted);
 }
 
 /* =========================
