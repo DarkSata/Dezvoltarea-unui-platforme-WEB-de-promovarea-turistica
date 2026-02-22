@@ -1,23 +1,16 @@
-﻿import { Link } from "react-router-dom";
+import ErrorPage from "./ErrorPage";
 
 export default function ServerError500() {
   return (
-    <section className="section">
-      <div className="container">
-        <article className="error-page">
-          <p className="error-code">500</p>
-          <h2>Eroare internă de server</h2>
-          <p className="muted">Eroare simulată de serviciu. Încearcă din nou sau revino mai târziu.</p>
-          <div className="error-actions">
-            <Link className="btn primary" to="/">
-              Înapoi acasă
-            </Link>
-            <Link className="btn ghost" to="/admin">
-              Admin
-            </Link>
-          </div>
-        </article>
-      </div>
-    </section>
+    <ErrorPage
+      code="500"
+      title="Drumul este inchis temporar"
+      message="A aparut o problema interna in timpul procesarii cererii."
+      hint="Echipa tehnica a primit semnalul. Incearca din nou peste cateva momente."
+      actions={[
+        { to: "/", label: "Inapoi acasa", icon: "fa-solid fa-house" },
+        { to: "/contact", label: "Contact suport", variant: "ghost", icon: "fa-solid fa-headset" },
+      ]}
+    />
   );
 }
