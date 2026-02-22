@@ -69,6 +69,15 @@ export default function Header() {
         >
           Rute
         </NavLink>
+        <Link className="nav-link" to="/#ghid-rapid">
+          Ghid
+        </Link>
+        <Link className="nav-link" to="/#galerie">
+          Galerie
+        </Link>
+        <Link className="nav-link" to="/#contact">
+          Contact
+        </Link>
         {session?.role === "admin" ? (
           <NavLink
             className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
