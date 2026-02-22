@@ -1,4 +1,4 @@
-:root{
+﻿:root{
   --bg: #0b1220;
   --panel: #0f1a2e;
   --panel-2: #0c1527;
@@ -649,6 +649,27 @@ textarea.form-control:-webkit-autofill:focus{
 .route h3{ margin: 0 0 10px 0; }
 .route ul{ margin: 0 0 14px 18px; color: var(--muted); }
 .route li{ margin: 6px 0; }
+.quick-routes-grid{
+  align-items: start;
+}
+.quick-route-card{
+  padding: 14px;
+}
+.quick-route-card h3{
+  min-height: 0;
+  margin-bottom: 8px;
+}
+.quick-route-card ul{
+  margin-bottom: 10px;
+}
+.quick-route-card .btn{
+  margin-top: 0;
+}
+.quick-route-card li{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .perk{ padding: 16px; }
 .perk i{ font-size: 22px; opacity: .9; }
@@ -1318,3 +1339,4 @@ textarea.form-control:-webkit-autofill:focus{
   .destinations-map{ height: 440px; }
   .destination-card .card-media{ height: 220px; }
 }
+

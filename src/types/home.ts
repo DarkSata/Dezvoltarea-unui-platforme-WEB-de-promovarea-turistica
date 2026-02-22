@@ -7,6 +7,7 @@ export type Destination = {
 
 export type RouteIdea = {
   icon: string
+  routeId: string
   title: string
   points: string[]
 }

@@ -10,7 +10,7 @@ export function HeroSection() {
 
         <div className="hero-actions">
           <a className="btn primary" href="#/top-locuri">Vezi top locuri</a>
-          <a className="btn ghost" href="#/rute-rapide">Trasee 1-3 zile</a>
+          <a className="btn ghost" href="#rute-rapide">Trasee 1-3 zile</a>
         </div>
 
         <div className="hero-badges" aria-label="Repere rapide">
