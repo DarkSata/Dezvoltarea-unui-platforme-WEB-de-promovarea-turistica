@@ -1,5 +1,6 @@
-import { perks } from '../data/home/perks'
-import { testimonials } from '../data/home/testimonials'
+﻿import { Link } from "react-router-dom";
+import { perks } from "../data/home/perks";
+import { testimonials } from "../data/home/testimonials";
 
 export function PerksSection() {
   return (
@@ -34,11 +35,11 @@ export function PerksSection() {
             <h3>Vrei să-ți facem un itinerar?</h3>
             <p>Scrie-ne ce preferi (natură / vin / istorie) și câte zile ai.</p>
           </div>
-          <a className="btn primary" href="mailto:contact@moldovatravel.md">
+          <Link className="btn primary" to="/contact">
             Contactează-ne
-          </a>
+          </Link>
         </div>
       </div>
     </section>
-  )
+  );
 }
