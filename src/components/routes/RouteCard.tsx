@@ -1,4 +1,4 @@
-import type { TouristRoute } from "../../types/routes";
+﻿import type { TouristRoute } from "../../types/routes";
 
 type Props = {
   route: TouristRoute;
@@ -9,7 +9,12 @@ type Props = {
 
 export function RouteCard({ route, detailsOpen, onToggleDetails, onShowRoute }: Props) {
   return (
-    <article className="card route-card" data-route={route.id} data-cat={route.category}>
+    <article
+      className="card route-card"
+      data-route={route.id}
+      data-cat={route.category}
+      data-duration-days={route.durationDays}
+    >
       <div className="card-body">
         <h3>{route.title}</h3>
         <p>{route.subtitle}</p>
@@ -38,7 +43,7 @@ export function RouteCard({ route, detailsOpen, onToggleDetails, onShowRoute }: 
           {detailsOpen ? "Ascunde detalii" : "Detalii traseu"}
         </button>
         <button className="btn small dest-btn" type="button" onClick={() => onShowRoute(route.id)}>
-          Vezi rută
+          {"Vezi rut\u0103"}
         </button>
 
         <div className={`route-details ${detailsOpen ? "open" : ""}`}>
@@ -48,3 +53,5 @@ export function RouteCard({ route, detailsOpen, onToggleDetails, onShowRoute }: 
     </article>
   );
 }
+
+

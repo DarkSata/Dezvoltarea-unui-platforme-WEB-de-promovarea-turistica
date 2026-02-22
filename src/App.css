@@ -1223,6 +1223,16 @@ textarea.form-control:-webkit-autofill:focus{
 }
 .route-details.open{ display: block; }
 
+.routes-filters{
+  display: grid;
+  justify-content: start;
+  gap: 10px;
+}
+
+.routes-filters .chips{
+  width: 100%;
+}
+
 .route-info-card{
   margin-top: 14px;
 }
