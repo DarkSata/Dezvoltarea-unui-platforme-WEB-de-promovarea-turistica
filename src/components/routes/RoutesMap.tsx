@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import { MapContainer, Marker, Popup, Polyline, TileLayer, useMap, ZoomControl } from "react-leaflet";
 import type { TouristRoute, RoutePoi } from "../../types/routes";
 
@@ -78,7 +78,7 @@ export function RoutesMap({ selectedRoute }: Props) {
       </MapContainer>
 
       <aside className={`poi-panel ${activePoi ? "open" : ""}`} aria-live="polite">
-        <button className="poi-close" type="button" aria-label="Închide panoul" onClick={() => setFocusedPoi(null)}>
+        <button className="poi-close" type="button" aria-label="Inchide panoul" onClick={() => setFocusedPoi(null)}>
           <i className="fa-solid fa-xmark" aria-hidden="true"></i>
         </button>
 
@@ -97,12 +97,12 @@ export function RoutesMap({ selectedRoute }: Props) {
         <div className="poi-content">
           <div className="poi-title">{activePoi?.title ?? "Alege un punct de oprire"}</div>
           <div className="poi-text">
-            {activePoi?.desc ?? "Apasă pe un marker de pe hartă ca să vezi imagine și detalii scurte."}
+            {activePoi?.desc ?? "Apas\u0103 pe un marker de pe hart\u0103 ca s\u0103 vezi imagine \u0219i detalii scurte."}
           </div>
         </div>
       </aside>
 
-      <div className="map-hint">Apasă „Vezi ruta”, apoi click pe marker pentru detalii</div>
+      <div className="map-hint">{"Apas\u0103 \"Vezi rut\u0103\", apoi click pe marker pentru detalii"}</div>
     </div>
   );
 }

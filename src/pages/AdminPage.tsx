@@ -1,5 +1,6 @@
 ﻿import { useCallback, useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import Empty from "../components/Empty";
 import ErrorState from "../components/Error";
@@ -42,6 +43,8 @@ function validate(input: DestinationInput): FormErrors {
 }
 
 export default function AdminPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [items, setItems] = useState<Destination[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -70,11 +73,12 @@ export default function AdminPage() {
       });
       setItems(result.items);
     } catch {
+      navigate("/503", { replace: true, state: { from: location.pathname } });
       setError("Nu am putut încărca lista pentru admin.");
     } finally {
       setLoading(false);
     }
-  }, [category, search, sortBy]);
+  }, [category, location.pathname, navigate, search, sortBy]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

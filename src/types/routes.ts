@@ -1,14 +1,15 @@
 import type { LatLngTuple } from "leaflet";
 
 export type RouteCategory =
-  | "Drumeție"
+  | "Drumetie"
   | "Ciclism"
-  | "Vinării"
-  | "Natură"
+  | "Vinarii"
+  | "Natura"
   | "Auto"
   | "Autobuz";
 
 export type RouteFilter = "toate" | RouteCategory;
+export type RouteDurationFilter = "toate" | 1 | 2 | 3;
 
 export type RoutePill = {
   icon: string;
@@ -26,6 +27,7 @@ export type RoutePoi = {
 export type TouristRoute = {
   id: string;
   category: RouteCategory;
+  durationDays: 1 | 2 | 3;
   title: string;
   subtitle: string;
   topPills: RoutePill[];

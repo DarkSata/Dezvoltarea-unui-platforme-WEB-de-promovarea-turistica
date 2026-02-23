@@ -1,10 +1,11 @@
+﻿import { Link } from "react-router-dom";
+
 export function RoutesInfoCard() {
   return (
     <article className="card route-info-card">
       <div className="card-body">
         <h3>
-          <i className="fa-solid fa-circle-info" aria-hidden="true"></i> Informații utile înainte de
-          plecare
+          <i className="fa-solid fa-circle-info" aria-hidden="true"></i> Informații utile înainte de plecare
         </h3>
 
         <ul className="route-info-list">
@@ -20,9 +21,9 @@ export function RoutesInfoCard() {
             <h3>Ai o idee de traseu?</h3>
             <p>Trimite-ne propunerea ta și o adăugăm în listă.</p>
           </div>
-          <button className="btn primary" type="button">
+          <Link className="btn primary" to="/contact">
             Propune un traseu
-          </button>
+          </Link>
         </div>
       </div>
     </article>

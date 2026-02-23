@@ -4,6 +4,8 @@ import ProtectedRoute from "./ProtectedRoute";
 import HomePage from "../../pages/HomePage";
 import DestinationsPage from "../../pages/DestinationsPage";
 import RoutesPage from "../../pages/RoutesPage";
+import ContactPage from "../../pages/ContactPage";
+import GuidePage from "../../pages/GuidePage";
 import TravelerGuidePage from "../../pages/TravelerGuidePage";
 import AdminPage from "../../pages/AdminPage";
 import LoginPage from "../../pages/LoginPage";
@@ -11,6 +13,7 @@ import Unauthorized401 from "../../errors/Unauthorized401";
 import Forbidden403 from "../../errors/Forbidden403";
 import NotFound404 from "../../errors/NotFound404";
 import ServerError500 from "../../errors/ServerError500";
+import ServiceUnavailable503 from "../../errors/ServiceUnavailable503";
 
 export default function AppRouter() {
   return (
@@ -19,6 +22,8 @@ export default function AppRouter() {
         <Route index element={<HomePage />} />
         <Route path="destinations" element={<DestinationsPage />} />
         <Route path="routes" element={<RoutesPage />} />
+        <Route path="guide" element={<GuidePage />} />
+        <Route path="contact" element={<ContactPage />} />
         <Route path="ghidul-calatorului" element={<TravelerGuidePage />} />
         <Route path="login" element={<LoginPage />} />
 
@@ -30,6 +35,7 @@ export default function AppRouter() {
         <Route path="403" element={<Forbidden403 />} />
         <Route path="404" element={<NotFound404 />} />
         <Route path="500" element={<ServerError500 />} />
+        <Route path="503" element={<ServiceUnavailable503 />} />
         <Route path="*" element={<Navigate to="/404" replace />} />
       </Route>
     </Routes>
