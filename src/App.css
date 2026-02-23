@@ -349,6 +349,10 @@ textarea.form-control:-webkit-autofill:focus{
   gap: 10px;
 }
 
+.admin-sub-switch{
+  margin-top: 4px;
+}
+
 .admin-switch-btn{
   border: 1px solid var(--border);
   background: rgba(255,255,255,.03);

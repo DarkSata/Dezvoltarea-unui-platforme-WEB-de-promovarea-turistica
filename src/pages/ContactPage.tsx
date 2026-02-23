@@ -1,11 +1,53 @@
+import { useEffect, useState } from "react";
 import { ContactDetails } from "../components/contact/ContactDetails";
 import { ContactFaq } from "../components/contact/ContactFaq";
 import { ContactForm } from "../components/contact/ContactForm";
 import { ContactMap } from "../components/contact/ContactMap";
 import { ContactSocialLinks } from "../components/contact/ContactSocialLinks";
+import { contactService } from "../services/contactService";
 import { CONTACT_DETAILS, CONTACT_FAQ, CONTACT_OFFICE, SOCIAL_LINKS } from "../data/contact/contactContent";
+import type { ContactDetail, FaqItem, OfficeLocation, SocialLink } from "../types/contact";
+
+type ContactState = {
+  details: ContactDetail[];
+  socials: SocialLink[];
+  faq: FaqItem[];
+  office: OfficeLocation;
+};
 
 export default function ContactPage() {
+  const [content, setContent] = useState<ContactState>({
+    details: CONTACT_DETAILS,
+    socials: SOCIAL_LINKS,
+    faq: CONTACT_FAQ,
+    office: CONTACT_OFFICE,
+  });
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadContent() {
+      try {
+        const data = await contactService.getContent();
+        if (!mounted) return;
+        setContent({
+          details: data.details,
+          socials: data.socials,
+          faq: data.faq,
+          office: data.office,
+        });
+      } catch {
+        // fallback stays as static content
+      }
+    }
+
+    void loadContent();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <>
       <section className="page-hero">
@@ -22,8 +64,8 @@ export default function ContactPage() {
       <section className="section">
         <div className="container contact-layout">
           <div className="contact-stack">
-            <ContactDetails details={CONTACT_DETAILS} />
-            <ContactSocialLinks links={SOCIAL_LINKS} />
+            <ContactDetails details={content.details} />
+            <ContactSocialLinks links={content.socials} />
           </div>
           <ContactForm />
         </div>
@@ -31,7 +73,7 @@ export default function ContactPage() {
 
       <section className="section">
         <div className="container">
-          <ContactMap office={CONTACT_OFFICE} />
+          <ContactMap office={content.office} />
           <article className="card cta-banner">
             <div className="card-body cta-banner-body">
               <div>
@@ -48,7 +90,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <ContactFaq items={CONTACT_FAQ} />
+      <ContactFaq items={content.faq} />
     </>
   );
 }
