@@ -36,3 +36,5 @@ export type TouristRoute = {
   line: LatLngTuple[];
   points: RoutePoi[];
 };
+
+export type TouristRouteInput = Omit<TouristRoute, "id">;

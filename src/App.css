@@ -334,6 +334,84 @@ textarea.form-control:-webkit-autofill:focus{
   margin-top: 8px;
 }
 
+.admin-shell{
+  display:grid;
+  gap: 18px;
+}
+
+.admin-hero-head{
+  margin-bottom: 4px;
+}
+
+.admin-switch{
+  display:flex;
+  flex-wrap:wrap;
+  gap: 10px;
+}
+
+.admin-switch-btn{
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.03);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 10px 14px;
+  display:inline-flex;
+  align-items:center;
+  gap: 8px;
+  font: inherit;
+  cursor: pointer;
+}
+.admin-switch-btn:hover{
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+.admin-switch-btn.active{
+  color: var(--text);
+  border-color: rgba(106,255,204,.36);
+  background: linear-gradient(180deg, rgba(106,255,204,.18), rgba(106,255,204,.06));
+}
+
+.admin-module-grid{
+  display:grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items:start;
+}
+
+.admin-panel{
+  border-radius: calc(var(--radius) + 2px);
+  border: 1px solid var(--border);
+  background:
+    radial-gradient(880px 220px at 8% 0%, rgba(120,170,255,.13), transparent 58%),
+    linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  box-shadow: var(--shadow);
+}
+
+.admin-panel-head{
+  margin: 2px 0 14px 0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+}
+.admin-panel-head h3{
+  margin:0;
+}
+
+.admin-item-card{
+  border-radius: calc(var(--radius) + 2px);
+}
+
+.admin-list-scroll{
+  max-height: min(68vh, 760px);
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.admin-list-scroll .destinations-cards{
+  grid-template-columns: 1fr;
+}
+
 .modal-backdrop{
   position: fixed;
   inset: 0;
@@ -774,6 +852,7 @@ textarea.form-control:-webkit-autofill:focus{
 @media (max-width: 980px){
   .cards{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .routes{ grid-template-columns: 1fr; }
+  .admin-module-grid{ grid-template-columns: 1fr; }
   .guide-itineraries-grid{ grid-template-columns: 1fr; }
   .guide-hero-layout{ grid-template-columns: 1fr; }
   .perks{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -815,6 +894,8 @@ textarea.form-control:-webkit-autofill:focus{
   .logo{ height: 94px; }
   .auth-card{ padding: 20px; }
   .admin-form{ padding: 14px; }
+  .admin-switch-btn{ width: 100%; justify-content: center; }
+  .admin-list-scroll{ max-height: min(62vh, 620px); }
   .contact-map{ height: 300px; }
   .contact-socials{ gap: 10px; }
 }
