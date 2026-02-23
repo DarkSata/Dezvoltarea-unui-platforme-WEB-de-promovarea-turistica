@@ -6,7 +6,6 @@ import DestinationsPage from "../../pages/DestinationsPage";
 import RoutesPage from "../../pages/RoutesPage";
 import ContactPage from "../../pages/ContactPage";
 import GuidePage from "../../pages/GuidePage";
-import TravelerGuidePage from "../../pages/TravelerGuidePage";
 import AdminPage from "../../pages/AdminPage";
 import LoginPage from "../../pages/LoginPage";
 import Unauthorized401 from "../../errors/Unauthorized401";
@@ -24,7 +23,6 @@ export default function AppRouter() {
         <Route path="routes" element={<RoutesPage />} />
         <Route path="guide" element={<GuidePage />} />
         <Route path="contact" element={<ContactPage />} />
-        <Route path="ghidul-calatorului" element={<TravelerGuidePage />} />
         <Route path="login" element={<LoginPage />} />
 
         <Route element={<ProtectedRoute roles={["admin"]} />}>
