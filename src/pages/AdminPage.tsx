@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import Button from "../components/Button";
+import { GalleryAdminModule } from "../components/admin/GalleryAdminModule";
+import { GuideAdminModule } from "../components/admin/GuideAdminModule";
 import Empty from "../components/Empty";
 import ErrorState from "../components/Error";
 import Input from "../components/Input";
@@ -11,7 +13,7 @@ import { routesService } from "../services/routesService";
 import type { Destination, DestinationCategory, DestinationInput } from "../types/destination";
 import type { RouteCategory, RouteDurationFilter, TouristRoute, TouristRouteInput } from "../types/routes";
 
-type AdminSection = "destinations" | "routes";
+type AdminSection = "destinations" | "routes" | "guide" | "gallery";
 type DestinationSortBy = "name-asc" | "name-desc" | "area-asc" | "area-desc";
 type RouteSortBy = "title-asc" | "title-desc" | "duration-asc" | "duration-desc";
 
@@ -474,7 +476,8 @@ export default function AdminPage() {
         <div className="section-head admin-hero-head">
           <h2>Panou Admin</h2>
           <p>
-            Administrare completa pentru <strong>Destinatii</strong> si <strong>Rute</strong>:
+            Administrare completa pentru <strong>Destinatii</strong>, <strong>Rute</strong>, <strong>Ghid</strong> si{" "}
+            <strong>Galerie</strong>:
             creare, editare, stergere, cautare si sortare.
           </p>
         </div>
@@ -497,6 +500,24 @@ export default function AdminPage() {
             onClick={() => setActiveSection("routes")}
           >
             <i className="fa-solid fa-route" aria-hidden="true"></i> Rute
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeSection === "guide"}
+            className={`admin-switch-btn ${activeSection === "guide" ? "active" : ""}`}
+            onClick={() => setActiveSection("guide")}
+          >
+            <i className="fa-solid fa-list-check" aria-hidden="true"></i> Ghid
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeSection === "gallery"}
+            className={`admin-switch-btn ${activeSection === "gallery" ? "active" : ""}`}
+            onClick={() => setActiveSection("gallery")}
+          >
+            <i className="fa-solid fa-images" aria-hidden="true"></i> Galerie
           </button>
         </div>
 
@@ -914,6 +935,9 @@ export default function AdminPage() {
             </div>
           </div>
         ) : null}
+
+        {activeSection === "guide" ? <GuideAdminModule /> : null}
+        {activeSection === "gallery" ? <GalleryAdminModule /> : null}
       </div>
 
       <ModalConfirm

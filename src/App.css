@@ -402,6 +402,12 @@ textarea.form-control:-webkit-autofill:focus{
   border-radius: calc(var(--radius) + 2px);
 }
 
+.admin-gallery-preview{
+  min-height: 170px;
+  margin: 0;
+  border-radius: 14px;
+}
+
 .admin-list-scroll{
   max-height: min(68vh, 760px);
   overflow: auto;
@@ -896,6 +902,7 @@ textarea.form-control:-webkit-autofill:focus{
   .admin-form{ padding: 14px; }
   .admin-switch-btn{ width: 100%; justify-content: center; }
   .admin-list-scroll{ max-height: min(62vh, 620px); }
+  .admin-gallery-preview{ min-height: 150px; }
   .contact-map{ height: 300px; }
   .contact-socials{ gap: 10px; }
 }
