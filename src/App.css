@@ -612,6 +612,86 @@ textarea.form-control{
 }
 
 /* =========================
+   GHIDUL CALATORULUI
+   ========================= */
+
+.traveler-guide-page{
+  background: rgba(255,255,255,.02);
+}
+
+.traveler-guide-head{
+  max-width: 920px;
+}
+
+.traveler-guide-head h1{
+  margin: 0 0 10px 0;
+  font-size: clamp(32px, 4.2vw, 46px);
+}
+
+.traveler-guide-sections{
+  display: grid;
+  gap: 26px;
+}
+
+.traveler-guide-block{
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+.traveler-guide-block h2{
+  margin: 0 0 10px 0;
+  color: #e96f4b;
+  font-size: clamp(27px, 3.2vw, 38px);
+  line-height: 1.1;
+}
+
+.traveler-guide-block > p{
+  margin: 0 0 16px 0;
+  color: var(--muted);
+  max-width: 960px;
+}
+
+.traveler-guide-grid{
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.traveler-guide-card{
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+
+.traveler-guide-frame{
+  height: 220px;
+  border-radius: 12px;
+  border: 1px dashed rgba(234,240,255,.28);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02)),
+    radial-gradient(900px 240px at 20% 0%, rgba(120,170,255,.16), transparent 55%);
+  display: grid;
+  place-items: center;
+  color: rgba(234,240,255,.65);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  font-size: .8rem;
+}
+
+.traveler-guide-card h3{
+  margin: 14px 0 8px 0;
+  color: #4fb5f1;
+  font-size: clamp(1.42rem, 2.2vw, 2rem);
+  line-height: 1.1;
+}
+
+.traveler-guide-card p{
+  margin: 0;
+  color: var(--muted);
+}
+
+/* =========================
    DESTINATII / RUTE (Leaflet + UI)
    ========================= */
 
@@ -1034,6 +1114,7 @@ textarea.form-control{
 
 @media (max-width: 980px){
   .destinations-layout{ grid-template-columns: 1fr; }
+  .traveler-guide-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .destinations-list{
     position: static;
     max-height: none;
@@ -1044,6 +1125,8 @@ textarea.form-control{
 }
 
 @media (max-width: 720px){
+  .traveler-guide-grid{ grid-template-columns: 1fr; }
+  .traveler-guide-frame{ height: 200px; }
   .destinations-map{ height: 440px; }
   .destination-card .card-media{ height: 220px; }
 }
