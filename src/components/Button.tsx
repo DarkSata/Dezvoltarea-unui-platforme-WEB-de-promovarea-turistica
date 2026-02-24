@@ -10,7 +10,7 @@ export default function Button({
   variant = "primary",
   className = "",
   ...rest
-}: Props) {
+}: Props) { 
   const variantClass = variant === "small" ? "btn small" : `btn ${variant}`;
   return (
     <button className={`${variantClass} ${className}`.trim()} {...rest}>
