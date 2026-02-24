@@ -71,6 +71,12 @@ export default function Header() {
         </NavLink>
         <NavLink
           className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+          to="/galerie"
+        >
+          Galerie
+        </NavLink>
+        <NavLink
+          className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
           to="/ghidul-calatorului"
         >
           Ghidul călătorului
