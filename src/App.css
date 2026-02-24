@@ -808,6 +808,109 @@ textarea.form-control:-webkit-autofill:focus{
   background: radial-gradient(900px 260px at 20% 20%, rgba(106,255,204,.22), transparent 55%), #1e3446;
 }
 
+/* =========================
+   GALLERY PAGE (ORHEIUL VECHI)
+   ========================= */
+
+.gallery-hero{
+  background:
+    linear-gradient(180deg, rgba(11,18,32,.28), rgba(11,18,32,.92)),
+    url('/images/galerie/orheiul-vechi/orhei-panoramic.webp');
+  background-size: cover;
+  background-position: center;
+}
+
+.gallery-actions{
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.gallery-note{
+  max-width: 780px;
+}
+
+.gallery-photos-grid{
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 210px;
+}
+
+.gallery-photo{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.gallery-photo.wide{
+  grid-column: span 2;
+}
+
+.gallery-photo.tall{
+  grid-row: span 2;
+}
+
+.gallery-photo-card{
+  position: relative;
+  flex: 1;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: rgba(255,255,255,.03);
+  box-shadow: var(--shadow);
+  padding: 0;
+  cursor: zoom-in;
+}
+
+.gallery-photo-card::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(11,18,32,.05), rgba(11,18,32,.45));
+  pointer-events: none;
+}
+
+.gallery-photo-card img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .3s ease;
+}
+
+.gallery-photo-card:hover img{
+  transform: scale(1.03);
+}
+
+.gallery-photo-zoom{
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(234,240,255,.2);
+  background: rgba(11,18,32,.72);
+  color: rgba(234,240,255,.92);
+  z-index: 1;
+}
+
+.gallery-photo-meta{
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+  font-size: .95rem;
+}
+
+.gallery-photo-meta strong{
+  color: var(--text);
+  font-size: 1rem;
+}
+
 .quote{ padding:16px; }
 .quote p{ margin:0; color: var(--text); }
 .quote cite{ display:block; margin-top:10px; color: var(--muted); font-style:normal; }
@@ -867,6 +970,7 @@ textarea.form-control:-webkit-autofill:focus{
   .guide-hero-layout{ grid-template-columns: 1fr; }
   .perks{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .gallery-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .gallery-photos-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 200px; }
   .testimonials{ grid-template-columns: 1fr; }
   .form-grid{ grid-template-columns: 1fr; }
   .contact-layout{ grid-template-columns: 1fr; }
@@ -899,6 +1003,12 @@ textarea.form-control:-webkit-autofill:focus{
   .top-place-media{ height: 200px; }
   .check-grid{ grid-template-columns: 1fr; }
   .gallery-grid{ grid-template-columns: 1fr; }
+  .gallery-photos-grid{ grid-template-columns: 1fr; grid-auto-rows: 220px; }
+  .gallery-photo.wide,
+  .gallery-photo.tall{
+    grid-column: span 1;
+    grid-row: span 1;
+  }
   .cta{ flex-direction: column; align-items: flex-start; }
 
   .logo{ height: 94px; }

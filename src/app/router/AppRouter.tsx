@@ -6,6 +6,7 @@ import DestinationsPage from "../../pages/DestinationsPage";
 import RoutesPage from "../../pages/RoutesPage";
 import ContactPage from "../../pages/ContactPage";
 import GuidePage from "../../pages/GuidePage";
+import GalleryPage from "../../pages/GalleryPage";
 import AdminPage from "../../pages/AdminPage";
 import LoginPage from "../../pages/LoginPage";
 import Unauthorized401 from "../../errors/Unauthorized401";
@@ -22,6 +23,7 @@ export default function AppRouter() {
         <Route path="destinations" element={<DestinationsPage />} />
         <Route path="routes" element={<RoutesPage />} />
         <Route path="guide" element={<GuidePage />} />
+        <Route path="galerie" element={<GalleryPage />} />
         <Route path="contact" element={<ContactPage />} />
         <Route path="login" element={<LoginPage />} />
 

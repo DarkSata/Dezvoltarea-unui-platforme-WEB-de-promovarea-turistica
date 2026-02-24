@@ -69,14 +69,17 @@ export default function Header() {
         >
           Rute
         </NavLink>
-        <NavLink className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`} to="/guide">
-          Ghid
-        </NavLink>
-        <Link className="nav-link" to="/#galerie">
+        <NavLink
+          className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+          to="/galerie"
+        >
           Galerie
-        </Link>
-        <NavLink className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`} to="/contact">
-          Contact
+        </NavLink>
+        <NavLink
+          className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+          to="/ghidul-calatorului"
+        >
+          Ghidul călătorului
         </NavLink>
         {session?.role === "admin" ? (
           <NavLink
