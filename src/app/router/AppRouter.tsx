@@ -23,6 +23,7 @@ export default function AppRouter() {
         <Route path="destinations" element={<DestinationsPage />} />
         <Route path="routes" element={<RoutesPage />} />
         <Route path="guide" element={<GuidePage />} />
+        <Route path="ghidul-calatorului" element={<GuidePage />} />
         <Route path="galerie" element={<GalleryPage />} />
         <Route path="contact" element={<ContactPage />} />
         <Route path="login" element={<LoginPage />} />
