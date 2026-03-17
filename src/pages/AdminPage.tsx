@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
-import Button from "../components/Button";
 import { GalleryAdminModule } from "../components/admin/GalleryAdminModule";
 import { GuideAdminModule } from "../components/admin/GuideAdminModule";
 import { ContactAdminModule } from "../components/admin/ContactAdminModule";
 import Empty from "../components/Empty";
 import ErrorState from "../components/Error";
-import Input from "../components/Input";
 import Loading from "../components/Loading";
 import ModalConfirm from "../components/ModalConfirm";
 import { destinationsService } from "../services/destinationsService";
@@ -471,182 +469,244 @@ export default function AdminPage() {
     }
   }
 
+  const sectionTitle =
+    activeSection === "destinations" ? "Destinatii" :
+    activeSection === "routes" ? "Rute" :
+    activeSection === "guide" ? "Ghid" :
+    activeSection === "gallery" ? "Galerie" : "Contact";
+
+  const sectionCount =
+    activeSection === "destinations" ? destinationCountLabel :
+    activeSection === "routes" ? routeCountLabel : null;
+
   return (
-    <section className="section">
-      <div className="container admin-shell">
-        <div className="section-head admin-hero-head">
-          <h2>Panou Admin</h2>
-          <p>
-            Administrare completa pentru <strong>Destinatii</strong>, <strong>Rute</strong>, <strong>Ghid</strong>,{" "}
-            <strong>Galerie</strong> si <strong>Contact</strong>:
-            creare, editare, stergere, cautare si sortare.
-          </p>
+    <div className="admin-dashboard">
+
+      {/* ── Sidebar ── */}
+      <aside className="admin-sidebar">
+        <div className="admin-sidebar-brand">
+          <i className="fa-solid fa-gear" aria-hidden="true"></i>
+          <span>Admin</span>
+        </div>
+        <nav className="admin-sidebar-nav" role="tablist" aria-label="Sectiuni admin">
+          {(
+            [
+              { id: "destinations", icon: "fa-solid fa-location-dot", label: "Destinatii" },
+              { id: "routes",       icon: "fa-solid fa-route",         label: "Rute"       },
+              { id: "guide",        icon: "fa-solid fa-list-check",    label: "Ghid"       },
+              { id: "gallery",      icon: "fa-solid fa-images",        label: "Galerie"    },
+              { id: "contact",      icon: "fa-solid fa-address-book",  label: "Contact"    },
+            ] as { id: AdminSection; icon: string; label: string }[]
+          ).map(({ id, icon, label }) => (
+            <button
+              key={id}
+              type="button"
+              role="tab"
+              aria-selected={activeSection === id}
+              className={`admin-nav-item${activeSection === id ? " active" : ""}`}
+              onClick={() => setActiveSection(id)}
+            >
+              <i className={icon} aria-hidden="true"></i>
+              {label}
+            </button>
+          ))}
+        </nav>
+      </aside>
+
+      {/* ── Main area ── */}
+      <div className="admin-main">
+
+        {/* Stats bar */}
+        <div className="admin-stats-bar">
+          <div className="admin-stat-cell">
+            <span className="admin-stat-num">{destinationItems.length}</span>
+            <span className="admin-stat-lbl">Destinatii</span>
+          </div>
+          <div className="admin-stat-cell">
+            <span className="admin-stat-num">{routeItems.length}</span>
+            <span className="admin-stat-lbl">Rute</span>
+          </div>
+          <div className="admin-stat-cell">
+            <span className="admin-stat-num">5</span>
+            <span className="admin-stat-lbl">Sectiuni</span>
+          </div>
         </div>
 
-        <div className="admin-switch" role="tablist" aria-label="Sectiuni admin">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeSection === "destinations"}
-            className={`admin-switch-btn ${activeSection === "destinations" ? "active" : ""}`}
-            onClick={() => setActiveSection("destinations")}
-          >
-            <i className="fa-solid fa-location-dot" aria-hidden="true"></i> Destinatii
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeSection === "routes"}
-            className={`admin-switch-btn ${activeSection === "routes" ? "active" : ""}`}
-            onClick={() => setActiveSection("routes")}
-          >
-            <i className="fa-solid fa-route" aria-hidden="true"></i> Rute
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeSection === "guide"}
-            className={`admin-switch-btn ${activeSection === "guide" ? "active" : ""}`}
-            onClick={() => setActiveSection("guide")}
-          >
-            <i className="fa-solid fa-list-check" aria-hidden="true"></i> Ghid
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeSection === "gallery"}
-            className={`admin-switch-btn ${activeSection === "gallery" ? "active" : ""}`}
-            onClick={() => setActiveSection("gallery")}
-          >
-            <i className="fa-solid fa-images" aria-hidden="true"></i> Galerie
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activeSection === "contact"}
-            className={`admin-switch-btn ${activeSection === "contact" ? "active" : ""}`}
-            onClick={() => setActiveSection("contact")}
-          >
-            <i className="fa-solid fa-address-book" aria-hidden="true"></i> Contact
-          </button>
+        {/* Topbar */}
+        <div className="admin-topbar">
+          <div className="admin-topbar-left">
+            <span className="admin-topbar-title">{sectionTitle}</span>
+            {sectionCount ? <span className="muted">{sectionCount}</span> : null}
+          </div>
+          {activeSection === "destinations" || activeSection === "routes" ? (
+            <button
+              type="button"
+              className="btn primary"
+              style={{ padding: "8px 14px", fontSize: ".85rem", borderRadius: "10px" }}
+              onClick={activeSection === "destinations" ? resetDestinationForm : resetRouteForm}
+            >
+              <i className="fa-solid fa-plus" aria-hidden="true"></i> Adauga nou
+            </button>
+          ) : null}
         </div>
 
-        {activeSection === "destinations" ? (
-          <div className="admin-module-grid">
-            <form ref={destinationFormRef} className="admin-form admin-panel" onSubmit={onDestinationSubmit}>
-              <div className="admin-panel-head">
-                <h3>{destinationEditingId ? "Editare destinatie" : "Adaugare destinatie"}</h3>
-                <span className="pill">{destinationEditingId ? "Mod editare" : "Noua"}</span>
-              </div>
+        {/* ── Body ── */}
+        <div className="admin-body">
 
-              <div className="form-grid">
-                <Input
-                  label="Nume"
-                  value={destinationForm.name}
-                  onChange={(event) => onDestinationFieldChange("name", event.target.value)}
-                  error={destinationFormErrors.name}
-                />
+          {/* ======= DESTINATIONS ======= */}
+          {activeSection === "destinations" ? (
+            <>
+              {/* Form panel */}
+              <form ref={destinationFormRef} className="admin-fp" onSubmit={onDestinationSubmit}>
+                <div className="admin-fp-head">
+                  <span className="admin-fp-title">
+                    {destinationEditingId
+                      ? `Editare: ${destinationForm.name || "destinatie"}`
+                      : "Adaugare"}
+                  </span>
+                  <span className={`admin-fp-badge${destinationEditingId ? " edit-mode" : " new-mode"}`}>
+                    {destinationEditingId ? "Editare" : "Nou"}
+                  </span>
+                </div>
 
-                <Input
-                  label="Zona"
-                  value={destinationForm.area}
-                  onChange={(event) => onDestinationFieldChange("area", event.target.value)}
-                  error={destinationFormErrors.area}
-                />
+                <div className="admin-fp-fields">
+                  <label className="admin-fp-field">
+                    <span className="admin-fp-label">Nume</span>
+                    <input
+                      className="form-control"
+                      value={destinationForm.name}
+                      onChange={(e) => onDestinationFieldChange("name", e.target.value)}
+                    />
+                    {destinationFormErrors.name ? (
+                      <span className="form-error">{destinationFormErrors.name}</span>
+                    ) : null}
+                  </label>
 
-                <label className="form-field">
-                  <span className="form-label">Categorie</span>
-                  <select
-                    className="form-control"
-                    value={destinationForm.cat}
-                    onChange={(event) =>
-                      onDestinationFieldChange("cat", event.target.value as DestinationCategory)
-                    }
+                  <label className="admin-fp-field">
+                    <span className="admin-fp-label">Zona</span>
+                    <input
+                      className="form-control"
+                      value={destinationForm.area}
+                      onChange={(e) => onDestinationFieldChange("area", e.target.value)}
+                    />
+                    {destinationFormErrors.area ? (
+                      <span className="form-error">{destinationFormErrors.area}</span>
+                    ) : null}
+                  </label>
+
+                  <label className="admin-fp-field">
+                    <span className="admin-fp-label">Categorie</span>
+                    <select
+                      className="form-control"
+                      value={destinationForm.cat}
+                      onChange={(e) =>
+                        onDestinationFieldChange("cat", e.target.value as DestinationCategory)
+                      }
+                    >
+                      {DESTINATION_CATEGORIES.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <div className="admin-fp-row2">
+                    <label className="admin-fp-field">
+                      <span className="admin-fp-label">Latitudine</span>
+                      <input
+                        className="form-control"
+                        type="number"
+                        step="0.0001"
+                        value={destinationForm.lat}
+                        onChange={(e) => onDestinationFieldChange("lat", Number(e.target.value))}
+                      />
+                      {destinationFormErrors.lat ? (
+                        <span className="form-error">{destinationFormErrors.lat}</span>
+                      ) : null}
+                    </label>
+                    <label className="admin-fp-field">
+                      <span className="admin-fp-label">Longitudine</span>
+                      <input
+                        className="form-control"
+                        type="number"
+                        step="0.0001"
+                        value={destinationForm.lng}
+                        onChange={(e) => onDestinationFieldChange("lng", Number(e.target.value))}
+                      />
+                      {destinationFormErrors.lng ? (
+                        <span className="form-error">{destinationFormErrors.lng}</span>
+                      ) : null}
+                    </label>
+                  </div>
+
+                  <label className="admin-fp-field">
+                    <span className="admin-fp-label">Imagine URL (optional)</span>
+                    <input
+                      className="form-control"
+                      value={destinationForm.image ?? ""}
+                      onChange={(e) => onDestinationFieldChange("image", e.target.value)}
+                    />
+                  </label>
+
+                  <label className="admin-fp-field">
+                    <span className="admin-fp-label">Descriere</span>
+                    <textarea
+                      className="form-control"
+                      rows={3}
+                      value={destinationForm.description}
+                      onChange={(e) => onDestinationFieldChange("description", e.target.value)}
+                    />
+                    {destinationFormErrors.description ? (
+                      <span className="form-error">{destinationFormErrors.description}</span>
+                    ) : null}
+                  </label>
+
+                  <label className="admin-fp-field">
+                    <span className="admin-fp-label">Sfaturi</span>
+                    <textarea
+                      className="form-control"
+                      rows={2}
+                      value={destinationForm.tips}
+                      onChange={(e) => onDestinationFieldChange("tips", e.target.value)}
+                    />
+                    {destinationFormErrors.tips ? (
+                      <span className="form-error">{destinationFormErrors.tips}</span>
+                    ) : null}
+                  </label>
+                </div>
+
+                {destinationSubmitError ? (
+                  <p className="form-error">{destinationSubmitError}</p>
+                ) : null}
+
+                <div className="admin-fp-actions">
+                  <button
+                    type="submit"
+                    className={`btn${destinationEditingId ? " btn-save-edit" : " primary"}`}
                   >
-                    {DESTINATION_CATEGORIES.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <Input
-                  label="Latitudine"
-                  type="number"
-                  step="0.0001"
-                  value={destinationForm.lat}
-                  onChange={(event) => onDestinationFieldChange("lat", Number(event.target.value))}
-                  error={destinationFormErrors.lat}
-                />
-
-                <Input
-                  label="Longitudine"
-                  type="number"
-                  step="0.0001"
-                  value={destinationForm.lng}
-                  onChange={(event) => onDestinationFieldChange("lng", Number(event.target.value))}
-                  error={destinationFormErrors.lng}
-                />
-
-                <Input
-                  label="Imagine URL (optional)"
-                  value={destinationForm.image ?? ""}
-                  onChange={(event) => onDestinationFieldChange("image", event.target.value)}
-                  error={destinationFormErrors.image}
-                />
-
-                <label className="form-field form-field-full">
-                  <span className="form-label">Descriere</span>
-                  <textarea
-                    className="form-control"
-                    rows={3}
-                    value={destinationForm.description}
-                    onChange={(event) => onDestinationFieldChange("description", event.target.value)}
-                  ></textarea>
-                  {destinationFormErrors.description ? (
-                    <span className="form-error">{destinationFormErrors.description}</span>
+                    Salveaza
+                  </button>
+                  <button type="button" className="btn ghost" onClick={resetDestinationForm}>
+                    Reset
+                  </button>
+                  {destinationEditingId ? (
+                    <button
+                      type="button"
+                      className="btn ghost admin-fp-cancel"
+                      onClick={resetDestinationForm}
+                    >
+                      Anuleaza editarea
+                    </button>
                   ) : null}
-                </label>
+                </div>
+              </form>
 
-                <label className="form-field form-field-full">
-                  <span className="form-label">Sfaturi</span>
-                  <textarea
-                    className="form-control"
-                    rows={2}
-                    value={destinationForm.tips}
-                    onChange={(event) => onDestinationFieldChange("tips", event.target.value)}
-                  ></textarea>
-                  {destinationFormErrors.tips ? (
-                    <span className="form-error">{destinationFormErrors.tips}</span>
-                  ) : null}
-                </label>
-              </div>
-
-              {destinationSubmitError ? <p className="form-error">{destinationSubmitError}</p> : null}
-
-              <div className="form-actions">
-                <Button type="submit">
-                  {destinationEditingId ? "Salveaza modificarile" : "Adauga destinatie"}
-                </Button>
-                <Button type="button" variant="ghost" onClick={resetDestinationForm}>
-                  Reset
-                </Button>
-              </div>
-            </form>
-
-            <div className="admin-panel">
-              <div className="admin-list-head">
-                <h3>Destinatii</h3>
-                <span className="muted">{destinationCountLabel}</span>
-              </div>
-
-              <div className="destinations-toolbar admin-toolbar">
+              {/* List panel */}
+              <div className="admin-lp">
                 <label className="search" aria-label="Cauta in destinatii">
                   <i className="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                   <input
                     value={destinationSearch}
-                    onChange={(event) => setDestinationSearch(event.target.value)}
+                    onChange={(e) => setDestinationSearch(e.target.value)}
                     placeholder="Cauta dupa nume, zona, descriere"
                   />
                 </label>
@@ -654,199 +714,244 @@ export default function AdminPage() {
                 <div className="chips">
                   <button
                     type="button"
-                    className={`chip ${destinationCategory === "Toate" ? "active" : ""}`}
+                    className={`chip${destinationCategory === "Toate" ? " active" : ""}`}
                     onClick={() => setDestinationCategory("Toate")}
                   >
                     Toate
                   </button>
-                  {DESTINATION_CATEGORIES.map((item) => (
+                  {DESTINATION_CATEGORIES.map((c) => (
                     <button
-                      key={item}
+                      key={c}
                       type="button"
-                      className={`chip ${destinationCategory === item ? "active" : ""}`}
-                      onClick={() => setDestinationCategory(item)}
+                      className={`chip${destinationCategory === c ? " active" : ""}`}
+                      onClick={() => setDestinationCategory(c)}
                     >
-                      {item}
+                      {c}
                     </button>
                   ))}
                 </div>
 
-                <label className="form-field admin-sort">
-                  <span className="form-label">Sortare</span>
+                <div className="admin-lp-sort">
+                  <span className="admin-fp-label">Sortare</span>
                   <select
-                    className="form-control"
+                    className="form-control admin-lp-sort-select"
                     value={destinationSortBy}
-                    onChange={(event) => setDestinationSortBy(event.target.value as DestinationSortBy)}
+                    onChange={(e) => setDestinationSortBy(e.target.value as DestinationSortBy)}
                   >
                     <option value="name-asc">Nume A-Z</option>
                     <option value="name-desc">Nume Z-A</option>
                     <option value="area-asc">Zona A-Z</option>
                     <option value="area-desc">Zona Z-A</option>
                   </select>
-                </label>
-              </div>
-
-              {destinationLoading ? <Loading text="Se incarca destinatiile..." /> : null}
-              {!destinationLoading && destinationError ? (
-                <ErrorState title="Eroare" message={destinationError} />
-              ) : null}
-              {!destinationLoading && !destinationError && destinationItems.length === 0 ? (
-                <Empty title="Lista este goala" description="Adauga prima destinatie din formular." />
-              ) : null}
-
-              {!destinationLoading && !destinationError && destinationItems.length > 0 ? (
-                <div className="admin-list-scroll" aria-label="Lista destinatii">
-                  <div className="grid destinations-cards">
-                    {destinationItems.map((item) => (
-                      <article key={item.id} className="card admin-item-card">
-                        <div className="card-body">
-                          <h3>{item.name}</h3>
-                          <div className="dest-row bottom">
-                            <span className="pill">{item.cat}</span>
-                            <span className="pill">{item.area}</span>
-                          </div>
-                          <p>{item.description}</p>
-                          <div className="admin-row-actions">
-                            <Button
-                              type="button"
-                              variant="small"
-                              onClick={() => startDestinationEdit(item)}
-                            >
-                              Editare
-                            </Button>
-                            <Button
-                              type="button"
-                              variant="small"
-                              className="danger"
-                              onClick={() => setDestinationDeleteId(item.id)}
-                            >
-                              Stergere
-                            </Button>
-                          </div>
-                        </div>
-                      </article>
-                    ))}
-                  </div>
                 </div>
-              ) : null}
-            </div>
-          </div>
-        ) : null}
 
-        {activeSection === "routes" ? (
-          <div className="admin-module-grid">
-            <form ref={routeFormRef} className="admin-form admin-panel" onSubmit={onRouteSubmit}>
-              <div className="admin-panel-head">
-                <h3>{routeEditingId ? "Editare ruta" : "Adaugare ruta"}</h3>
-                <span className="pill">{routeEditingId ? "Mod editare" : "Noua"}</span>
+                {destinationLoading ? <Loading text="Se incarca destinatiile..." /> : null}
+                {!destinationLoading && destinationError ? (
+                  <ErrorState title="Eroare" message={destinationError} />
+                ) : null}
+                {!destinationLoading && !destinationError && destinationItems.length === 0 ? (
+                  <Empty title="Lista este goala" description="Adauga prima destinatie din formular." />
+                ) : null}
+
+                {!destinationLoading && !destinationError && destinationItems.length > 0 ? (
+                  <table className="admin-table" aria-label="Lista destinatii">
+                    <thead>
+                      <tr>
+                        <th>Nume</th>
+                        <th>Zona</th>
+                        <th>Categorie</th>
+                        <th>Actiuni</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {destinationItems.map((item) => (
+                        <tr key={item.id}>
+                          <td>{item.name}</td>
+                          <td className="muted">{item.area}</td>
+                          <td>
+                            <span className={`admin-tag admin-tag-${item.cat.toLowerCase()}`}>
+                              {item.cat}
+                            </span>
+                          </td>
+                          <td>
+                            <div className="admin-row-btns">
+                              <button
+                                type="button"
+                                className="admin-btn-edit"
+                                onClick={() => startDestinationEdit(item)}
+                              >
+                                Editare
+                              </button>
+                              <button
+                                type="button"
+                                className="admin-btn-del"
+                                onClick={() => setDestinationDeleteId(item.id)}
+                              >
+                                Stergere
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : null}
               </div>
+            </>
+          ) : null}
 
-              <div className="form-grid">
-                <Input
-                  label="Titlu ruta"
-                  value={routeForm.title}
-                  onChange={(event) => onRouteFieldChange("title", event.target.value)}
-                  error={routeFormErrors.title}
-                />
+          {/* ======= ROUTES ======= */}
+          {activeSection === "routes" ? (
+            <>
+              {/* Form panel */}
+              <form ref={routeFormRef} className="admin-fp" onSubmit={onRouteSubmit}>
+                <div className="admin-fp-head">
+                  <span className="admin-fp-title">
+                    {routeEditingId
+                      ? `Editare: ${routeForm.title || "ruta"}`
+                      : "Adaugare"}
+                  </span>
+                  <span className={`admin-fp-badge${routeEditingId ? " edit-mode" : " new-mode"}`}>
+                    {routeEditingId ? "Editare" : "Nou"}
+                  </span>
+                </div>
 
-                <Input
-                  label="Subtitlu"
-                  value={routeForm.subtitle}
-                  onChange={(event) => onRouteFieldChange("subtitle", event.target.value)}
-                  error={routeFormErrors.subtitle}
-                />
+                <div className="admin-fp-fields">
+                  <label className="admin-fp-field">
+                    <span className="admin-fp-label">Titlu ruta</span>
+                    <input
+                      className="form-control"
+                      value={routeForm.title}
+                      onChange={(e) => onRouteFieldChange("title", e.target.value)}
+                    />
+                    {routeFormErrors.title ? (
+                      <span className="form-error">{routeFormErrors.title}</span>
+                    ) : null}
+                  </label>
 
-                <label className="form-field">
-                  <span className="form-label">Categorie</span>
-                  <select
-                    className="form-control"
-                    value={routeForm.category}
-                    onChange={(event) => onRouteFieldChange("category", event.target.value as RouteCategory)}
+                  <label className="admin-fp-field">
+                    <span className="admin-fp-label">Subtitlu</span>
+                    <input
+                      className="form-control"
+                      value={routeForm.subtitle}
+                      onChange={(e) => onRouteFieldChange("subtitle", e.target.value)}
+                    />
+                    {routeFormErrors.subtitle ? (
+                      <span className="form-error">{routeFormErrors.subtitle}</span>
+                    ) : null}
+                  </label>
+
+                  <label className="admin-fp-field">
+                    <span className="admin-fp-label">Categorie</span>
+                    <select
+                      className="form-control"
+                      value={routeForm.category}
+                      onChange={(e) => onRouteFieldChange("category", e.target.value as RouteCategory)}
+                    >
+                      {ROUTE_CATEGORIES.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="admin-fp-field">
+                    <span className="admin-fp-label">Durata</span>
+                    <select
+                      className="form-control"
+                      value={routeForm.durationDays}
+                      onChange={(e) =>
+                        onRouteFieldChange("durationDays", Number(e.target.value) as 1 | 2 | 3)
+                      }
+                    >
+                      <option value={1}>1 zi</option>
+                      <option value={2}>2 zile</option>
+                      <option value={3}>3 zile</option>
+                    </select>
+                  </label>
+
+                  <div className="admin-fp-row2">
+                    <label className="admin-fp-field">
+                      <span className="admin-fp-label">Latitudine</span>
+                      <input
+                        className="form-control"
+                        type="number"
+                        step="0.0001"
+                        value={routeForm.lat}
+                        onChange={(e) => onRouteFieldChange("lat", Number(e.target.value))}
+                      />
+                      {routeFormErrors.lat ? (
+                        <span className="form-error">{routeFormErrors.lat}</span>
+                      ) : null}
+                    </label>
+                    <label className="admin-fp-field">
+                      <span className="admin-fp-label">Longitudine</span>
+                      <input
+                        className="form-control"
+                        type="number"
+                        step="0.0001"
+                        value={routeForm.lng}
+                        onChange={(e) => onRouteFieldChange("lng", Number(e.target.value))}
+                      />
+                      {routeFormErrors.lng ? (
+                        <span className="form-error">{routeFormErrors.lng}</span>
+                      ) : null}
+                    </label>
+                  </div>
+
+                  <label className="admin-fp-field">
+                    <span className="admin-fp-label">Imagine punct start (optional)</span>
+                    <input
+                      className="form-control"
+                      value={routeForm.image}
+                      onChange={(e) => onRouteFieldChange("image", e.target.value)}
+                    />
+                  </label>
+
+                  <label className="admin-fp-field">
+                    <span className="admin-fp-label">Detalii ruta</span>
+                    <textarea
+                      className="form-control"
+                      rows={4}
+                      value={routeForm.details}
+                      onChange={(e) => onRouteFieldChange("details", e.target.value)}
+                    />
+                    {routeFormErrors.details ? (
+                      <span className="form-error">{routeFormErrors.details}</span>
+                    ) : null}
+                  </label>
+                </div>
+
+                {routeSubmitError ? <p className="form-error">{routeSubmitError}</p> : null}
+
+                <div className="admin-fp-actions">
+                  <button
+                    type="submit"
+                    className={`btn${routeEditingId ? " btn-save-edit" : " primary"}`}
                   >
-                    {ROUTE_CATEGORIES.map((item) => (
-                      <option key={item} value={item}>
-                        {item}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-
-                <label className="form-field">
-                  <span className="form-label">Durata</span>
-                  <select
-                    className="form-control"
-                    value={routeForm.durationDays}
-                    onChange={(event) =>
-                      onRouteFieldChange("durationDays", Number(event.target.value) as 1 | 2 | 3)
-                    }
-                  >
-                    <option value={1}>1 zi</option>
-                    <option value={2}>2 zile</option>
-                    <option value={3}>3 zile</option>
-                  </select>
-                </label>
-
-                <Input
-                  label="Latitudine start"
-                  type="number"
-                  step="0.0001"
-                  value={routeForm.lat}
-                  onChange={(event) => onRouteFieldChange("lat", Number(event.target.value))}
-                  error={routeFormErrors.lat}
-                />
-
-                <Input
-                  label="Longitudine start"
-                  type="number"
-                  step="0.0001"
-                  value={routeForm.lng}
-                  onChange={(event) => onRouteFieldChange("lng", Number(event.target.value))}
-                  error={routeFormErrors.lng}
-                />
-
-                <Input
-                  label="Imagine punct start (optional)"
-                  value={routeForm.image}
-                  onChange={(event) => onRouteFieldChange("image", event.target.value)}
-                  error={routeFormErrors.image}
-                />
-
-                <label className="form-field form-field-full">
-                  <span className="form-label">Detalii ruta</span>
-                  <textarea
-                    className="form-control"
-                    rows={4}
-                    value={routeForm.details}
-                    onChange={(event) => onRouteFieldChange("details", event.target.value)}
-                  ></textarea>
-                  {routeFormErrors.details ? (
-                    <span className="form-error">{routeFormErrors.details}</span>
+                    Salveaza
+                  </button>
+                  <button type="button" className="btn ghost" onClick={resetRouteForm}>
+                    Reset
+                  </button>
+                  {routeEditingId ? (
+                    <button
+                      type="button"
+                      className="btn ghost admin-fp-cancel"
+                      onClick={resetRouteForm}
+                    >
+                      Anuleaza editarea
+                    </button>
                   ) : null}
-                </label>
-              </div>
+                </div>
+              </form>
 
-              {routeSubmitError ? <p className="form-error">{routeSubmitError}</p> : null}
-
-              <div className="form-actions">
-                <Button type="submit">{routeEditingId ? "Salveaza modificarile" : "Adauga ruta"}</Button>
-                <Button type="button" variant="ghost" onClick={resetRouteForm}>
-                  Reset
-                </Button>
-              </div>
-            </form>
-
-            <div className="admin-panel">
-              <div className="admin-list-head">
-                <h3>Rute</h3>
-                <span className="muted">{routeCountLabel}</span>
-              </div>
-
-              <div className="destinations-toolbar admin-toolbar">
+              {/* List panel */}
+              <div className="admin-lp">
                 <label className="search" aria-label="Cauta in rute">
                   <i className="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                   <input
                     value={routeSearch}
-                    onChange={(event) => setRouteSearch(event.target.value)}
+                    onChange={(e) => setRouteSearch(e.target.value)}
                     placeholder="Cauta dupa titlu, subtitlu, detalii"
                   />
                 </label>
@@ -854,122 +959,142 @@ export default function AdminPage() {
                 <div className="chips">
                   <button
                     type="button"
-                    className={`chip ${routeCategory === "Toate" ? "active" : ""}`}
+                    className={`chip${routeCategory === "Toate" ? " active" : ""}`}
                     onClick={() => setRouteCategory("Toate")}
                   >
                     Toate
                   </button>
-                  {ROUTE_CATEGORIES.map((item) => (
+                  {ROUTE_CATEGORIES.map((c) => (
                     <button
-                      key={item}
+                      key={c}
                       type="button"
-                      className={`chip ${routeCategory === item ? "active" : ""}`}
-                      onClick={() => setRouteCategory(item)}
+                      className={`chip${routeCategory === c ? " active" : ""}`}
+                      onClick={() => setRouteCategory(c)}
                     >
-                      {item}
+                      {c}
                     </button>
                   ))}
                 </div>
 
                 <div className="chips">
-                  {(["toate", 1, 2, 3] as const).map((item) => (
+                  {(["toate", 1, 2, 3] as const).map((d) => (
                     <button
-                      key={`duration-${item}`}
+                      key={`duration-${d}`}
                       type="button"
-                      className={`chip ${routeDuration === item ? "active" : ""}`}
-                      onClick={() => setRouteDuration(item)}
+                      className={`chip${routeDuration === d ? " active" : ""}`}
+                      onClick={() => setRouteDuration(d)}
                     >
-                      {item === "toate" ? "Durata: toate" : `${item} zi${item > 1 ? "le" : ""}`}
+                      {d === "toate" ? "Durata: toate" : `${d} zi${d > 1 ? "le" : ""}`}
                     </button>
                   ))}
                 </div>
 
-                <label className="form-field admin-sort">
-                  <span className="form-label">Sortare</span>
+                <div className="admin-lp-sort">
+                  <span className="admin-fp-label">Sortare</span>
                   <select
-                    className="form-control"
+                    className="form-control admin-lp-sort-select"
                     value={routeSortBy}
-                    onChange={(event) => setRouteSortBy(event.target.value as RouteSortBy)}
+                    onChange={(e) => setRouteSortBy(e.target.value as RouteSortBy)}
                   >
                     <option value="title-asc">Titlu A-Z</option>
                     <option value="title-desc">Titlu Z-A</option>
                     <option value="duration-asc">Durata asc</option>
                     <option value="duration-desc">Durata desc</option>
                   </select>
-                </label>
-              </div>
-
-              {routeLoading ? <Loading text="Se incarca rutele..." /> : null}
-              {!routeLoading && routeError ? <ErrorState title="Eroare" message={routeError} /> : null}
-              {!routeLoading && !routeError && routeItems.length === 0 ? (
-                <Empty title="Lista de rute este goala" description="Adauga prima ruta din formular." />
-              ) : null}
-
-              {!routeLoading && !routeError && routeItems.length > 0 ? (
-                <div className="admin-list-scroll" aria-label="Lista rute">
-                  <div className="grid destinations-cards">
-                    {routeItems.map((item) => (
-                      <article key={item.id} className="card admin-item-card">
-                        <div className="card-body">
-                          <h3>{item.title}</h3>
-                          <div className="dest-row bottom">
-                            <span className="pill">
-                              <i className={categoryIcon(item.category)} aria-hidden="true"></i> {item.category}
-                            </span>
-                            <span className="pill">
-                              <i className="fa-solid fa-clock" aria-hidden="true"></i> {item.durationDays} zi
-                              {item.durationDays > 1 ? "le" : ""}
-                            </span>
-                          </div>
-                          <p>{item.subtitle}</p>
-                          <p className="muted">{item.details}</p>
-                          <div className="admin-row-actions">
-                            <Button type="button" variant="small" onClick={() => startRouteEdit(item)}>
-                              Editare
-                            </Button>
-                            <Button
-                              type="button"
-                              variant="small"
-                              className="danger"
-                              onClick={() => setRouteDeleteId(item.id)}
-                            >
-                              Stergere
-                            </Button>
-                          </div>
-                        </div>
-                      </article>
-                    ))}
-                  </div>
                 </div>
-              ) : null}
-            </div>
-          </div>
-        ) : null}
 
-        {activeSection === "guide" ? <GuideAdminModule /> : null}
-        {activeSection === "gallery" ? <GalleryAdminModule /> : null}
-        {activeSection === "contact" ? <ContactAdminModule /> : null}
-      </div>
+                {routeLoading ? <Loading text="Se incarca rutele..." /> : null}
+                {!routeLoading && routeError ? (
+                  <ErrorState title="Eroare" message={routeError} />
+                ) : null}
+                {!routeLoading && !routeError && routeItems.length === 0 ? (
+                  <Empty title="Lista de rute este goala" description="Adauga prima ruta din formular." />
+                ) : null}
+
+                {!routeLoading && !routeError && routeItems.length > 0 ? (
+                  <table className="admin-table" aria-label="Lista rute">
+                    <thead>
+                      <tr>
+                        <th>Titlu</th>
+                        <th>Categorie</th>
+                        <th>Durata</th>
+                        <th>Actiuni</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {routeItems.map((item) => (
+                        <tr key={item.id}>
+                          <td>{item.title}</td>
+                          <td>
+                            <span
+                              className={`admin-tag admin-tag-${item.category.toLowerCase()}`}
+                            >
+                              <i
+                                className={categoryIcon(item.category)}
+                                aria-hidden="true"
+                                style={{ fontSize: "10px" }}
+                              ></i>
+                              {item.category}
+                            </span>
+                          </td>
+                          <td className="muted">
+                            {item.durationDays} zi{item.durationDays > 1 ? "le" : ""}
+                          </td>
+                          <td>
+                            <div className="admin-row-btns">
+                              <button
+                                type="button"
+                                className="admin-btn-edit"
+                                onClick={() => startRouteEdit(item)}
+                              >
+                                Editare
+                              </button>
+                              <button
+                                type="button"
+                                className="admin-btn-del"
+                                onClick={() => setRouteDeleteId(item.id)}
+                              >
+                                Stergere
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : null}
+              </div>
+            </>
+          ) : null}
+
+          {/* ======= SUBMODULES ======= */}
+          {activeSection === "guide" ? (
+            <div className="admin-submodule-wrap"><GuideAdminModule /></div>
+          ) : null}
+          {activeSection === "gallery" ? (
+            <div className="admin-submodule-wrap"><GalleryAdminModule /></div>
+          ) : null}
+          {activeSection === "contact" ? (
+            <div className="admin-submodule-wrap"><ContactAdminModule /></div>
+          ) : null}
+
+        </div>{/* /admin-body */}
+      </div>{/* /admin-main */}
 
       <ModalConfirm
         open={Boolean(destinationDeleteId)}
         title="Stergere destinatie"
         message="Actiunea nu poate fi anulata. Confirmi stergerea?"
         onCancel={() => setDestinationDeleteId(null)}
-        onConfirm={() => {
-          void confirmDestinationDelete();
-        }}
+        onConfirm={() => { void confirmDestinationDelete(); }}
       />
-
       <ModalConfirm
         open={Boolean(routeDeleteId)}
         title="Stergere ruta"
         message="Actiunea nu poate fi anulata. Confirmi stergerea?"
         onCancel={() => setRouteDeleteId(null)}
-        onConfirm={() => {
-          void confirmRouteDelete();
-        }}
+        onConfirm={() => { void confirmRouteDelete(); }}
       />
-    </section>
+    </div>
   );
 }
