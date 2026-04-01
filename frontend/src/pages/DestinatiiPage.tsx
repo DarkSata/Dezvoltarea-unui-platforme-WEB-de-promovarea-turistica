@@ -1,11 +1,10 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { Marker } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { SiteHeader } from '../components/SiteHeader'
 import { SiteFooter } from '../components/SiteFooter'
 import { Lightbox } from '../components/Lightbox'
 import { navLinks } from '../data/home/navLinks'
-import { destinations } from '../data/destinatii'
 import { categoryLabel, chipOrder, fallbackImage, markerIconByCategory } from '../data/destinatii/meta'
 import { useFilteredDestinations } from '../hooks/useFilteredDestinations'
 import { useLeafletMap } from '../hooks/useLeafletMap'
@@ -15,10 +14,27 @@ import { useScrollToSection } from '../hooks/useScrollToSection'
 import { DestinatiiHero } from '../sections/DestinatiiHero'
 import { DestinatiiMapSection } from '../sections/DestinatiiMapSection'
 import { escapeHtml } from '../utils/string'
-import type { CategoryFilter, Destination } from '../types/destinatii'
+import type { CategoryFilter, Category, Destination } from '../types/destinatii'
+import type { Destination as ApiDestination } from '../types/destination'
+import { destinationsService } from '../services/destinationsService'
+
+function mapApiToLocal(d: ApiDestination): Destination {
+  return {
+    id: d.id,
+    name: d.name,
+    category: d.cat as Category,
+    region: d.area,
+    description: d.description,
+    tips: d.tips,
+    lat: d.lat,
+    lng: d.lng,
+    image: d.image ?? fallbackImage,
+  }
+}
 
 type DestinatiiPageProps = { sectionId?: string; yearText: string }
 export function DestinatiiPage({ sectionId = '', yearText }: DestinatiiPageProps) {
+  const [destinations, setDestinations] = useState<Destination[]>([])
   const [query, setQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>('toate')
   const { lightboxDestination, setLightboxDestination } = useLightbox()
@@ -26,6 +42,15 @@ export function DestinatiiPage({ sectionId = '', yearText }: DestinatiiPageProps
   const markerByIdRef = useRef<Record<string, Marker>>({})
   const { mapRef, markersLayerRef } = useLeafletMap(mapContainerRef)
   const filteredDestinations = useFilteredDestinations(destinations, query, activeCategory)
+
+  useEffect(() => {
+    let mounted = true
+    destinationsService.list().then(items => {
+      if (!mounted) return
+      setDestinations(items.map(mapApiToLocal))
+    }).catch(() => { /* show empty list on error */ })
+    return () => { mounted = false }
+  }, [])
   useDestinatiiMarkers({
     filteredDestinations,
     mapRef,

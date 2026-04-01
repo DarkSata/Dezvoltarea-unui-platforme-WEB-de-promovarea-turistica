@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import Button from "../Button";
+import { Select } from "../Select";
 import Empty from "../Empty";
 import ErrorState from "../Error";
 import Input from "../Input";
@@ -201,17 +202,17 @@ export function GuideAdminModule() {
               />
             </label>
 
-            <label className="form-field admin-sort">
+            <div className="form-field admin-sort">
               <span className="form-label">Sortare</span>
-              <select
-                className="form-control"
+              <Select
                 value={sortBy}
-                onChange={(event) => setSortBy(event.target.value as GuideSortBy)}
-              >
-                <option value="title-asc">Titlu A-Z</option>
-                <option value="title-desc">Titlu Z-A</option>
-              </select>
-            </label>
+                onChange={(v) => setSortBy(v as GuideSortBy)}
+                options={[
+                  { value: "title-asc",  label: "Titlu A-Z" },
+                  { value: "title-desc", label: "Titlu Z-A" },
+                ]}
+              />
+            </div>
           </div>
 
           {loading ? <Loading text="Se incarca ghidul..." /> : null}

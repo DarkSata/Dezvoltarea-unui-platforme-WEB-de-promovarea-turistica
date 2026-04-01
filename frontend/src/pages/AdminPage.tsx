@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Select } from "../components/Select";
 import type { FormEvent } from "react";
 import { GalleryAdminModule } from "../components/admin/GalleryAdminModule";
 import { GuideAdminModule } from "../components/admin/GuideAdminModule";
 import { ContactAdminModule } from "../components/admin/ContactAdminModule";
+import { UsersAdminModule } from "../components/admin/UsersAdminModule";
+import { authService } from "../services/authService";
 import Empty from "../components/Empty";
 import ErrorState from "../components/Error";
 import Loading from "../components/Loading";
@@ -12,7 +15,7 @@ import { routesService } from "../services/routesService";
 import type { Destination, DestinationCategory, DestinationInput } from "../types/destination";
 import type { RouteCategory, RouteDurationFilter, TouristRoute, TouristRouteInput } from "../types/routes";
 
-type AdminSection = "destinations" | "routes" | "guide" | "gallery" | "contact";
+type AdminSection = "destinations" | "routes" | "guide" | "gallery" | "contact" | "users";
 type DestinationSortBy = "name-asc" | "name-desc" | "area-asc" | "area-desc";
 type RouteSortBy = "title-asc" | "title-desc" | "duration-asc" | "duration-desc";
 
@@ -203,6 +206,8 @@ function buildRouteInput(form: RouteForm, existing?: TouristRoute): TouristRoute
 export default function AdminPage() {
   const destinationFormRef = useRef<HTMLFormElement | null>(null);
   const routeFormRef = useRef<HTMLFormElement | null>(null);
+
+  const isAdmin = authService.getSession()?.role === "admin";
 
   const [activeSection, setActiveSection] = useState<AdminSection>("destinations");
 
@@ -471,9 +476,10 @@ export default function AdminPage() {
 
   const sectionTitle =
     activeSection === "destinations" ? "Destinatii" :
-    activeSection === "routes" ? "Rute" :
-    activeSection === "guide" ? "Ghid" :
-    activeSection === "gallery" ? "Galerie" : "Contact";
+    activeSection === "routes"       ? "Rute"        :
+    activeSection === "guide"        ? "Ghid"        :
+    activeSection === "gallery"      ? "Galerie"     :
+    activeSection === "users"        ? "Utilizatori" : "Contact";
 
   const sectionCount =
     activeSection === "destinations" ? destinationCountLabel :
@@ -496,6 +502,9 @@ export default function AdminPage() {
               { id: "guide",        icon: "fa-solid fa-list-check",    label: "Ghid"       },
               { id: "gallery",      icon: "fa-solid fa-images",        label: "Galerie"    },
               { id: "contact",      icon: "fa-solid fa-address-book",  label: "Contact"    },
+              ...(isAdmin
+                ? [{ id: "users", icon: "fa-solid fa-users", label: "Utilizatori" }]
+                : []),
             ] as { id: AdminSection; icon: string; label: string }[]
           ).map(({ id, icon, label }) => (
             <button
@@ -596,17 +605,11 @@ export default function AdminPage() {
 
                   <label className="admin-fp-field">
                     <span className="admin-fp-label">Categorie</span>
-                    <select
-                      className="form-control"
+                    <Select
                       value={destinationForm.cat}
-                      onChange={(e) =>
-                        onDestinationFieldChange("cat", e.target.value as DestinationCategory)
-                      }
-                    >
-                      {DESTINATION_CATEGORIES.map((c) => (
-                        <option key={c} value={c}>{c}</option>
-                      ))}
-                    </select>
+                      onChange={(v) => onDestinationFieldChange("cat", v as DestinationCategory)}
+                      options={DESTINATION_CATEGORIES.map((c) => ({ value: c, label: c }))}
+                    />
                   </label>
 
                   <div className="admin-fp-row2">
@@ -733,16 +736,17 @@ export default function AdminPage() {
 
                 <div className="admin-lp-sort">
                   <span className="admin-fp-label">Sortare</span>
-                  <select
-                    className="form-control admin-lp-sort-select"
+                  <Select
                     value={destinationSortBy}
-                    onChange={(e) => setDestinationSortBy(e.target.value as DestinationSortBy)}
-                  >
-                    <option value="name-asc">Nume A-Z</option>
-                    <option value="name-desc">Nume Z-A</option>
-                    <option value="area-asc">Zona A-Z</option>
-                    <option value="area-desc">Zona Z-A</option>
-                  </select>
+                    onChange={(v) => setDestinationSortBy(v as DestinationSortBy)}
+                    options={[
+                      { value: "name-asc",  label: "Nume A-Z" },
+                      { value: "name-desc", label: "Nume Z-A" },
+                      { value: "area-asc",  label: "Zona A-Z" },
+                      { value: "area-desc", label: "Zona Z-A" },
+                    ]}
+                    ariaLabel="Sortare destinatii"
+                  />
                 </div>
 
                 {destinationLoading ? <Loading text="Se incarca destinatiile..." /> : null}
@@ -843,30 +847,24 @@ export default function AdminPage() {
 
                   <label className="admin-fp-field">
                     <span className="admin-fp-label">Categorie</span>
-                    <select
-                      className="form-control"
+                    <Select
                       value={routeForm.category}
-                      onChange={(e) => onRouteFieldChange("category", e.target.value as RouteCategory)}
-                    >
-                      {ROUTE_CATEGORIES.map((c) => (
-                        <option key={c} value={c}>{c}</option>
-                      ))}
-                    </select>
+                      onChange={(v) => onRouteFieldChange("category", v as RouteCategory)}
+                      options={ROUTE_CATEGORIES.map((c) => ({ value: c, label: c }))}
+                    />
                   </label>
 
                   <label className="admin-fp-field">
                     <span className="admin-fp-label">Durata</span>
-                    <select
-                      className="form-control"
-                      value={routeForm.durationDays}
-                      onChange={(e) =>
-                        onRouteFieldChange("durationDays", Number(e.target.value) as 1 | 2 | 3)
-                      }
-                    >
-                      <option value={1}>1 zi</option>
-                      <option value={2}>2 zile</option>
-                      <option value={3}>3 zile</option>
-                    </select>
+                    <Select
+                      value={String(routeForm.durationDays)}
+                      onChange={(v) => onRouteFieldChange("durationDays", Number(v) as 1 | 2 | 3)}
+                      options={[
+                        { value: "1", label: "1 zi" },
+                        { value: "2", label: "2 zile" },
+                        { value: "3", label: "3 zile" },
+                      ]}
+                    />
                   </label>
 
                   <div className="admin-fp-row2">
@@ -991,16 +989,17 @@ export default function AdminPage() {
 
                 <div className="admin-lp-sort">
                   <span className="admin-fp-label">Sortare</span>
-                  <select
-                    className="form-control admin-lp-sort-select"
+                  <Select
                     value={routeSortBy}
-                    onChange={(e) => setRouteSortBy(e.target.value as RouteSortBy)}
-                  >
-                    <option value="title-asc">Titlu A-Z</option>
-                    <option value="title-desc">Titlu Z-A</option>
-                    <option value="duration-asc">Durata asc</option>
-                    <option value="duration-desc">Durata desc</option>
-                  </select>
+                    onChange={(v) => setRouteSortBy(v as RouteSortBy)}
+                    options={[
+                      { value: "title-asc",      label: "Titlu A-Z" },
+                      { value: "title-desc",     label: "Titlu Z-A" },
+                      { value: "duration-asc",   label: "Durata asc" },
+                      { value: "duration-desc",  label: "Durata desc" },
+                    ]}
+                    ariaLabel="Sortare rute"
+                  />
                 </div>
 
                 {routeLoading ? <Loading text="Se incarca rutele..." /> : null}
@@ -1076,6 +1075,9 @@ export default function AdminPage() {
           ) : null}
           {activeSection === "contact" ? (
             <div className="admin-submodule-wrap"><ContactAdminModule /></div>
+          ) : null}
+          {activeSection === "users" && isAdmin ? (
+            <div className="admin-submodule-wrap"><UsersAdminModule /></div>
           ) : null}
 
         </div>{/* /admin-body */}

@@ -13,4 +13,5 @@ public class BusinessLogic
     public IContactAction      ContactAction()      => new ContactActionExecution();
     public IGalleryAction      GalleryAction()      => new GalleryActionExecution();
     public IGuideAction        GuideAction()        => new GuideActionExecution();
+    public IUserAdminAction    UserAdminAction()    => new UserAdminActionExecution();
 }

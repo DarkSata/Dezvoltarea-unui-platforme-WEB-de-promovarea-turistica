@@ -4,5 +4,6 @@ namespace Web_aplication.BusinessLayer.Interfaces;
 
 public interface IAuthAction
 {
-    LoginResponse? Login(LoginRequest request);
+    LoginResponse?    Login(LoginRequest request);
+    RegisterResponse? Register(RegisterRequest request);
 }

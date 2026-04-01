@@ -46,6 +46,23 @@ class AuthService {
     }
   }
 
+  async register(username: string, password: string): Promise<{ user: SessionUser | null; error?: string }> {
+    try {
+      const res = await api.post<LoginResponse>("/api/auth/register", { username, password });
+      storeToken(res.token);
+      const session: SessionUser = {
+        username: res.username,
+        role: res.role as SessionUser["role"],
+      };
+      localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      this.emit();
+      return { user: session };
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
+      return { user: null, error: msg ?? "Eroare la înregistrare." };
+    }
+  }
+
   async logout(): Promise<void> {
     try {
       await api.post("/api/auth/logout");

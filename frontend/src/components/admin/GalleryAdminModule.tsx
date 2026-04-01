@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import Button from "../Button";
+import { Select } from "../Select";
 import Empty from "../Empty";
 import ErrorState from "../Error";
 import Input from "../Input";
@@ -184,17 +185,11 @@ export function GalleryAdminModule() {
 
             <label className="form-field">
               <span className="form-label">Tema vizuala</span>
-              <select
-                className="form-control"
+              <Select
                 value={form.theme}
-                onChange={(event) => onFieldChange("theme", event.target.value as GalleryTheme)}
-              >
-                {THEMES.map((theme) => (
-                  <option key={theme} value={theme}>
-                    {THEME_LABEL[theme]}
-                  </option>
-                ))}
-              </select>
+                onChange={(v) => onFieldChange("theme", v as GalleryTheme)}
+                options={THEMES.map((t) => ({ value: t, label: THEME_LABEL[t] }))}
+              />
             </label>
 
             <div className="form-field">
@@ -234,17 +229,17 @@ export function GalleryAdminModule() {
               />
             </label>
 
-            <label className="form-field admin-sort">
+            <div className="form-field admin-sort">
               <span className="form-label">Sortare</span>
-              <select
-                className="form-control"
+              <Select
                 value={sortBy}
-                onChange={(event) => setSortBy(event.target.value as GallerySortBy)}
-              >
-                <option value="title-asc">Titlu A-Z</option>
-                <option value="title-desc">Titlu Z-A</option>
-              </select>
-            </label>
+                onChange={(v) => setSortBy(v as GallerySortBy)}
+                options={[
+                  { value: "title-asc",  label: "Titlu A-Z" },
+                  { value: "title-desc", label: "Titlu Z-A" },
+                ]}
+              />
+            </div>
           </div>
 
           {loading ? <Loading text="Se incarca galeria..." /> : null}

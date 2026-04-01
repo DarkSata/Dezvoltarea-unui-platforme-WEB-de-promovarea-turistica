@@ -6,6 +6,9 @@ namespace Web_aplication.BusinessLayer.Structure;
 
 public class AuthActionExecution : AuthActions, IAuthAction
 {
-    public LoginResponse? Login(LoginRequest request)
+    public LoginResponse?    Login(LoginRequest request)
         => LoginActionExecution(request);
+
+    public RegisterResponse? Register(RegisterRequest request)
+        => RegisterActionExecution(request);
 }

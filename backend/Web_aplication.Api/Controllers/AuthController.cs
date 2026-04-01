@@ -21,6 +21,18 @@ public class AuthController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPost("register")]
+    public IActionResult Register([FromBody] RegisterRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Username) || string.IsNullOrWhiteSpace(request.Password))
+            return BadRequest(new { message = "Username și parola sunt obligatorii." });
+
+        var result = _bl.AuthAction().Register(request);
+        if (result is null)
+            return Conflict(new { message = "Username-ul este deja folosit." });
+        return Ok(result);
+    }
+
     [HttpPost("logout")]
     public IActionResult Logout() => Ok();
 

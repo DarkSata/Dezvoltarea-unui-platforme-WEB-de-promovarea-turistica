@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { FormEvent } from "react";
 import Button from "../Button";
+import { Select } from "../Select";
 import Empty from "../Empty";
 import ErrorState from "../Error";
 import Input from "../Input";
@@ -456,7 +457,7 @@ export function ContactAdminModule() {
             <div className="admin-list-head"><h3>Date contact</h3><span className="muted">{filteredDetails.length} inregistrari</span></div>
             <div className="destinations-toolbar admin-toolbar">
               <label className="search"><i className="fa-solid fa-magnifying-glass"></i><input value={detailSearch} onChange={(event) => setDetailSearch(event.target.value)} placeholder="Cauta..." /></label>
-              <label className="form-field admin-sort"><span className="form-label">Sortare</span><select className="form-control" value={detailSort} onChange={(event) => setDetailSort(event.target.value as LabelSort)}><option value="label-asc">Label A-Z</option><option value="label-desc">Label Z-A</option></select></label>
+              <div className="form-field admin-sort"><span className="form-label">Sortare</span><Select value={detailSort} onChange={(v) => setDetailSort(v as LabelSort)} options={[{ value: "label-asc", label: "Label A-Z" }, { value: "label-desc", label: "Label Z-A" }]} /></div>
             </div>
             {filteredDetails.length === 0 ? <Empty title="Nu sunt elemente" description="Adauga primul element de contact." /> : null}
             {filteredDetails.length > 0 ? (
@@ -502,7 +503,7 @@ export function ContactAdminModule() {
             <div className="admin-list-head"><h3>Social links</h3><span className="muted">{filteredSocials.length} inregistrari</span></div>
             <div className="destinations-toolbar admin-toolbar">
               <label className="search"><i className="fa-solid fa-magnifying-glass"></i><input value={socialSearch} onChange={(event) => setSocialSearch(event.target.value)} placeholder="Cauta..." /></label>
-              <label className="form-field admin-sort"><span className="form-label">Sortare</span><select className="form-control" value={socialSort} onChange={(event) => setSocialSort(event.target.value as LabelSort)}><option value="label-asc">Label A-Z</option><option value="label-desc">Label Z-A</option></select></label>
+              <div className="form-field admin-sort"><span className="form-label">Sortare</span><Select value={socialSort} onChange={(v) => setSocialSort(v as LabelSort)} options={[{ value: "label-asc", label: "Label A-Z" }, { value: "label-desc", label: "Label Z-A" }]} /></div>
             </div>
             {filteredSocials.length > 0 ? (
               <div className="admin-list-scroll">
@@ -552,7 +553,7 @@ export function ContactAdminModule() {
                   <button type="button" key={category} className={`chip ${faqCategory === category ? "active" : ""}`} onClick={() => setFaqCategory(category)}>{category}</button>
                 ))}
               </div>
-              <label className="form-field admin-sort"><span className="form-label">Sortare</span><select className="form-control" value={faqSort} onChange={(event) => setFaqSort(event.target.value as FaqSort)}><option value="category-asc">Categorie A-Z</option><option value="category-desc">Categorie Z-A</option><option value="question-asc">Intrebare A-Z</option><option value="question-desc">Intrebare Z-A</option></select></label>
+              <div className="form-field admin-sort"><span className="form-label">Sortare</span><Select value={faqSort} onChange={(v) => setFaqSort(v as FaqSort)} options={[{ value: "category-asc", label: "Categorie A-Z" }, { value: "category-desc", label: "Categorie Z-A" }, { value: "question-asc", label: "Intrebare A-Z" }, { value: "question-desc", label: "Intrebare Z-A" }]} /></div>
             </div>
             {filteredFaq.length > 0 ? (
               <div className="admin-list-scroll">

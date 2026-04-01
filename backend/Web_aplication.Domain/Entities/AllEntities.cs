@@ -18,6 +18,11 @@ public class UserEntity
 
     [Required, MaxLength(50)]
     public string Role { get; set; } = "";
+
+    [MaxLength(200)]
+    public string? Email { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
 
 // ── Destination ───────────────────────────────────────────────────────────────

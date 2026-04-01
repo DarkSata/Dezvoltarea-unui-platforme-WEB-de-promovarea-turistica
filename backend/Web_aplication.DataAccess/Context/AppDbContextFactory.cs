@@ -12,7 +12,7 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     public AppDbContext CreateDbContext(string[] args)
     {
         DbSession.ConnectionString =
-            "Server=localhost;Database=MoldovaTravelDb;Trusted_Connection=True;TrustServerCertificate=True;";
+            "Server=localhost\\SQLEXPRESS;Database=MoldovaTravelDb;Trusted_Connection=True;TrustServerCertificate=True;";
         return new AppDbContext();
     }
 }

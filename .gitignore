@@ -1,8 +1,21 @@
-backend/**/bin/
-backend/**/obj/
-backend/**/.vs/
-backend/*.db
+# ── .NET / Backend ────────────────────────────────────────────────────────────
+BACKEND/**/bin/
+BACKEND/**/obj/
+BACKEND/**/.vs/
+BACKEND/**/*.user
+BACKEND/**/*.suo
+BACKEND/**/appsettings.*.json
+BACKEND/**/*.db
+BACKEND/**/*.mdf
+BACKEND/**/*.ldf
+
+# ── Frontend ──────────────────────────────────────────────────────────────────
+FRONTEND/node_modules/
+FRONTEND/dist/
+FRONTEND/.vite/
+
+# ── IDE / OS ──────────────────────────────────────────────────────────────────
 .idea/
-.vite/
-dist/
-node_modules/
+.vs/
+.DS_Store
+Thumbs.db
