@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Select } from "../components/Select";
 import type { FormEvent } from "react";
 import { GalleryAdminModule } from "../components/admin/GalleryAdminModule";
 import { GuideAdminModule } from "../components/admin/GuideAdminModule";
 import { ContactAdminModule } from "../components/admin/ContactAdminModule";
+import { LocationPickerMap } from "../components/admin/LocationPickerMap";
 import { UsersAdminModule } from "../components/admin/UsersAdminModule";
 import { authService } from "../services/authService";
 import Empty from "../components/Empty";
@@ -204,7 +206,6 @@ function buildRouteInput(form: RouteForm, existing?: TouristRoute): TouristRoute
 }
 
 export default function AdminPage() {
-  const destinationFormRef = useRef<HTMLFormElement | null>(null);
   const routeFormRef = useRef<HTMLFormElement | null>(null);
 
   const isAdmin = authService.getSession()?.role === "admin";
@@ -219,6 +220,7 @@ export default function AdminPage() {
   const [destinationSubmitError, setDestinationSubmitError] = useState<string | null>(null);
   const [destinationEditingId, setDestinationEditingId] = useState<string | null>(null);
   const [destinationDeleteId, setDestinationDeleteId] = useState<string | null>(null);
+  const [destinationModalOpen, setDestinationModalOpen] = useState(false);
   const [destinationSearch, setDestinationSearch] = useState("");
   const [destinationCategory, setDestinationCategory] = useState<"Toate" | DestinationCategory>("Toate");
   const [destinationSortBy, setDestinationSortBy] = useState<DestinationSortBy>("name-asc");
@@ -303,6 +305,26 @@ export default function AdminPage() {
     };
   }, [refreshRoutes]);
 
+  useEffect(() => {
+    if (!destinationModalOpen) return;
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setDestinationModalOpen(false);
+        setDestinationForm(EMPTY_DESTINATION_FORM);
+        setDestinationFormErrors({});
+        setDestinationSubmitError(null);
+        setDestinationEditingId(null);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [destinationModalOpen]);
+
   function resetDestinationForm() {
     setDestinationForm(EMPTY_DESTINATION_FORM);
     setDestinationFormErrors({});
@@ -347,7 +369,17 @@ export default function AdminPage() {
     });
     setDestinationFormErrors({});
     setDestinationSubmitError(null);
-    destinationFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setDestinationModalOpen(true);
+  }
+
+  function openDestinationCreate() {
+    resetDestinationForm();
+    setDestinationModalOpen(true);
+  }
+
+  function closeDestinationModal() {
+    setDestinationModalOpen(false);
+    resetDestinationForm();
   }
 
   function startRouteEdit(item: TouristRoute) {
@@ -397,6 +429,7 @@ export default function AdminPage() {
       }
 
       resetDestinationForm();
+      setDestinationModalOpen(false);
       await refreshDestinations();
     } catch {
       setDestinationSubmitError("Operatia a esuat. Incearca din nou.");
@@ -450,6 +483,7 @@ export default function AdminPage() {
       setDestinationDeleteId(null);
       if (destinationEditingId === destinationDeleteId) {
         resetDestinationForm();
+        setDestinationModalOpen(false);
       }
       await refreshDestinations();
     } catch {
@@ -552,7 +586,7 @@ export default function AdminPage() {
               type="button"
               className="btn primary"
               style={{ padding: "8px 14px", fontSize: ".85rem", borderRadius: "10px" }}
-              onClick={activeSection === "destinations" ? resetDestinationForm : resetRouteForm}
+              onClick={activeSection === "destinations" ? openDestinationCreate : resetRouteForm}
             >
               <i className="fa-solid fa-plus" aria-hidden="true"></i> Adauga nou
             </button>
@@ -565,146 +599,8 @@ export default function AdminPage() {
           {/* ======= DESTINATIONS ======= */}
           {activeSection === "destinations" ? (
             <>
-              {/* Form panel */}
-              <form ref={destinationFormRef} className="admin-fp" onSubmit={onDestinationSubmit}>
-                <div className="admin-fp-head">
-                  <span className="admin-fp-title">
-                    {destinationEditingId
-                      ? `Editare: ${destinationForm.name || "destinatie"}`
-                      : "Adaugare"}
-                  </span>
-                  <span className={`admin-fp-badge${destinationEditingId ? " edit-mode" : " new-mode"}`}>
-                    {destinationEditingId ? "Editare" : "Nou"}
-                  </span>
-                </div>
-
-                <div className="admin-fp-fields">
-                  <label className="admin-fp-field">
-                    <span className="admin-fp-label">Nume</span>
-                    <input
-                      className="form-control"
-                      value={destinationForm.name}
-                      onChange={(e) => onDestinationFieldChange("name", e.target.value)}
-                    />
-                    {destinationFormErrors.name ? (
-                      <span className="form-error">{destinationFormErrors.name}</span>
-                    ) : null}
-                  </label>
-
-                  <label className="admin-fp-field">
-                    <span className="admin-fp-label">Zona</span>
-                    <input
-                      className="form-control"
-                      value={destinationForm.area}
-                      onChange={(e) => onDestinationFieldChange("area", e.target.value)}
-                    />
-                    {destinationFormErrors.area ? (
-                      <span className="form-error">{destinationFormErrors.area}</span>
-                    ) : null}
-                  </label>
-
-                  <label className="admin-fp-field">
-                    <span className="admin-fp-label">Categorie</span>
-                    <Select
-                      value={destinationForm.cat}
-                      onChange={(v) => onDestinationFieldChange("cat", v as DestinationCategory)}
-                      options={DESTINATION_CATEGORIES.map((c) => ({ value: c, label: c }))}
-                    />
-                  </label>
-
-                  <div className="admin-fp-row2">
-                    <label className="admin-fp-field">
-                      <span className="admin-fp-label">Latitudine</span>
-                      <input
-                        className="form-control"
-                        type="number"
-                        step="0.0001"
-                        value={destinationForm.lat}
-                        onChange={(e) => onDestinationFieldChange("lat", Number(e.target.value))}
-                      />
-                      {destinationFormErrors.lat ? (
-                        <span className="form-error">{destinationFormErrors.lat}</span>
-                      ) : null}
-                    </label>
-                    <label className="admin-fp-field">
-                      <span className="admin-fp-label">Longitudine</span>
-                      <input
-                        className="form-control"
-                        type="number"
-                        step="0.0001"
-                        value={destinationForm.lng}
-                        onChange={(e) => onDestinationFieldChange("lng", Number(e.target.value))}
-                      />
-                      {destinationFormErrors.lng ? (
-                        <span className="form-error">{destinationFormErrors.lng}</span>
-                      ) : null}
-                    </label>
-                  </div>
-
-                  <label className="admin-fp-field">
-                    <span className="admin-fp-label">Imagine URL (optional)</span>
-                    <input
-                      className="form-control"
-                      value={destinationForm.image ?? ""}
-                      onChange={(e) => onDestinationFieldChange("image", e.target.value)}
-                    />
-                  </label>
-
-                  <label className="admin-fp-field">
-                    <span className="admin-fp-label">Descriere</span>
-                    <textarea
-                      className="form-control"
-                      rows={3}
-                      value={destinationForm.description}
-                      onChange={(e) => onDestinationFieldChange("description", e.target.value)}
-                    />
-                    {destinationFormErrors.description ? (
-                      <span className="form-error">{destinationFormErrors.description}</span>
-                    ) : null}
-                  </label>
-
-                  <label className="admin-fp-field">
-                    <span className="admin-fp-label">Sfaturi</span>
-                    <textarea
-                      className="form-control"
-                      rows={2}
-                      value={destinationForm.tips}
-                      onChange={(e) => onDestinationFieldChange("tips", e.target.value)}
-                    />
-                    {destinationFormErrors.tips ? (
-                      <span className="form-error">{destinationFormErrors.tips}</span>
-                    ) : null}
-                  </label>
-                </div>
-
-                {destinationSubmitError ? (
-                  <p className="form-error">{destinationSubmitError}</p>
-                ) : null}
-
-                <div className="admin-fp-actions">
-                  <button
-                    type="submit"
-                    className={`btn${destinationEditingId ? " btn-save-edit" : " primary"}`}
-                  >
-                    Salveaza
-                  </button>
-                  <button type="button" className="btn ghost" onClick={resetDestinationForm}>
-                    Reset
-                  </button>
-                  {destinationEditingId ? (
-                    <button
-                      type="button"
-                      className="btn ghost admin-fp-cancel"
-                      onClick={resetDestinationForm}
-                    >
-                      Anuleaza editarea
-                    </button>
-                  ) : null}
-                </div>
-              </form>
-
               {/* List panel */}
-              <div className="admin-lp">
+              <div className="admin-lp admin-lp-full">
                 <label className="search" aria-label="Cauta in destinatii">
                   <i className="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                   <input
@@ -758,47 +654,49 @@ export default function AdminPage() {
                 ) : null}
 
                 {!destinationLoading && !destinationError && destinationItems.length > 0 ? (
-                  <table className="admin-table" aria-label="Lista destinatii">
-                    <thead>
-                      <tr>
-                        <th>Nume</th>
-                        <th>Zona</th>
-                        <th>Categorie</th>
-                        <th>Actiuni</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {destinationItems.map((item) => (
-                        <tr key={item.id}>
-                          <td>{item.name}</td>
-                          <td className="muted">{item.area}</td>
-                          <td>
-                            <span className={`admin-tag admin-tag-${item.cat.toLowerCase()}`}>
-                              {item.cat}
-                            </span>
-                          </td>
-                          <td>
-                            <div className="admin-row-btns">
-                              <button
-                                type="button"
-                                className="admin-btn-edit"
-                                onClick={() => startDestinationEdit(item)}
-                              >
-                                Editare
-                              </button>
-                              <button
-                                type="button"
-                                className="admin-btn-del"
-                                onClick={() => setDestinationDeleteId(item.id)}
-                              >
-                                Stergere
-                              </button>
-                            </div>
-                          </td>
+                  <div className="admin-table-scroll">
+                    <table className="admin-table" aria-label="Lista destinatii">
+                      <thead>
+                        <tr>
+                          <th>Nume</th>
+                          <th>Zona</th>
+                          <th>Categorie</th>
+                          <th>Actiuni</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {destinationItems.map((item) => (
+                          <tr key={item.id}>
+                            <td>{item.name}</td>
+                            <td className="muted">{item.area}</td>
+                            <td>
+                              <span className={`admin-tag admin-tag-${item.cat.toLowerCase()}`}>
+                                {item.cat}
+                              </span>
+                            </td>
+                            <td>
+                              <div className="admin-row-btns">
+                                <button
+                                  type="button"
+                                  className="admin-btn-edit"
+                                  onClick={() => startDestinationEdit(item)}
+                                >
+                                  Editare
+                                </button>
+                                <button
+                                  type="button"
+                                  className="admin-btn-del"
+                                  onClick={() => setDestinationDeleteId(item.id)}
+                                >
+                                  Stergere
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 ) : null}
               </div>
             </>
@@ -1082,6 +980,169 @@ export default function AdminPage() {
 
         </div>{/* /admin-body */}
       </div>{/* /admin-main */}
+
+      {destinationModalOpen
+        ? createPortal(
+            <div
+              className="admin-modal-backdrop"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="destination-modal-title"
+              onMouseDown={(event) => {
+                if (event.target === event.currentTarget) closeDestinationModal();
+              }}
+            >
+              <div className="admin-modal-dialog">
+                <div className="admin-modal-head">
+                  <div className="admin-modal-head-text">
+                    <h3 id="destination-modal-title" className="admin-modal-title">
+                      {destinationEditingId
+                        ? `Editare: ${destinationForm.name || "destinatie"}`
+                        : "Adaugare destinatie"}
+                    </h3>
+                    <span
+                      className={`admin-fp-badge${destinationEditingId ? " edit-mode" : " new-mode"}`}
+                    >
+                      {destinationEditingId ? "Editare" : "Nou"}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    className="admin-modal-close"
+                    aria-label="Inchide"
+                    onClick={closeDestinationModal}
+                  >
+                    <i className="fa-solid fa-xmark" aria-hidden="true"></i>
+                  </button>
+                </div>
+
+                <form
+                  id="destination-form"
+                  className="admin-modal-form"
+                  onSubmit={onDestinationSubmit}
+                >
+                  <div className="admin-modal-body">
+                    <div className="admin-fp-fields">
+                      <label className="admin-fp-field">
+                        <span className="admin-fp-label">Nume</span>
+                        <input
+                          className="form-control"
+                          value={destinationForm.name}
+                          onChange={(e) => onDestinationFieldChange("name", e.target.value)}
+                        />
+                        {destinationFormErrors.name ? (
+                          <span className="form-error">{destinationFormErrors.name}</span>
+                        ) : null}
+                      </label>
+
+                      <label className="admin-fp-field">
+                        <span className="admin-fp-label">Zona</span>
+                        <input
+                          className="form-control"
+                          value={destinationForm.area}
+                          onChange={(e) => onDestinationFieldChange("area", e.target.value)}
+                        />
+                        {destinationFormErrors.area ? (
+                          <span className="form-error">{destinationFormErrors.area}</span>
+                        ) : null}
+                      </label>
+
+                      <label className="admin-fp-field">
+                        <span className="admin-fp-label">Categorie</span>
+                        <Select
+                          value={destinationForm.cat}
+                          onChange={(v) => onDestinationFieldChange("cat", v as DestinationCategory)}
+                          options={DESTINATION_CATEGORIES.map((c) => ({ value: c, label: c }))}
+                        />
+                      </label>
+
+                      <div className="admin-fp-field">
+                        <span className="admin-fp-label">Locatie pe harta</span>
+                        <LocationPickerMap
+                          lat={destinationForm.lat}
+                          lng={destinationForm.lng}
+                          onChange={(lat, lng) => {
+                            setDestinationForm((prev) => ({ ...prev, lat, lng }));
+                            setDestinationFormErrors((prev) => ({
+                              ...prev,
+                              lat: undefined,
+                              lng: undefined,
+                            }));
+                            setDestinationSubmitError(null);
+                          }}
+                        />
+                        {destinationFormErrors.lat || destinationFormErrors.lng ? (
+                          <span className="form-error">
+                            {destinationFormErrors.lat ?? destinationFormErrors.lng}
+                          </span>
+                        ) : null}
+                      </div>
+
+                      <label className="admin-fp-field">
+                        <span className="admin-fp-label">Imagine URL (optional)</span>
+                        <input
+                          className="form-control"
+                          value={destinationForm.image ?? ""}
+                          onChange={(e) => onDestinationFieldChange("image", e.target.value)}
+                        />
+                      </label>
+
+                      <label className="admin-fp-field">
+                        <span className="admin-fp-label">Descriere</span>
+                        <textarea
+                          className="form-control"
+                          rows={3}
+                          value={destinationForm.description}
+                          onChange={(e) => onDestinationFieldChange("description", e.target.value)}
+                        />
+                        {destinationFormErrors.description ? (
+                          <span className="form-error">{destinationFormErrors.description}</span>
+                        ) : null}
+                      </label>
+
+                      <label className="admin-fp-field">
+                        <span className="admin-fp-label">Sfaturi</span>
+                        <textarea
+                          className="form-control"
+                          rows={2}
+                          value={destinationForm.tips}
+                          onChange={(e) => onDestinationFieldChange("tips", e.target.value)}
+                        />
+                        {destinationFormErrors.tips ? (
+                          <span className="form-error">{destinationFormErrors.tips}</span>
+                        ) : null}
+                      </label>
+                    </div>
+
+                    {destinationSubmitError ? (
+                      <p className="form-error">{destinationSubmitError}</p>
+                    ) : null}
+                  </div>
+
+                  <div className="admin-modal-foot">
+                    <button
+                      type="button"
+                      className="btn ghost"
+                      onClick={closeDestinationModal}
+                    >
+                      Anuleaza
+                    </button>
+                    <button type="button" className="btn ghost" onClick={resetDestinationForm}>
+                      Reset
+                    </button>
+                    <button
+                      type="submit"
+                      className={`btn${destinationEditingId ? " btn-save-edit" : " primary"}`}
+                    >
+                      Salveaza
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
 
       <ModalConfirm
         open={Boolean(destinationDeleteId)}
