@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { Select } from "../components/Select";
 import type { FormEvent } from "react";
@@ -206,8 +206,6 @@ function buildRouteInput(form: RouteForm, existing?: TouristRoute): TouristRoute
 }
 
 export default function AdminPage() {
-  const routeFormRef = useRef<HTMLFormElement | null>(null);
-
   const isAdmin = authService.getSession()?.role === "admin";
 
   const [activeSection, setActiveSection] = useState<AdminSection>("destinations");
@@ -233,6 +231,7 @@ export default function AdminPage() {
   const [routeSubmitError, setRouteSubmitError] = useState<string | null>(null);
   const [routeEditingId, setRouteEditingId] = useState<string | null>(null);
   const [routeDeleteId, setRouteDeleteId] = useState<string | null>(null);
+  const [routeModalOpen, setRouteModalOpen] = useState(false);
   const [routeSearch, setRouteSearch] = useState("");
   const [routeCategory, setRouteCategory] = useState<"Toate" | RouteCategory>("Toate");
   const [routeDuration, setRouteDuration] = useState<RouteDurationFilter>("toate");
@@ -325,6 +324,26 @@ export default function AdminPage() {
     };
   }, [destinationModalOpen]);
 
+  useEffect(() => {
+    if (!routeModalOpen) return;
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setRouteModalOpen(false);
+        setRouteForm(EMPTY_ROUTE_FORM);
+        setRouteFormErrors({});
+        setRouteSubmitError(null);
+        setRouteEditingId(null);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [routeModalOpen]);
+
   function resetDestinationForm() {
     setDestinationForm(EMPTY_DESTINATION_FORM);
     setDestinationFormErrors({});
@@ -397,7 +416,17 @@ export default function AdminPage() {
     });
     setRouteFormErrors({});
     setRouteSubmitError(null);
-    routeFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setRouteModalOpen(true);
+  }
+
+  function openRouteCreate() {
+    resetRouteForm();
+    setRouteModalOpen(true);
+  }
+
+  function closeRouteModal() {
+    setRouteModalOpen(false);
+    resetRouteForm();
   }
 
   async function onDestinationSubmit(event: FormEvent) {
@@ -469,6 +498,7 @@ export default function AdminPage() {
       }
 
       resetRouteForm();
+      setRouteModalOpen(false);
       await refreshRoutes();
     } catch {
       setRouteSubmitError("Operatia pe ruta a esuat. Incearca din nou.");
@@ -500,6 +530,7 @@ export default function AdminPage() {
       setRouteDeleteId(null);
       if (routeEditingId === routeDeleteId) {
         resetRouteForm();
+        setRouteModalOpen(false);
       }
       await refreshRoutes();
     } catch {
@@ -586,7 +617,7 @@ export default function AdminPage() {
               type="button"
               className="btn primary"
               style={{ padding: "8px 14px", fontSize: ".85rem", borderRadius: "10px" }}
-              onClick={activeSection === "destinations" ? openDestinationCreate : resetRouteForm}
+              onClick={activeSection === "destinations" ? openDestinationCreate : openRouteCreate}
             >
               <i className="fa-solid fa-plus" aria-hidden="true"></i> Adauga nou
             </button>
@@ -705,144 +736,8 @@ export default function AdminPage() {
           {/* ======= ROUTES ======= */}
           {activeSection === "routes" ? (
             <>
-              {/* Form panel */}
-              <form ref={routeFormRef} className="admin-fp" onSubmit={onRouteSubmit}>
-                <div className="admin-fp-head">
-                  <span className="admin-fp-title">
-                    {routeEditingId
-                      ? `Editare: ${routeForm.title || "ruta"}`
-                      : "Adaugare"}
-                  </span>
-                  <span className={`admin-fp-badge${routeEditingId ? " edit-mode" : " new-mode"}`}>
-                    {routeEditingId ? "Editare" : "Nou"}
-                  </span>
-                </div>
-
-                <div className="admin-fp-fields">
-                  <label className="admin-fp-field">
-                    <span className="admin-fp-label">Titlu ruta</span>
-                    <input
-                      className="form-control"
-                      value={routeForm.title}
-                      onChange={(e) => onRouteFieldChange("title", e.target.value)}
-                    />
-                    {routeFormErrors.title ? (
-                      <span className="form-error">{routeFormErrors.title}</span>
-                    ) : null}
-                  </label>
-
-                  <label className="admin-fp-field">
-                    <span className="admin-fp-label">Subtitlu</span>
-                    <input
-                      className="form-control"
-                      value={routeForm.subtitle}
-                      onChange={(e) => onRouteFieldChange("subtitle", e.target.value)}
-                    />
-                    {routeFormErrors.subtitle ? (
-                      <span className="form-error">{routeFormErrors.subtitle}</span>
-                    ) : null}
-                  </label>
-
-                  <label className="admin-fp-field">
-                    <span className="admin-fp-label">Categorie</span>
-                    <Select
-                      value={routeForm.category}
-                      onChange={(v) => onRouteFieldChange("category", v as RouteCategory)}
-                      options={ROUTE_CATEGORIES.map((c) => ({ value: c, label: c }))}
-                    />
-                  </label>
-
-                  <label className="admin-fp-field">
-                    <span className="admin-fp-label">Durata</span>
-                    <Select
-                      value={String(routeForm.durationDays)}
-                      onChange={(v) => onRouteFieldChange("durationDays", Number(v) as 1 | 2 | 3)}
-                      options={[
-                        { value: "1", label: "1 zi" },
-                        { value: "2", label: "2 zile" },
-                        { value: "3", label: "3 zile" },
-                      ]}
-                    />
-                  </label>
-
-                  <div className="admin-fp-row2">
-                    <label className="admin-fp-field">
-                      <span className="admin-fp-label">Latitudine</span>
-                      <input
-                        className="form-control"
-                        type="number"
-                        step="0.0001"
-                        value={routeForm.lat}
-                        onChange={(e) => onRouteFieldChange("lat", Number(e.target.value))}
-                      />
-                      {routeFormErrors.lat ? (
-                        <span className="form-error">{routeFormErrors.lat}</span>
-                      ) : null}
-                    </label>
-                    <label className="admin-fp-field">
-                      <span className="admin-fp-label">Longitudine</span>
-                      <input
-                        className="form-control"
-                        type="number"
-                        step="0.0001"
-                        value={routeForm.lng}
-                        onChange={(e) => onRouteFieldChange("lng", Number(e.target.value))}
-                      />
-                      {routeFormErrors.lng ? (
-                        <span className="form-error">{routeFormErrors.lng}</span>
-                      ) : null}
-                    </label>
-                  </div>
-
-                  <label className="admin-fp-field">
-                    <span className="admin-fp-label">Imagine punct start (optional)</span>
-                    <input
-                      className="form-control"
-                      value={routeForm.image}
-                      onChange={(e) => onRouteFieldChange("image", e.target.value)}
-                    />
-                  </label>
-
-                  <label className="admin-fp-field">
-                    <span className="admin-fp-label">Detalii ruta</span>
-                    <textarea
-                      className="form-control"
-                      rows={4}
-                      value={routeForm.details}
-                      onChange={(e) => onRouteFieldChange("details", e.target.value)}
-                    />
-                    {routeFormErrors.details ? (
-                      <span className="form-error">{routeFormErrors.details}</span>
-                    ) : null}
-                  </label>
-                </div>
-
-                {routeSubmitError ? <p className="form-error">{routeSubmitError}</p> : null}
-
-                <div className="admin-fp-actions">
-                  <button
-                    type="submit"
-                    className={`btn${routeEditingId ? " btn-save-edit" : " primary"}`}
-                  >
-                    Salveaza
-                  </button>
-                  <button type="button" className="btn ghost" onClick={resetRouteForm}>
-                    Reset
-                  </button>
-                  {routeEditingId ? (
-                    <button
-                      type="button"
-                      className="btn ghost admin-fp-cancel"
-                      onClick={resetRouteForm}
-                    >
-                      Anuleaza editarea
-                    </button>
-                  ) : null}
-                </div>
-              </form>
-
               {/* List panel */}
-              <div className="admin-lp">
+              <div className="admin-lp admin-lp-full">
                 <label className="search" aria-label="Cauta in rute">
                   <i className="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                   <input
@@ -909,56 +804,58 @@ export default function AdminPage() {
                 ) : null}
 
                 {!routeLoading && !routeError && routeItems.length > 0 ? (
-                  <table className="admin-table" aria-label="Lista rute">
-                    <thead>
-                      <tr>
-                        <th>Titlu</th>
-                        <th>Categorie</th>
-                        <th>Durata</th>
-                        <th>Actiuni</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {routeItems.map((item) => (
-                        <tr key={item.id}>
-                          <td>{item.title}</td>
-                          <td>
-                            <span
-                              className={`admin-tag admin-tag-${item.category.toLowerCase()}`}
-                            >
-                              <i
-                                className={categoryIcon(item.category)}
-                                aria-hidden="true"
-                                style={{ fontSize: "10px" }}
-                              ></i>
-                              {item.category}
-                            </span>
-                          </td>
-                          <td className="muted">
-                            {item.durationDays} zi{item.durationDays > 1 ? "le" : ""}
-                          </td>
-                          <td>
-                            <div className="admin-row-btns">
-                              <button
-                                type="button"
-                                className="admin-btn-edit"
-                                onClick={() => startRouteEdit(item)}
-                              >
-                                Editare
-                              </button>
-                              <button
-                                type="button"
-                                className="admin-btn-del"
-                                onClick={() => setRouteDeleteId(item.id)}
-                              >
-                                Stergere
-                              </button>
-                            </div>
-                          </td>
+                  <div className="admin-table-scroll">
+                    <table className="admin-table" aria-label="Lista rute">
+                      <thead>
+                        <tr>
+                          <th>Titlu</th>
+                          <th>Categorie</th>
+                          <th>Durata</th>
+                          <th>Actiuni</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        {routeItems.map((item) => (
+                          <tr key={item.id}>
+                            <td>{item.title}</td>
+                            <td>
+                              <span
+                                className={`admin-tag admin-tag-${item.category.toLowerCase()}`}
+                              >
+                                <i
+                                  className={categoryIcon(item.category)}
+                                  aria-hidden="true"
+                                  style={{ fontSize: "10px" }}
+                                ></i>
+                                {item.category}
+                              </span>
+                            </td>
+                            <td className="muted">
+                              {item.durationDays} zi{item.durationDays > 1 ? "le" : ""}
+                            </td>
+                            <td>
+                              <div className="admin-row-btns">
+                                <button
+                                  type="button"
+                                  className="admin-btn-edit"
+                                  onClick={() => startRouteEdit(item)}
+                                >
+                                  Editare
+                                </button>
+                                <button
+                                  type="button"
+                                  className="admin-btn-del"
+                                  onClick={() => setRouteDeleteId(item.id)}
+                                >
+                                  Stergere
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
                 ) : null}
               </div>
             </>
@@ -1133,6 +1030,165 @@ export default function AdminPage() {
                     <button
                       type="submit"
                       className={`btn${destinationEditingId ? " btn-save-edit" : " primary"}`}
+                    >
+                      Salveaza
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
+
+      {routeModalOpen
+        ? createPortal(
+            <div
+              className="admin-modal-backdrop"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="route-modal-title"
+              onMouseDown={(event) => {
+                if (event.target === event.currentTarget) closeRouteModal();
+              }}
+            >
+              <div className="admin-modal-dialog">
+                <div className="admin-modal-head">
+                  <div className="admin-modal-head-text">
+                    <h3 id="route-modal-title" className="admin-modal-title">
+                      {routeEditingId
+                        ? `Editare: ${routeForm.title || "ruta"}`
+                        : "Adaugare ruta"}
+                    </h3>
+                    <span
+                      className={`admin-fp-badge${routeEditingId ? " edit-mode" : " new-mode"}`}
+                    >
+                      {routeEditingId ? "Editare" : "Nou"}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    className="admin-modal-close"
+                    aria-label="Inchide"
+                    onClick={closeRouteModal}
+                  >
+                    <i className="fa-solid fa-xmark" aria-hidden="true"></i>
+                  </button>
+                </div>
+
+                <form
+                  id="route-form"
+                  className="admin-modal-form"
+                  onSubmit={onRouteSubmit}
+                >
+                  <div className="admin-modal-body">
+                    <div className="admin-fp-fields">
+                      <label className="admin-fp-field">
+                        <span className="admin-fp-label">Titlu ruta</span>
+                        <input
+                          className="form-control"
+                          value={routeForm.title}
+                          onChange={(e) => onRouteFieldChange("title", e.target.value)}
+                        />
+                        {routeFormErrors.title ? (
+                          <span className="form-error">{routeFormErrors.title}</span>
+                        ) : null}
+                      </label>
+
+                      <label className="admin-fp-field">
+                        <span className="admin-fp-label">Subtitlu</span>
+                        <input
+                          className="form-control"
+                          value={routeForm.subtitle}
+                          onChange={(e) => onRouteFieldChange("subtitle", e.target.value)}
+                        />
+                        {routeFormErrors.subtitle ? (
+                          <span className="form-error">{routeFormErrors.subtitle}</span>
+                        ) : null}
+                      </label>
+
+                      <label className="admin-fp-field">
+                        <span className="admin-fp-label">Categorie</span>
+                        <Select
+                          value={routeForm.category}
+                          onChange={(v) => onRouteFieldChange("category", v as RouteCategory)}
+                          options={ROUTE_CATEGORIES.map((c) => ({ value: c, label: c }))}
+                        />
+                      </label>
+
+                      <label className="admin-fp-field">
+                        <span className="admin-fp-label">Durata</span>
+                        <Select
+                          value={String(routeForm.durationDays)}
+                          onChange={(v) => onRouteFieldChange("durationDays", Number(v) as 1 | 2 | 3)}
+                          options={[
+                            { value: "1", label: "1 zi" },
+                            { value: "2", label: "2 zile" },
+                            { value: "3", label: "3 zile" },
+                          ]}
+                        />
+                      </label>
+
+                      <div className="admin-fp-field">
+                        <span className="admin-fp-label">Locatie pe harta</span>
+                        <LocationPickerMap
+                          lat={routeForm.lat}
+                          lng={routeForm.lng}
+                          onChange={(lat, lng) => {
+                            setRouteForm((prev) => ({ ...prev, lat, lng }));
+                            setRouteFormErrors((prev) => ({
+                              ...prev,
+                              lat: undefined,
+                              lng: undefined,
+                            }));
+                            setRouteSubmitError(null);
+                          }}
+                        />
+                        {routeFormErrors.lat || routeFormErrors.lng ? (
+                          <span className="form-error">
+                            {routeFormErrors.lat ?? routeFormErrors.lng}
+                          </span>
+                        ) : null}
+                      </div>
+
+                      <label className="admin-fp-field">
+                        <span className="admin-fp-label">Imagine punct start (optional)</span>
+                        <input
+                          className="form-control"
+                          value={routeForm.image}
+                          onChange={(e) => onRouteFieldChange("image", e.target.value)}
+                        />
+                      </label>
+
+                      <label className="admin-fp-field">
+                        <span className="admin-fp-label">Detalii ruta</span>
+                        <textarea
+                          className="form-control"
+                          rows={4}
+                          value={routeForm.details}
+                          onChange={(e) => onRouteFieldChange("details", e.target.value)}
+                        />
+                        {routeFormErrors.details ? (
+                          <span className="form-error">{routeFormErrors.details}</span>
+                        ) : null}
+                      </label>
+                    </div>
+
+                    {routeSubmitError ? (
+                      <p className="form-error">{routeSubmitError}</p>
+                    ) : null}
+                  </div>
+
+                  <div className="admin-modal-foot">
+                    <button type="button" className="btn ghost" onClick={closeRouteModal}>
+                      Anuleaza
+                    </button>
+                    <button type="button" className="btn ghost" onClick={resetRouteForm}>
+                      Reset
+                    </button>
+                    <button
+                      type="submit"
+                      className={`btn${routeEditingId ? " btn-save-edit" : " primary"}`}
                     >
                       Salveaza
                     </button>
