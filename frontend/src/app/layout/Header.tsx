@@ -87,12 +87,6 @@ export default function Header() {
         >
           Ghidul călătorului
         </NavLink>
-        <NavLink
-          className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
-          to="/contact"
-        >
-          Contact
-        </NavLink>
         {session?.role === "admin" ? (
           <NavLink
             className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
