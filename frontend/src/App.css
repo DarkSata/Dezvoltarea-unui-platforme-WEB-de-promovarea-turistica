@@ -318,6 +318,12 @@ textarea.form-control:-webkit-autofill:focus{
 .admin-list-head h3{
   margin: 0;
 }
+.admin-list-head-left{
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
 
 .admin-toolbar{
   margin-bottom: 16px;

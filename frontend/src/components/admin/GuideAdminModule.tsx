@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import type { FormEvent } from "react";
 import Button from "../Button";
 import { Select } from "../Select";
 import Empty from "../Empty";
 import ErrorState from "../Error";
-import Input from "../Input";
 import Loading from "../Loading";
 import ModalConfirm from "../ModalConfirm";
 import {
@@ -31,8 +31,6 @@ function validate(input: GuideChecklistInput): GuideFormErrors {
 }
 
 export function GuideAdminModule() {
-  const formRef = useRef<HTMLFormElement | null>(null);
-
   const [items, setItems] = useState<GuideChecklistItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -42,6 +40,7 @@ export function GuideAdminModule() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<GuideSortBy>("title-asc");
@@ -77,11 +76,41 @@ export function GuideAdminModule() {
     };
   }, [refresh]);
 
+  useEffect(() => {
+    if (!modalOpen) return;
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setModalOpen(false);
+        setForm(EMPTY_FORM);
+        setFormErrors({});
+        setSubmitError(null);
+        setEditingId(null);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [modalOpen]);
+
   function resetForm() {
     setForm(EMPTY_FORM);
     setFormErrors({});
     setSubmitError(null);
     setEditingId(null);
+  }
+
+  function openCreate() {
+    resetForm();
+    setModalOpen(true);
+  }
+
+  function closeModal() {
+    setModalOpen(false);
+    resetForm();
   }
 
   function onFieldChange<K extends keyof GuideChecklistInput>(key: K, value: GuideChecklistInput[K]) {
@@ -98,7 +127,7 @@ export function GuideAdminModule() {
     });
     setFormErrors({});
     setSubmitError(null);
-    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setModalOpen(true);
   }
 
   async function onSubmit(event: FormEvent) {
@@ -125,6 +154,7 @@ export function GuideAdminModule() {
       }
 
       resetForm();
+      setModalOpen(false);
       await refresh();
     } catch {
       setSubmitError("Operatia a esuat. Incearca din nou.");
@@ -139,6 +169,7 @@ export function GuideAdminModule() {
       setDeleteId(null);
       if (editingId === deleteId) {
         resetForm();
+        setModalOpen(false);
       }
       await refresh();
     } catch {
@@ -149,107 +180,163 @@ export function GuideAdminModule() {
 
   return (
     <>
-      <div className="admin-module-grid">
-        <form ref={formRef} className="admin-form admin-panel" onSubmit={onSubmit}>
-          <div className="admin-panel-head">
-            <h3>{editingId ? "Editare ghid" : "Adaugare ghid"}</h3>
-            <span className="pill">{editingId ? "Mod editare" : "Nou"}</span>
-          </div>
-
-          <div className="form-grid">
-            <Input
-              label="Titlu"
-              value={form.title}
-              onChange={(event) => onFieldChange("title", event.target.value)}
-              error={formErrors.title}
-            />
-
-            <label className="form-field form-field-full">
-              <span className="form-label">Descriere</span>
-              <textarea
-                className="form-control"
-                rows={4}
-                value={form.description}
-                onChange={(event) => onFieldChange("description", event.target.value)}
-              ></textarea>
-              {formErrors.description ? <span className="form-error">{formErrors.description}</span> : null}
-            </label>
-          </div>
-
-          {submitError ? <p className="form-error">{submitError}</p> : null}
-
-          <div className="form-actions">
-            <Button type="submit">{editingId ? "Salveaza modificarile" : "Adauga ghid"}</Button>
-            <Button type="button" variant="ghost" onClick={resetForm}>
-              Reset
-            </Button>
-          </div>
-        </form>
-
-        <div className="admin-panel">
-          <div className="admin-list-head">
+      <div className="admin-panel">
+        <div className="admin-list-head">
+          <div className="admin-list-head-left">
             <h3>Ghid</h3>
             <span className="muted">{countLabel}</span>
           </div>
+          <button
+            type="button"
+            className="btn primary"
+            style={{ padding: "8px 14px", fontSize: ".85rem", borderRadius: "10px" }}
+            onClick={openCreate}
+          >
+            <i className="fa-solid fa-plus" aria-hidden="true"></i> Adauga nou
+          </button>
+        </div>
 
-          <div className="destinations-toolbar admin-toolbar">
-            <label className="search" aria-label="Cauta in ghid">
-              <i className="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-              <input
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Cauta dupa titlu sau descriere"
-              />
-            </label>
+        <div className="destinations-toolbar admin-toolbar">
+          <label className="search" aria-label="Cauta in ghid">
+            <i className="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Cauta dupa titlu sau descriere"
+            />
+          </label>
 
-            <div className="form-field admin-sort">
-              <span className="form-label">Sortare</span>
-              <Select
-                value={sortBy}
-                onChange={(v) => setSortBy(v as GuideSortBy)}
-                options={[
-                  { value: "title-asc",  label: "Titlu A-Z" },
-                  { value: "title-desc", label: "Titlu Z-A" },
-                ]}
-              />
+          <div className="form-field admin-sort">
+            <span className="form-label">Sortare</span>
+            <Select
+              value={sortBy}
+              onChange={(v) => setSortBy(v as GuideSortBy)}
+              options={[
+                { value: "title-asc",  label: "Titlu A-Z" },
+                { value: "title-desc", label: "Titlu Z-A" },
+              ]}
+            />
+          </div>
+        </div>
+
+        {loading ? <Loading text="Se incarca ghidul..." /> : null}
+        {!loading && error ? <ErrorState title="Eroare" message={error} /> : null}
+        {!loading && !error && items.length === 0 ? (
+          <Empty title="Lista ghid este goala" description="Adauga primul punct de ghid." />
+        ) : null}
+
+        {!loading && !error && items.length > 0 ? (
+          <div className="admin-list-scroll" aria-label="Lista ghid">
+            <div className="grid destinations-cards">
+              {items.map((item) => (
+                <article key={item.id} className="card admin-item-card">
+                  <div className="card-body">
+                    <h3>{item.title}</h3>
+                    <p>{item.description}</p>
+                    <div className="admin-row-actions">
+                      <Button type="button" variant="small" onClick={() => startEdit(item)}>
+                        Editare
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="small"
+                        className="danger"
+                        onClick={() => setDeleteId(item.id)}
+                      >
+                        Stergere
+                      </Button>
+                    </div>
+                  </div>
+                </article>
+              ))}
             </div>
           </div>
-
-          {loading ? <Loading text="Se incarca ghidul..." /> : null}
-          {!loading && error ? <ErrorState title="Eroare" message={error} /> : null}
-          {!loading && !error && items.length === 0 ? (
-            <Empty title="Lista ghid este goala" description="Adauga primul punct de ghid." />
-          ) : null}
-
-          {!loading && !error && items.length > 0 ? (
-            <div className="admin-list-scroll" aria-label="Lista ghid">
-              <div className="grid destinations-cards">
-                {items.map((item) => (
-                  <article key={item.id} className="card admin-item-card">
-                    <div className="card-body">
-                      <h3>{item.title}</h3>
-                      <p>{item.description}</p>
-                      <div className="admin-row-actions">
-                        <Button type="button" variant="small" onClick={() => startEdit(item)}>
-                          Editare
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="small"
-                          className="danger"
-                          onClick={() => setDeleteId(item.id)}
-                        >
-                          Stergere
-                        </Button>
-                      </div>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          ) : null}
-        </div>
+        ) : null}
       </div>
+
+      {modalOpen
+        ? createPortal(
+            <div
+              className="admin-modal-backdrop"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="guide-modal-title"
+              onMouseDown={(event) => {
+                if (event.target === event.currentTarget) closeModal();
+              }}
+            >
+              <div className="admin-modal-dialog">
+                <div className="admin-modal-head">
+                  <div className="admin-modal-head-text">
+                    <h3 id="guide-modal-title" className="admin-modal-title">
+                      {editingId ? `Editare: ${form.title || "ghid"}` : "Adaugare ghid"}
+                    </h3>
+                    <span className={`admin-fp-badge${editingId ? " edit-mode" : " new-mode"}`}>
+                      {editingId ? "Editare" : "Nou"}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    className="admin-modal-close"
+                    aria-label="Inchide"
+                    onClick={closeModal}
+                  >
+                    <i className="fa-solid fa-xmark" aria-hidden="true"></i>
+                  </button>
+                </div>
+
+                <form id="guide-form" className="admin-modal-form" onSubmit={onSubmit}>
+                  <div className="admin-modal-body">
+                    <div className="admin-fp-fields">
+                      <label className="admin-fp-field">
+                        <span className="admin-fp-label">Titlu</span>
+                        <input
+                          className="form-control"
+                          value={form.title}
+                          onChange={(event) => onFieldChange("title", event.target.value)}
+                        />
+                        {formErrors.title ? (
+                          <span className="form-error">{formErrors.title}</span>
+                        ) : null}
+                      </label>
+
+                      <label className="admin-fp-field">
+                        <span className="admin-fp-label">Descriere</span>
+                        <textarea
+                          className="form-control"
+                          rows={5}
+                          value={form.description}
+                          onChange={(event) => onFieldChange("description", event.target.value)}
+                        />
+                        {formErrors.description ? (
+                          <span className="form-error">{formErrors.description}</span>
+                        ) : null}
+                      </label>
+                    </div>
+
+                    {submitError ? <p className="form-error">{submitError}</p> : null}
+                  </div>
+
+                  <div className="admin-modal-foot">
+                    <button type="button" className="btn ghost" onClick={closeModal}>
+                      Anuleaza
+                    </button>
+                    <button type="button" className="btn ghost" onClick={resetForm}>
+                      Reset
+                    </button>
+                    <button
+                      type="submit"
+                      className={`btn${editingId ? " btn-save-edit" : " primary"}`}
+                    >
+                      Salveaza
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
 
       <ModalConfirm
         open={Boolean(deleteId)}
