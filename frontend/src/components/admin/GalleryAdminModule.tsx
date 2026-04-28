@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import type { FormEvent } from "react";
 import Button from "../Button";
 import { Select } from "../Select";
 import Empty from "../Empty";
 import ErrorState from "../Error";
-import Input from "../Input";
 import Loading from "../Loading";
 import ModalConfirm from "../ModalConfirm";
 import {
@@ -41,8 +41,6 @@ function validate(input: GalleryBlockInput): GalleryFormErrors {
 }
 
 export function GalleryAdminModule() {
-  const formRef = useRef<HTMLFormElement | null>(null);
-
   const [items, setItems] = useState<GalleryBlock[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,6 +50,7 @@ export function GalleryAdminModule() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<GallerySortBy>("title-asc");
@@ -87,11 +86,41 @@ export function GalleryAdminModule() {
     };
   }, [refresh]);
 
+  useEffect(() => {
+    if (!modalOpen) return;
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setModalOpen(false);
+        setForm(EMPTY_FORM);
+        setFormErrors({});
+        setSubmitError(null);
+        setEditingId(null);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [modalOpen]);
+
   function resetForm() {
     setForm(EMPTY_FORM);
     setFormErrors({});
     setSubmitError(null);
     setEditingId(null);
+  }
+
+  function openCreate() {
+    resetForm();
+    setModalOpen(true);
+  }
+
+  function closeModal() {
+    setModalOpen(false);
+    resetForm();
   }
 
   function onFieldChange<K extends keyof GalleryBlockInput>(key: K, value: GalleryBlockInput[K]) {
@@ -109,7 +138,7 @@ export function GalleryAdminModule() {
     });
     setFormErrors({});
     setSubmitError(null);
-    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setModalOpen(true);
   }
 
   async function onSubmit(event: FormEvent) {
@@ -137,6 +166,7 @@ export function GalleryAdminModule() {
       }
 
       resetForm();
+      setModalOpen(false);
       await refresh();
     } catch {
       setSubmitError("Operatia a esuat. Incearca din nou.");
@@ -151,6 +181,7 @@ export function GalleryAdminModule() {
       setDeleteId(null);
       if (editingId === deleteId) {
         resetForm();
+        setModalOpen(false);
       }
       await refresh();
     } catch {
@@ -161,126 +192,185 @@ export function GalleryAdminModule() {
 
   return (
     <>
-      <div className="admin-module-grid">
-        <form ref={formRef} className="admin-form admin-panel" onSubmit={onSubmit}>
-          <div className="admin-panel-head">
-            <h3>{editingId ? "Editare galerie" : "Adaugare galerie"}</h3>
-            <span className="pill">{editingId ? "Mod editare" : "Nou"}</span>
-          </div>
-
-          <div className="form-grid">
-            <Input
-              label="Titlu"
-              value={form.title}
-              onChange={(event) => onFieldChange("title", event.target.value)}
-              error={formErrors.title}
-            />
-
-            <Input
-              label="Subtitlu"
-              value={form.subtitle}
-              onChange={(event) => onFieldChange("subtitle", event.target.value)}
-              error={formErrors.subtitle}
-            />
-
-            <label className="form-field">
-              <span className="form-label">Tema vizuala</span>
-              <Select
-                value={form.theme}
-                onChange={(v) => onFieldChange("theme", v as GalleryTheme)}
-                options={THEMES.map((t) => ({ value: t, label: THEME_LABEL[t] }))}
-              />
-            </label>
-
-            <div className="form-field">
-              <span className="form-label">Preview</span>
-              <figure className={`gallery-item ${form.theme} admin-gallery-preview`}>
-                <figcaption>
-                  <strong>{form.title || "Titlu card"}</strong>
-                  <span>{form.subtitle || "Subtitlu card"}</span>
-                </figcaption>
-              </figure>
-            </div>
-          </div>
-
-          {submitError ? <p className="form-error">{submitError}</p> : null}
-
-          <div className="form-actions">
-            <Button type="submit">{editingId ? "Salveaza modificarile" : "Adauga galerie"}</Button>
-            <Button type="button" variant="ghost" onClick={resetForm}>
-              Reset
-            </Button>
-          </div>
-        </form>
-
-        <div className="admin-panel">
-          <div className="admin-list-head">
+      <div className="admin-panel">
+        <div className="admin-list-head">
+          <div className="admin-list-head-left">
             <h3>Galerie</h3>
             <span className="muted">{countLabel}</span>
           </div>
+          <button
+            type="button"
+            className="btn primary"
+            style={{ padding: "8px 14px", fontSize: ".85rem", borderRadius: "10px" }}
+            onClick={openCreate}
+          >
+            <i className="fa-solid fa-plus" aria-hidden="true"></i> Adauga nou
+          </button>
+        </div>
 
-          <div className="destinations-toolbar admin-toolbar">
-            <label className="search" aria-label="Cauta in galerie">
-              <i className="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-              <input
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Cauta dupa titlu sau subtitlu"
-              />
-            </label>
+        <div className="destinations-toolbar admin-toolbar">
+          <label className="search" aria-label="Cauta in galerie">
+            <i className="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Cauta dupa titlu sau subtitlu"
+            />
+          </label>
 
-            <div className="form-field admin-sort">
-              <span className="form-label">Sortare</span>
-              <Select
-                value={sortBy}
-                onChange={(v) => setSortBy(v as GallerySortBy)}
-                options={[
-                  { value: "title-asc",  label: "Titlu A-Z" },
-                  { value: "title-desc", label: "Titlu Z-A" },
-                ]}
-              />
+          <div className="form-field admin-sort">
+            <span className="form-label">Sortare</span>
+            <Select
+              value={sortBy}
+              onChange={(v) => setSortBy(v as GallerySortBy)}
+              options={[
+                { value: "title-asc",  label: "Titlu A-Z" },
+                { value: "title-desc", label: "Titlu Z-A" },
+              ]}
+            />
+          </div>
+        </div>
+
+        {loading ? <Loading text="Se incarca galeria..." /> : null}
+        {!loading && error ? <ErrorState title="Eroare" message={error} /> : null}
+        {!loading && !error && items.length === 0 ? (
+          <Empty title="Galeria este goala" description="Adauga primul item din galerie." />
+        ) : null}
+
+        {!loading && !error && items.length > 0 ? (
+          <div className="admin-list-scroll" aria-label="Lista galerie">
+            <div className="grid destinations-cards">
+              {items.map((item) => (
+                <article key={item.id} className="card admin-item-card">
+                  <div className="card-body">
+                    <figure className={`gallery-item ${item.theme} admin-gallery-preview`}>
+                      <figcaption>
+                        <strong>{item.title}</strong>
+                        <span>{item.subtitle}</span>
+                      </figcaption>
+                    </figure>
+                    <div className="admin-row-actions">
+                      <Button type="button" variant="small" onClick={() => startEdit(item)}>
+                        Editare
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="small"
+                        className="danger"
+                        onClick={() => setDeleteId(item.id)}
+                      >
+                        Stergere
+                      </Button>
+                    </div>
+                  </div>
+                </article>
+              ))}
             </div>
           </div>
+        ) : null}
+      </div>
 
-          {loading ? <Loading text="Se incarca galeria..." /> : null}
-          {!loading && error ? <ErrorState title="Eroare" message={error} /> : null}
-          {!loading && !error && items.length === 0 ? (
-            <Empty title="Galeria este goala" description="Adauga primul item din galerie." />
-          ) : null}
+      {modalOpen
+        ? createPortal(
+            <div
+              className="admin-modal-backdrop"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="gallery-modal-title"
+              onMouseDown={(event) => {
+                if (event.target === event.currentTarget) closeModal();
+              }}
+            >
+              <div className="admin-modal-dialog">
+                <div className="admin-modal-head">
+                  <div className="admin-modal-head-text">
+                    <h3 id="gallery-modal-title" className="admin-modal-title">
+                      {editingId ? `Editare: ${form.title || "galerie"}` : "Adaugare galerie"}
+                    </h3>
+                    <span className={`admin-fp-badge${editingId ? " edit-mode" : " new-mode"}`}>
+                      {editingId ? "Editare" : "Nou"}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    className="admin-modal-close"
+                    aria-label="Inchide"
+                    onClick={closeModal}
+                  >
+                    <i className="fa-solid fa-xmark" aria-hidden="true"></i>
+                  </button>
+                </div>
 
-          {!loading && !error && items.length > 0 ? (
-            <div className="admin-list-scroll" aria-label="Lista galerie">
-              <div className="grid destinations-cards">
-                {items.map((item) => (
-                  <article key={item.id} className="card admin-item-card">
-                    <div className="card-body">
-                      <figure className={`gallery-item ${item.theme} admin-gallery-preview`}>
-                        <figcaption>
-                          <strong>{item.title}</strong>
-                          <span>{item.subtitle}</span>
-                        </figcaption>
-                      </figure>
-                      <div className="admin-row-actions">
-                        <Button type="button" variant="small" onClick={() => startEdit(item)}>
-                          Editare
-                        </Button>
-                        <Button
-                          type="button"
-                          variant="small"
-                          className="danger"
-                          onClick={() => setDeleteId(item.id)}
-                        >
-                          Stergere
-                        </Button>
+                <form id="gallery-form" className="admin-modal-form" onSubmit={onSubmit}>
+                  <div className="admin-modal-body">
+                    <div className="admin-fp-fields">
+                      <label className="admin-fp-field">
+                        <span className="admin-fp-label">Titlu</span>
+                        <input
+                          className="form-control"
+                          value={form.title}
+                          onChange={(event) => onFieldChange("title", event.target.value)}
+                        />
+                        {formErrors.title ? (
+                          <span className="form-error">{formErrors.title}</span>
+                        ) : null}
+                      </label>
+
+                      <label className="admin-fp-field">
+                        <span className="admin-fp-label">Subtitlu</span>
+                        <input
+                          className="form-control"
+                          value={form.subtitle}
+                          onChange={(event) => onFieldChange("subtitle", event.target.value)}
+                        />
+                        {formErrors.subtitle ? (
+                          <span className="form-error">{formErrors.subtitle}</span>
+                        ) : null}
+                      </label>
+
+                      <label className="admin-fp-field">
+                        <span className="admin-fp-label">Tema vizuala</span>
+                        <Select
+                          value={form.theme}
+                          onChange={(v) => onFieldChange("theme", v as GalleryTheme)}
+                          options={THEMES.map((t) => ({ value: t, label: THEME_LABEL[t] }))}
+                        />
+                      </label>
+
+                      <div className="admin-fp-field">
+                        <span className="admin-fp-label">Preview</span>
+                        <figure className={`gallery-item ${form.theme} admin-gallery-preview`}>
+                          <figcaption>
+                            <strong>{form.title || "Titlu card"}</strong>
+                            <span>{form.subtitle || "Subtitlu card"}</span>
+                          </figcaption>
+                        </figure>
                       </div>
                     </div>
-                  </article>
-                ))}
+
+                    {submitError ? <p className="form-error">{submitError}</p> : null}
+                  </div>
+
+                  <div className="admin-modal-foot">
+                    <button type="button" className="btn ghost" onClick={closeModal}>
+                      Anuleaza
+                    </button>
+                    <button type="button" className="btn ghost" onClick={resetForm}>
+                      Reset
+                    </button>
+                    <button
+                      type="submit"
+                      className={`btn${editingId ? " btn-save-edit" : " primary"}`}
+                    >
+                      Salveaza
+                    </button>
+                  </div>
+                </form>
               </div>
-            </div>
-          ) : null}
-        </div>
-      </div>
+            </div>,
+            document.body,
+          )
+        : null}
 
       <ModalConfirm
         open={Boolean(deleteId)}
