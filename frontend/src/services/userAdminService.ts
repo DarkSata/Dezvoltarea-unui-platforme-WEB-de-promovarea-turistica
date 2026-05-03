@@ -1,11 +1,19 @@
 import { api } from "./apiClient";
-import type { AdminUser, UserUpdateInput } from "../types/user";
+import type { AdminUser, UserCreateInput, UserUpdateInput } from "../types/user";
 
 type UserListResponse = { items: AdminUser[]; total: number };
 
 class UserAdminService {
   async getAll(): Promise<UserListResponse> {
     return api.get<UserListResponse>("/api/admin/users");
+  }
+
+  async getById(id: number): Promise<AdminUser> {
+    return api.get<AdminUser>(`/api/admin/users/${id}`);
+  }
+
+  async create(input: UserCreateInput): Promise<AdminUser> {
+    return api.post<AdminUser>("/api/admin/users", input);
   }
 
   async update(id: number, input: UserUpdateInput): Promise<AdminUser> {

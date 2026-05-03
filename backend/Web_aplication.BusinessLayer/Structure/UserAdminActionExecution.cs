@@ -7,6 +7,8 @@ namespace Web_aplication.BusinessLayer.Structure;
 public class UserAdminActionExecution : UserAdminActions, IUserAdminAction
 {
     public UserListResponse  GetAllUsers()                          => GetAllUsersExecution();
+    public UserAdminDto?     GetUserById(int id)                    => GetUserByIdExecution(id);
+    public UserAdminDto?     CreateUser(UserCreateRequest r)        => CreateUserExecution(r);
     public UserAdminDto?     UpdateUser(int id, UserUpdateRequest r) => UpdateUserExecution(id, r);
     public bool              DeleteUser(int id)                     => DeleteUserExecution(id);
 }

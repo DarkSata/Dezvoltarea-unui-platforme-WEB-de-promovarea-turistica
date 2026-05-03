@@ -23,6 +23,7 @@ public class RegisterRequest
 {
     public string Username { get; set; } = "";
     public string Password { get; set; } = "";
+    public string? Email   { get; set; }
 }
 
 public class RegisterResponse
@@ -30,6 +31,31 @@ public class RegisterResponse
     public string Token    { get; set; } = "";
     public string Username { get; set; } = "";
     public string Role     { get; set; } = "";
+}
+
+public class UserProfileDto
+{
+    public string   Username  { get; set; } = "";
+    public string?  Email     { get; set; }
+    public string   Role      { get; set; } = "";
+    public DateTime CreatedAt { get; set; }
+}
+
+public class UserProfileUpdateRequest
+{
+    public string? Username { get; set; }
+    public string? Email    { get; set; }
+}
+
+public class UserProfileUpdateResponse : UserProfileDto
+{
+    public string Token { get; set; } = "";
+}
+
+public class ChangePasswordRequest
+{
+    public string CurrentPassword { get; set; } = "";
+    public string NewPassword     { get; set; } = "";
 }
 
 public class UserAdminDto
@@ -47,6 +73,14 @@ public class UserUpdateRequest
     public string? Email    { get; set; }
     public string? Role     { get; set; }
     public string? Password { get; set; }
+}
+
+public class UserCreateRequest
+{
+    public string  Username { get; set; } = "";
+    public string  Password { get; set; } = "";
+    public string? Email    { get; set; }
+    public string  Role     { get; set; } = "user";
 }
 
 public class UserListResponse
