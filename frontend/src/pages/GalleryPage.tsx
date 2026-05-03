@@ -9,6 +9,81 @@ type GalleryImage = {
   size?: "wide" | "tall";
 };
 
+const SAHARNA_IMAGES: GalleryImage[] = [
+  {
+    id: "saharna-1",
+    src: "/images/galerie/manastirea-saharna/saharna-1.png",
+    title: "Manastirea Saharna",
+    subtitle: "Complex monastic",
+  },
+  {
+    id: "saharna-2",
+    src: "/images/galerie/manastirea-saharna/saharna-2.png",
+    title: "Manastirea Saharna",
+    subtitle: "Cadru vertical",
+    size: "tall",
+  },
+  {
+    id: "saharna-3",
+    src: "/images/galerie/manastirea-saharna/saharna-3.png",
+    title: "Manastirea Saharna",
+    subtitle: "Vedere panoramica",
+  },
+  {
+    id: "saharna-4",
+    src: "/images/galerie/manastirea-saharna/saharna-4.png",
+    title: "Manastirea Saharna",
+    subtitle: "Peisaj natural",
+  },
+  {
+    id: "saharna-5",
+    src: "/images/galerie/manastirea-saharna/saharna-5.png",
+    title: "Manastirea Saharna",
+    subtitle: "Atmosfera Saharna",
+    size: "wide",
+  },
+  {
+    id: "saharna-6",
+    src: "/images/galerie/manastirea-saharna/saharna-6.png",
+    title: "Manastirea Saharna",
+    subtitle: "Cadru suplimentar",
+  },
+];
+
+const CRICOVA_IMAGES: GalleryImage[] = [
+  {
+    id: "cricova-1",
+    src: "/images/galerie/cricova/cricova-1.png",
+    title: "Cricova",
+    subtitle: "Galerii subterane",
+  },
+  {
+    id: "cricova-2",
+    src: "/images/galerie/cricova/cricova-2.webp",
+    title: "Cricova",
+    subtitle: "Panorama locatiei",
+    size: "wide",
+  },
+  {
+    id: "cricova-3",
+    src: "/images/galerie/cricova/cricova-3.png",
+    title: "Cricova",
+    subtitle: "Traditie vinicola",
+  },
+  {
+    id: "cricova-4",
+    src: "/images/galerie/cricova/cricova-4.png",
+    title: "Cricova",
+    subtitle: "Cadru de vizitare",
+  },
+  {
+    id: "cricova-5",
+    src: "/images/galerie/cricova/cricova-5.png",
+    title: "Cricova",
+    subtitle: "Atmosfera Cricova",
+  },
+];
+
 const CHISINAU_IMAGES: GalleryImage[] = [
   {
     id: "chisinau-1",
@@ -112,7 +187,13 @@ const ORHEI_IMAGES: GalleryImage[] = [
   },
 ];
 
-const GALLERY_IMAGES = [...CHISINAU_IMAGES, ...SOROCA_IMAGES, ...ORHEI_IMAGES];
+const GALLERY_IMAGES = [
+  ...SAHARNA_IMAGES,
+  ...CRICOVA_IMAGES,
+  ...CHISINAU_IMAGES,
+  ...SOROCA_IMAGES,
+  ...ORHEI_IMAGES,
+];
 
 export default function GalleryPage() {
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -148,14 +229,14 @@ export default function GalleryPage() {
       <section className="page-hero gallery-hero">
         <div className="container">
           <p className="hero-kicker">Galerie foto</p>
-          <h1>Chisinau in imagini</h1>
+          <h1>Manastirea Saharna in imagini</h1>
           <p className="hero-subtitle">
-            O selectie de cadre dedicate Chisinaului, alaturi de galeriile existente
-            pentru Cetatea Soroca si Orheiul Vechi.
+            O selectie de cadre dedicate Manastirii Saharna, alaturi de galeriile
+            existente pentru Cricova, Chisinau, Cetatea Soroca si Orheiul Vechi.
           </p>
           <div className="hero-actions gallery-actions">
-            <a className="btn ghost" href="#galerie-chisinau">
-              Vezi Chisinau
+            <a className="btn ghost" href="#galerie-saharna">
+              Vezi Saharna
             </a>
             <Link className="btn primary" to="/destinations">
               Vezi toate destinatiile
@@ -163,6 +244,74 @@ export default function GalleryPage() {
           </div>
           <div className="note gallery-note">
             Daca ai imagini noi pentru alte destinatii, le putem integra in aceasta galerie.
+          </div>
+        </div>
+      </section>
+
+      <section className="section" id="galerie-saharna">
+        <div className="container">
+          <div className="section-head">
+            <h2>Galerie foto Manastirea Saharna</h2>
+            <p>Imaginile de mai jos sunt dedicate Manastirii Saharna si peisajelor din zona.</p>
+          </div>
+
+          <div className="gallery-photos-grid">
+            {SAHARNA_IMAGES.map((item) => (
+              <figure
+                key={item.id}
+                className={`gallery-photo${item.size ? ` ${item.size}` : ""}`}
+              >
+                <button
+                  className="gallery-photo-card"
+                  type="button"
+                  onClick={() => setActiveId(item.id)}
+                  aria-label={`Mareste imaginea: ${item.title}`}
+                >
+                  <img src={item.src} alt={item.title} loading="lazy" />
+                  <span className="gallery-photo-zoom" aria-hidden="true">
+                    <i className="fa-solid fa-magnifying-glass-plus"></i>
+                  </span>
+                </button>
+                <figcaption className="gallery-photo-meta">
+                  <strong>{item.title}</strong>
+                  <span>{item.subtitle}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section" id="galerie-cricova">
+        <div className="container">
+          <div className="section-head">
+            <h2>Galerie foto Cricova</h2>
+            <p>Imaginile de mai jos sunt dedicate Cricovei si traseelor sale turistice.</p>
+          </div>
+
+          <div className="gallery-photos-grid">
+            {CRICOVA_IMAGES.map((item) => (
+              <figure
+                key={item.id}
+                className={`gallery-photo${item.size ? ` ${item.size}` : ""}`}
+              >
+                <button
+                  className="gallery-photo-card"
+                  type="button"
+                  onClick={() => setActiveId(item.id)}
+                  aria-label={`Mareste imaginea: ${item.title}`}
+                >
+                  <img src={item.src} alt={item.title} loading="lazy" />
+                  <span className="gallery-photo-zoom" aria-hidden="true">
+                    <i className="fa-solid fa-magnifying-glass-plus"></i>
+                  </span>
+                </button>
+                <figcaption className="gallery-photo-meta">
+                  <strong>{item.title}</strong>
+                  <span>{item.subtitle}</span>
+                </figcaption>
+              </figure>
+            ))}
           </div>
         </div>
       </section>
