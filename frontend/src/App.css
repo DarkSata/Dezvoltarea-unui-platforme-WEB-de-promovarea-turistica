@@ -1399,13 +1399,13 @@ textarea.form-control:-webkit-autofill:focus{
 }
 
 /* =========================
-   GALLERY PAGE (ORHEIUL VECHI)
+   GALLERY PAGE
    ========================= */
 
 .gallery-hero{
   background:
     linear-gradient(180deg, rgba(11,18,32,.28), rgba(11,18,32,.92)),
-    url('/images/galerie/orheiul-vechi/orhei-panoramic.webp');
+    url('/images/galerie/chisinau/chisinau-2.webp');
   background-size: cover;
   background-position: center;
 }
