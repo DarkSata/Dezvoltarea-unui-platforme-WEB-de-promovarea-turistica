@@ -9,6 +9,74 @@ type GalleryImage = {
   size?: "wide" | "tall";
 };
 
+const CODRI_IMAGES: GalleryImage[] = [
+  {
+    id: "codri-1",
+    src: "/images/galerie/rezervatia-codri/codri-1.png",
+    title: "Rezervatia Codri",
+    subtitle: "Peisaj forestier",
+  },
+  {
+    id: "codri-2",
+    src: "/images/galerie/rezervatia-codri/codri-2.png",
+    title: "Rezervatia Codri",
+    subtitle: "Padure seculara",
+  },
+  {
+    id: "codri-3",
+    src: "/images/galerie/rezervatia-codri/codri-3.png",
+    title: "Rezervatia Codri",
+    subtitle: "Traseu natural",
+  },
+  {
+    id: "codri-4",
+    src: "/images/galerie/rezervatia-codri/codri-4.png",
+    title: "Rezervatia Codri",
+    subtitle: "Privire panoramica",
+  },
+  {
+    id: "codri-5",
+    src: "/images/galerie/rezervatia-codri/codri-5.png",
+    title: "Rezervatia Codri",
+    subtitle: "Atmosfera naturala",
+    size: "wide",
+  },
+];
+
+const MILESTII_MICI_IMAGES: GalleryImage[] = [
+  {
+    id: "milestii-mici-1",
+    src: "/images/galerie/milestii-mici/milestii-mici-1.png",
+    title: "Milestii Mici",
+    subtitle: "Crame subterane",
+  },
+  {
+    id: "milestii-mici-2",
+    src: "/images/galerie/milestii-mici/milestii-mici-2.png",
+    title: "Milestii Mici",
+    subtitle: "Colectii de vin",
+  },
+  {
+    id: "milestii-mici-3",
+    src: "/images/galerie/milestii-mici/milestii-mici-3.png",
+    title: "Milestii Mici",
+    subtitle: "Traseu turistic",
+  },
+  {
+    id: "milestii-mici-4",
+    src: "/images/galerie/milestii-mici/milestii-mici-4.png",
+    title: "Milestii Mici",
+    subtitle: "Galerii vinicole",
+  },
+  {
+    id: "milestii-mici-5",
+    src: "/images/galerie/milestii-mici/milestii-mici-5.png",
+    title: "Milestii Mici",
+    subtitle: "Atmosfera cramei",
+    size: "wide",
+  },
+];
+
 const TIPOVA_IMAGES: GalleryImage[] = [
   {
     id: "tipova-1",
@@ -220,6 +288,8 @@ const ORHEI_IMAGES: GalleryImage[] = [
 ];
 
 const GALLERY_IMAGES = [
+  ...CODRI_IMAGES,
+  ...MILESTII_MICI_IMAGES,
   ...TIPOVA_IMAGES,
   ...SAHARNA_IMAGES,
   ...CRICOVA_IMAGES,
@@ -274,6 +344,74 @@ export default function GalleryPage() {
           </div>
           <div className="note gallery-note">
             Daca ai imagini noi pentru alte destinatii, le putem integra in aceasta galerie.
+          </div>
+        </div>
+      </section>
+
+      <section className="section" id="galerie-codri">
+        <div className="container">
+          <div className="section-head">
+            <h2>Galerie foto Rezervatia Codri</h2>
+            <p>Imaginile de mai jos sunt dedicate Rezervatiei Codri si peisajelor sale naturale.</p>
+          </div>
+
+          <div className="gallery-photos-grid">
+            {CODRI_IMAGES.map((item) => (
+              <figure
+                key={item.id}
+                className={`gallery-photo${item.size ? ` ${item.size}` : ""}`}
+              >
+                <button
+                  className="gallery-photo-card"
+                  type="button"
+                  onClick={() => setActiveId(item.id)}
+                  aria-label={`Mareste imaginea: ${item.title}`}
+                >
+                  <img src={item.src} alt={item.title} loading="lazy" />
+                  <span className="gallery-photo-zoom" aria-hidden="true">
+                    <i className="fa-solid fa-magnifying-glass-plus"></i>
+                  </span>
+                </button>
+                <figcaption className="gallery-photo-meta">
+                  <strong>{item.title}</strong>
+                  <span>{item.subtitle}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section" id="galerie-milestii-mici">
+        <div className="container">
+          <div className="section-head">
+            <h2>Galerie foto Milestii Mici</h2>
+            <p>Imaginile de mai jos sunt dedicate cramelor Milestii Mici si galeriilor sale subterane.</p>
+          </div>
+
+          <div className="gallery-photos-grid">
+            {MILESTII_MICI_IMAGES.map((item) => (
+              <figure
+                key={item.id}
+                className={`gallery-photo${item.size ? ` ${item.size}` : ""}`}
+              >
+                <button
+                  className="gallery-photo-card"
+                  type="button"
+                  onClick={() => setActiveId(item.id)}
+                  aria-label={`Mareste imaginea: ${item.title}`}
+                >
+                  <img src={item.src} alt={item.title} loading="lazy" />
+                  <span className="gallery-photo-zoom" aria-hidden="true">
+                    <i className="fa-solid fa-magnifying-glass-plus"></i>
+                  </span>
+                </button>
+                <figcaption className="gallery-photo-meta">
+                  <strong>{item.title}</strong>
+                  <span>{item.subtitle}</span>
+                </figcaption>
+              </figure>
+            ))}
           </div>
         </div>
       </section>
