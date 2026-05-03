@@ -11,8 +11,9 @@ public abstract class AuthActions
     protected LoginResponse? LoginActionExecution(LoginRequest request)
     {
         using var db = new AppDbContext();
+        var username = request.Username.Trim();
         var user = db.Users.FirstOrDefault(u =>
-            u.Username == request.Username && u.Password == request.Password);
+            u.Username == username && u.Password == request.Password);
 
         if (user == null) return null;
 
@@ -27,14 +28,16 @@ public abstract class AuthActions
     protected RegisterResponse? RegisterActionExecution(RegisterRequest request)
     {
         using var db = new AppDbContext();
+        var username = request.Username.Trim();
 
-        if (db.Users.Any(u => u.Username == request.Username))
+        if (db.Users.Any(u => u.Username.ToLower() == username.ToLower()))
             return null;
 
         var user = new UserEntity
         {
-            Username  = request.Username,
-            Password  = request.Password,
+            Username  = username,
+            Password  = request.Password.Trim(),
+            Email     = string.IsNullOrWhiteSpace(request.Email) ? null : request.Email.Trim(),
             Role      = "user",
             CreatedAt = DateTime.UtcNow
         };

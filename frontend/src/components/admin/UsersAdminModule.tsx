@@ -8,9 +8,11 @@ import Input from "../Input";
 import Loading from "../Loading";
 import ModalConfirm from "../ModalConfirm";
 import { userAdminService } from "../../services/userAdminService";
-import type { AdminUser, UserRole, UserUpdateInput } from "../../types/user";
+import type { AdminUser, UserCreateInput, UserRole, UserUpdateInput } from "../../types/user";
 
-type EditForm = {
+type FormMode = "idle" | "create" | "edit";
+
+type UserForm = {
   username: string;
   email: string;
   role: UserRole;
@@ -18,9 +20,9 @@ type EditForm = {
   confirmPassword: string;
 };
 
-type EditFormErrors = Partial<Record<keyof EditForm, string>>;
+type UserFormErrors = Partial<Record<keyof UserForm, string>>;
 
-const EMPTY_FORM: EditForm = {
+const EMPTY_FORM: UserForm = {
   username: "",
   email: "",
   role: "user",
@@ -28,19 +30,30 @@ const EMPTY_FORM: EditForm = {
   confirmPassword: "",
 };
 
-function validate(form: EditForm): EditFormErrors {
-  const errors: EditFormErrors = {};
+function validate(form: UserForm, mode: FormMode): UserFormErrors {
+  const errors: UserFormErrors = {};
   if (!form.username.trim()) errors.username = "Username-ul este obligatoriu.";
+  else if (form.username.trim().length < 3) errors.username = "Username-ul trebuie sa aiba minimum 3 caractere.";
+
   if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
     errors.email = "Email invalid.";
   }
-  if (form.password && form.password.length < 4) {
+
+  if (mode === "create" && !form.password.trim()) {
+    errors.password = "Parola este obligatorie.";
+  } else if (form.password && form.password.length < 4) {
     errors.password = "Parola trebuie sa aiba cel putin 4 caractere.";
   }
+
   if (form.password && form.password !== form.confirmPassword) {
     errors.confirmPassword = "Parolele nu coincid.";
   }
+
   return errors;
+}
+
+function getApiMessage(err: unknown, fallback: string): string {
+  return (err as { response?: { data?: { message?: string } } })?.response?.data?.message ?? fallback;
 }
 
 function formatDate(iso: string): string {
@@ -60,9 +73,10 @@ export function UsersAdminModule() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [form, setForm] = useState<EditForm>(EMPTY_FORM);
-  const [formErrors, setFormErrors] = useState<EditFormErrors>({});
+  const [form, setForm] = useState<UserForm>(EMPTY_FORM);
+  const [formErrors, setFormErrors] = useState<UserFormErrors>({});
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [mode, setMode] = useState<FormMode>("idle");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
@@ -99,16 +113,31 @@ export function UsersAdminModule() {
     setForm(EMPTY_FORM);
     setFormErrors({});
     setSubmitError(null);
+    setMode("idle");
     setEditingId(null);
   }
 
-  function onFieldChange<K extends keyof EditForm>(key: K, value: EditForm[K]) {
+  function scrollToForm() {
+    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function onFieldChange<K extends keyof UserForm>(key: K, value: UserForm[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
     setFormErrors((prev) => ({ ...prev, [key]: undefined }));
     setSubmitError(null);
   }
 
+  function startCreate() {
+    setMode("create");
+    setEditingId(null);
+    setForm(EMPTY_FORM);
+    setFormErrors({});
+    setSubmitError(null);
+    scrollToForm();
+  }
+
   function startEdit(user: AdminUser) {
+    setMode("edit");
     setEditingId(user.id);
     setForm({
       username: user.username,
@@ -119,34 +148,41 @@ export function UsersAdminModule() {
     });
     setFormErrors({});
     setSubmitError(null);
-    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    scrollToForm();
   }
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
-    if (editingId === null) return;
+    if (mode === "idle") return;
 
-    const errors = validate(form);
+    const errors = validate(form, mode);
     setFormErrors(errors);
     if (Object.keys(errors).length > 0) return;
 
-    const payload: UserUpdateInput = {
-      username: form.username.trim(),
-      email: form.email.trim() || "",
-      role: form.role,
-    };
-    if (form.password) payload.password = form.password;
-
     try {
-      const updated = await userAdminService.update(editingId, payload);
-      if (!updated) {
-        setSubmitError("Utilizatorul nu mai exista.");
-        return;
+      if (mode === "create") {
+        const payload: UserCreateInput = {
+          username: form.username.trim(),
+          email: form.email.trim() || undefined,
+          role: form.role,
+          password: form.password,
+        };
+        await userAdminService.create(payload);
+      } else if (editingId !== null) {
+        const payload: UserUpdateInput = {
+          username: form.username.trim(),
+          email: form.email.trim() || "",
+          role: form.role,
+        };
+        if (form.password) payload.password = form.password;
+
+        await userAdminService.update(editingId, payload);
       }
+
       resetForm();
       await refresh();
-    } catch {
-      setSubmitError("Operatia a esuat. Incearca din nou.");
+    } catch (err: unknown) {
+      setSubmitError(getApiMessage(err, "Operatia a esuat. Incearca din nou."));
     }
   }
 
@@ -157,29 +193,34 @@ export function UsersAdminModule() {
       setDeleteId(null);
       if (editingId === deleteId) resetForm();
       await refresh();
-    } catch {
+    } catch (err: unknown) {
       setDeleteId(null);
-      setError("Nu am putut sterge utilizatorul.");
+      setError(getApiMessage(err, "Nu am putut sterge utilizatorul."));
     }
   }
 
   const deleteTarget = users.find((u) => u.id === deleteId);
+  const isEditing = mode === "edit";
+  const isCreating = mode === "create";
 
   return (
     <>
       <div className="admin-module-grid">
-
-        {/* ── Edit form ── */}
         <form ref={formRef} className="admin-form admin-panel" onSubmit={onSubmit}>
           <div className="admin-panel-head">
-            <h3>{editingId !== null ? "Editare utilizator" : "Selecteaza un utilizator"}</h3>
-            <span className="pill">{editingId !== null ? "Mod editare" : "—"}</span>
+            <h3>{isCreating ? "Creare utilizator" : isEditing ? "Editare utilizator" : "Utilizator"}</h3>
+            <span className="pill">{isCreating ? "Mod creare" : isEditing ? "Mod editare" : "Inactiv"}</span>
           </div>
 
-          {editingId === null ? (
-            <p className="muted" style={{ padding: "12px 0" }}>
-              Apasa <strong>Editare</strong> pe un utilizator din lista pentru a-l modifica.
-            </p>
+          {mode === "idle" ? (
+            <>
+              <p className="muted" style={{ padding: "12px 0" }}>
+                Selecteaza un utilizator din lista sau creeaza unul nou.
+              </p>
+              <div className="form-actions">
+                <Button type="button" onClick={startCreate}>Adauga utilizator</Button>
+              </div>
+            </>
           ) : (
             <>
               <div className="form-grid">
@@ -188,6 +229,7 @@ export function UsersAdminModule() {
                   value={form.username}
                   onChange={(e) => onFieldChange("username", e.target.value)}
                   error={formErrors.username}
+                  autoComplete="username"
                 />
 
                 <Input
@@ -195,6 +237,7 @@ export function UsersAdminModule() {
                   value={form.email}
                   onChange={(e) => onFieldChange("email", e.target.value)}
                   error={formErrors.email}
+                  autoComplete="email"
                 />
 
                 <label className="form-field">
@@ -210,35 +253,41 @@ export function UsersAdminModule() {
                 </label>
 
                 <Input
-                  label="Parola noua (lasa gol pentru a pastra)"
+                  label={isCreating ? "Parola" : "Parola noua (lasa gol pentru a pastra)"}
+                  type="password"
                   value={form.password}
                   onChange={(e) => onFieldChange("password", e.target.value)}
                   error={formErrors.password}
+                  autoComplete="new-password"
                 />
 
                 <Input
                   label="Confirma parola"
+                  type="password"
                   value={form.confirmPassword}
                   onChange={(e) => onFieldChange("confirmPassword", e.target.value)}
                   error={formErrors.confirmPassword}
+                  autoComplete="new-password"
                 />
               </div>
 
               {submitError ? <p className="form-error">{submitError}</p> : null}
 
               <div className="form-actions">
-                <Button type="submit">Salveaza modificarile</Button>
+                <Button type="submit">{isCreating ? "Creeaza utilizator" : "Salveaza modificarile"}</Button>
                 <Button type="button" variant="ghost" onClick={resetForm}>Anuleaza</Button>
               </div>
             </>
           )}
         </form>
 
-        {/* ── User list ── */}
         <div className="admin-panel">
           <div className="admin-list-head">
-            <h3>Utilizatori</h3>
-            <span className="muted">{filtered.length} inregistrari</span>
+            <div>
+              <h3>Utilizatori</h3>
+              <span className="muted">{filtered.length} inregistrari</span>
+            </div>
+            <Button type="button" variant="small" onClick={startCreate}>Adauga</Button>
           </div>
 
           <div className="destinations-toolbar admin-toolbar">
@@ -289,7 +338,7 @@ export function UsersAdminModule() {
                       <td>
                         <span className="user-name">{user.username}</span>
                       </td>
-                      <td className="muted">{user.email ?? "—"}</td>
+                      <td className="muted">{user.email ?? "-"}</td>
                       <td>
                         <span className={`role-badge role-${user.role}`}>{user.role}</span>
                       </td>

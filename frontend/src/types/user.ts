@@ -14,3 +14,10 @@ export type UserUpdateInput = {
   role?: UserRole;
   password?: string;
 };
+
+export type UserCreateInput = {
+  username: string;
+  password: string;
+  email?: string;
+  role: UserRole;
+};

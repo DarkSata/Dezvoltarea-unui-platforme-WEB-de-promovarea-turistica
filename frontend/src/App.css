@@ -1389,13 +1389,19 @@ textarea.form-control:-webkit-autofill:focus{
   gap:6px;
 }
 .galerie-sunset{
-  background: radial-gradient(900px 260px at 20% 20%, rgba(255,195,125,.35), transparent 55%), #2f2a4f;
+  background-image: url('/images/galerie/orheiul-vechi/orhei-panoramic.webp');
+  background-size: cover;
+  background-position: center;
 }
 .galerie-vin{
-  background: radial-gradient(900px 260px at 80% 10%, rgba(190,125,255,.28), transparent 55%), #32253e;
+  background-image: url('/images/galerie/milestii-mici/milestii-mici-5.png');
+  background-size: cover;
+  background-position: center;
 }
 .galerie-nistru{
-  background: radial-gradient(900px 260px at 20% 20%, rgba(106,255,204,.22), transparent 55%), #1e3446;
+  background-image: url('/images/galerie/manastirea-tipova/tipova-3.png');
+  background-size: cover;
+  background-position: center;
 }
 
 /* =========================

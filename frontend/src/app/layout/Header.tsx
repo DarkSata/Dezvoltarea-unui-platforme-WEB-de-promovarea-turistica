@@ -95,6 +95,14 @@ export default function Header() {
             Admin
           </NavLink>
         ) : null}
+        {session ? (
+          <NavLink
+            className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+            to="/contul-meu"
+          >
+            Contul meu
+          </NavLink>
+        ) : null}
         {!session ? (
           <NavLink
             className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}

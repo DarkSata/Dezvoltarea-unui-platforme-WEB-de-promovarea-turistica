@@ -1,5 +1,11 @@
 import { api, clearToken, storeToken } from "./apiClient";
-import type { SessionUser } from "../types/auth";
+import type {
+  ChangePasswordInput,
+  SessionUser,
+  UserProfile,
+  UserProfileUpdateInput,
+  UserProfileUpdateResponse,
+} from "../types/auth";
 
 type Listener = () => void;
 type LoginResponse = { token: string; username: string; role: string };
@@ -61,6 +67,33 @@ class AuthService {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
       return { user: null, error: msg ?? "Eroare la înregistrare." };
     }
+  }
+
+  async getProfile(): Promise<UserProfile> {
+    return api.get<UserProfile>("/api/users/me");
+  }
+
+  async updateProfile(input: UserProfileUpdateInput): Promise<UserProfileUpdateResponse> {
+    const profile = await api.put<UserProfileUpdateResponse>("/api/users/me", input);
+    storeToken(profile.token);
+    const session: SessionUser = {
+      username: profile.username,
+      role: profile.role,
+    };
+    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    this.emit();
+    return profile;
+  }
+
+  async changePassword(input: ChangePasswordInput): Promise<void> {
+    await api.put("/api/users/me/password", input);
+  }
+
+  async deleteAccount(): Promise<void> {
+    await api.delete("/api/users/me");
+    clearToken();
+    localStorage.removeItem(SESSION_KEY);
+    this.emit();
   }
 
   async logout(): Promise<void> {

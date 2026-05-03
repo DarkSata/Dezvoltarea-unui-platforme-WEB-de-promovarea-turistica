@@ -9,6 +9,7 @@ import GuidePage from "../../pages/GuidePage";
 import GalleryPage from "../../pages/GalleryPage";
 import AdminPage from "../../pages/AdminPage";
 import LoginPage from "../../pages/LoginPage";
+import UserProfilePage from "../../pages/UserProfilePage";
 import Unauthorized401 from "../../errors/Unauthorized401";
 import Forbidden403 from "../../errors/Forbidden403";
 import NotFound404 from "../../errors/NotFound404";
@@ -30,6 +31,10 @@ export default function AppRouter() {
 
         <Route element={<ProtectedRoute roles={["admin"]} />}>
           <Route path="admin" element={<AdminPage />} />
+        </Route>
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="contul-meu" element={<UserProfilePage />} />
         </Route>
 
         <Route path="401" element={<Unauthorized401 />} />
