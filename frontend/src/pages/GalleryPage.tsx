@@ -9,6 +9,40 @@ type GalleryImage = {
   size?: "wide" | "tall";
 };
 
+const TIPOVA_IMAGES: GalleryImage[] = [
+  {
+    id: "tipova-1",
+    src: "/images/galerie/manastirea-tipova/tipova-1.png",
+    title: "Manastirea Tipova",
+    subtitle: "Complex rupestru",
+  },
+  {
+    id: "tipova-2",
+    src: "/images/galerie/manastirea-tipova/tipova-2.png",
+    title: "Manastirea Tipova",
+    subtitle: "Peisaj monastic",
+  },
+  {
+    id: "tipova-3",
+    src: "/images/galerie/manastirea-tipova/tipova-3.png",
+    title: "Manastirea Tipova",
+    subtitle: "Vedere panoramica",
+  },
+  {
+    id: "tipova-4",
+    src: "/images/galerie/manastirea-tipova/tipova-4.png",
+    title: "Manastirea Tipova",
+    subtitle: "Stanci si natura",
+  },
+  {
+    id: "tipova-5",
+    src: "/images/galerie/manastirea-tipova/tipova-5.png",
+    title: "Manastirea Tipova",
+    subtitle: "Cadru suplimentar",
+    size: "wide",
+  },
+];
+
 const SAHARNA_IMAGES: GalleryImage[] = [
   {
     id: "saharna-1",
@@ -21,7 +55,6 @@ const SAHARNA_IMAGES: GalleryImage[] = [
     src: "/images/galerie/manastirea-saharna/saharna-2.png",
     title: "Manastirea Saharna",
     subtitle: "Cadru vertical",
-    size: "tall",
   },
   {
     id: "saharna-3",
@@ -40,7 +73,6 @@ const SAHARNA_IMAGES: GalleryImage[] = [
     src: "/images/galerie/manastirea-saharna/saharna-5.png",
     title: "Manastirea Saharna",
     subtitle: "Atmosfera Saharna",
-    size: "wide",
   },
   {
     id: "saharna-6",
@@ -188,6 +220,7 @@ const ORHEI_IMAGES: GalleryImage[] = [
 ];
 
 const GALLERY_IMAGES = [
+  ...TIPOVA_IMAGES,
   ...SAHARNA_IMAGES,
   ...CRICOVA_IMAGES,
   ...CHISINAU_IMAGES,
@@ -229,21 +262,52 @@ export default function GalleryPage() {
       <section className="page-hero gallery-hero">
         <div className="container">
           <p className="hero-kicker">Galerie foto</p>
-          <h1>Manastirea Saharna in imagini</h1>
+          <h1>Galerie top locuri turistice din Moldova</h1>
           <p className="hero-subtitle">
-            O selectie de cadre dedicate Manastirii Saharna, alaturi de galeriile
-            existente pentru Cricova, Chisinau, Cetatea Soroca si Orheiul Vechi.
+            Privelisti spectaculoase cu manastiri rupestre, cetati, orase si peisaje
+            naturale care surprind farmecul celor mai vizitate destinatii din Moldova.
           </p>
           <div className="hero-actions gallery-actions">
-            <a className="btn ghost" href="#galerie-saharna">
-              Vezi Saharna
-            </a>
             <Link className="btn primary" to="/destinations">
               Vezi toate destinatiile
             </Link>
           </div>
           <div className="note gallery-note">
             Daca ai imagini noi pentru alte destinatii, le putem integra in aceasta galerie.
+          </div>
+        </div>
+      </section>
+
+      <section className="section" id="galerie-tipova">
+        <div className="container">
+          <div className="section-head">
+            <h2>Galerie foto Manastirea Tipova</h2>
+            <p>Imaginile de mai jos sunt dedicate Manastirii Tipova si peisajelor de pe malul Nistrului.</p>
+          </div>
+
+          <div className="gallery-photos-grid">
+            {TIPOVA_IMAGES.map((item) => (
+              <figure
+                key={item.id}
+                className={`gallery-photo${item.size ? ` ${item.size}` : ""}`}
+              >
+                <button
+                  className="gallery-photo-card"
+                  type="button"
+                  onClick={() => setActiveId(item.id)}
+                  aria-label={`Mareste imaginea: ${item.title}`}
+                >
+                  <img src={item.src} alt={item.title} loading="lazy" />
+                  <span className="gallery-photo-zoom" aria-hidden="true">
+                    <i className="fa-solid fa-magnifying-glass-plus"></i>
+                  </span>
+                </button>
+                <figcaption className="gallery-photo-meta">
+                  <strong>{item.title}</strong>
+                  <span>{item.subtitle}</span>
+                </figcaption>
+              </figure>
+            ))}
           </div>
         </div>
       </section>
