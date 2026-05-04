@@ -1,6 +1,0 @@
-<Solution>
-  <Project Path="PromovareTuristica.API/PromovareTuristica.API.csproj" />
-  <Project Path="PromovareTuristica.BusinessLayer/PromovareTuristica.BusinessLayer.csproj" />
-  <Project Path="PromovareTuristica.DataAccess/PromovareTuristica.DataAccess.csproj" />
-  <Project Path="PromovareTuristica.Domain/PromovareTuristica.Domain.csproj" />
-</Solution>
